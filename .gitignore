@@ -4,3 +4,6 @@ opencity.ext.core/.classpath
 *.component
 opencity.ext.core/.settings/org.eclipse.wst.common.project.facet.core.xml
 opencity.ext.core/.project
+opencity.ext.core.test/.classpath
+RemoteSystemsTempFiles/.project
+opencity.ext.core.test/.project
