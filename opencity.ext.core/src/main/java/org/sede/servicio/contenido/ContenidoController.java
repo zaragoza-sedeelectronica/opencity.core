@@ -1,0 +1,220 @@
+package org.sede.servicio.contenido;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.Date;
+
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.apache.commons.codec.CharEncoding;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.solr.common.SolrInputDocument;
+import org.sede.core.anotaciones.Gcz;
+import org.sede.core.anotaciones.NoCache;
+import org.sede.core.anotaciones.Permisos;
+import org.sede.core.dao.Solr;
+import org.sede.core.rest.Mensaje;
+import org.sede.core.rest.solr.Faceta;
+import org.sede.core.tag.Utils;
+import org.sede.core.utils.ConvertDate;
+import org.sede.core.utils.Funciones;
+import org.sede.core.utils.Propiedades;
+import org.sede.core.validator.HTMLValidator;
+import org.sede.servicio.ModelAttr;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
+import org.xml.sax.SAXException;
+
+
+@Gcz(servicio="CONTENIDOS",seccion="PAGINAS")
+@Controller
+@RequestMapping(value = "/" + ContenidoController.MAPPING, method = RequestMethod.GET)
+public class ContenidoController {
+	private static final String SERVICIO = "contenido";
+	public static final String MAPPING = "servicio/" + SERVICIO;
+	
+	@RequestMapping(method = RequestMethod.GET, produces = {
+			MediaType.TEXT_HTML_VALUE, "*/*" })
+	public String redirect() {
+		return "redirect:" + SERVICIO + "/";
+	}
+	
+	@NoCache
+	@RequestMapping(value = "/", method = RequestMethod.GET, produces = {
+			MediaType.TEXT_HTML_VALUE, "*/*" })
+	public String nuevo(Model model, @RequestParam(name = "path", required = false) String path) throws IOException {
+		if (path != null) {
+			String pathFisico = Propiedades.getPathVistas() + path + ".xml";
+			FileInputStream fisTargetFile = new FileInputStream(new File(pathFisico));
+			model.addAttribute("path", path);
+			model.addAttribute("content", IOUtils.toString(fisTargetFile, CharEncoding.UTF_8));
+		} else {
+			model.addAttribute("content", "<!DOCTYPE html>" + System.getProperty("line.separator") +
+				"<html xmlns=\"http://www.w3.org/1999/xhtml\" xmlns:th=\"http://www.thymeleaf.org\" xmlns:sede=\"http://www.zaragoza.es\" lang=\"es\">" + System.getProperty("line.separator") +
+				"<head>" + System.getProperty("line.separator") +
+				"    <meta charset=\"utf-8\" />	" + System.getProperty("line.separator") +
+				"	<sede:meta title=\"\"></sede:meta>" + System.getProperty("line.separator") +
+				"</head>" + System.getProperty("line.separator") +
+				"<body>" + System.getProperty("line.separator") +
+				"    <sede:content>" + System.getProperty("line.separator") +
+				"" + System.getProperty("line.separator") +
+				"    </sede:content>" + System.getProperty("line.separator") +
+				"</body>" + System.getProperty("line.separator") +
+				"</html>");
+		}
+		return MAPPING + "/edit";
+	}
+	
+	@Permisos(Permisos.MOD)
+	@RequestMapping(value = "/save", method = RequestMethod.POST, produces = {
+			MediaType.TEXT_HTML_VALUE, "*/*" })
+	public String guardar(@RequestParam(value="path", required=false) String path,
+			@RequestParam(value="content", required = true) String content, Model model) {
+		HTMLValidator validador = new HTMLValidator();
+		try {
+			validador.validate(content);
+			Funciones.saveFile(Propiedades.getPathVistas() + path + ".xml", content);
+			model.addAttribute(ModelAttr.MENSAJE, new Mensaje(HttpStatus.OK.value(), "Registro guardado correctamente"));
+		} catch (ParserConfigurationException e) {
+			model.addAttribute(ModelAttr.MENSAJE, new Mensaje(HttpStatus.BAD_REQUEST.value(), e.getMessage()));
+		} catch (SAXException e) {
+			model.addAttribute(ModelAttr.MENSAJE, new Mensaje(HttpStatus.BAD_REQUEST.value(), e.getMessage()));
+		} catch (IOException e) {
+			model.addAttribute(ModelAttr.MENSAJE, new Mensaje(HttpStatus.BAD_REQUEST.value(), e.getMessage()));
+		}
+		
+		return "fragmentos/error";
+	}
+
+	@Permisos(Permisos.MOD)
+	@RequestMapping(value = "/img", method = RequestMethod.POST, produces = {MediaType.TEXT_HTML_VALUE, "*/*" })
+	public String imagen(@RequestParam(value="path", required=false) String path,
+			@RequestParam("imagen") MultipartFile file, Model model) {
+		if (!file.isEmpty()) {
+			try {
+				String extension = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf('.'), file.getOriginalFilename().length());
+				Funciones.saveFileOverWrite(Propiedades.getPathVistas() + path, file.getOriginalFilename() + extension, file.getInputStream());
+			} catch (IOException e) {
+				model.addAttribute(ModelAttr.MENSAJE, new Mensaje(HttpStatus.BAD_REQUEST.value(), "Error al cargar fichero " + file.getOriginalFilename() + " => " + e.getMessage()));
+			}
+		}
+		return "fragmentos/error";
+	}
+	
+	@Permisos(Permisos.MOD)
+	@RequestMapping(value = "/index-solr", method = RequestMethod.POST, produces = {
+			MediaType.TEXT_HTML_VALUE, "*/*" })
+	public String indizar(
+			@RequestParam(value="uri") String uri,
+			@RequestParam(value="title") String title,
+			@RequestParam(value="description") String description,
+			@RequestParam(value="category") String category,
+			@RequestParam(value="author") String author,
+			@RequestParam(value="subject") String subject,
+			@RequestParam(value=Faceta.FACET_FECHA_MODIFICADO) String lastModified,
+			@RequestParam(value="language", defaultValue = "es") String language,
+			@RequestParam(value="keywords") String keywords,
+			@RequestParam(value="audience", defaultValue = "") String audience,
+			@RequestParam(value="text") String text,
+			@RequestParam(value="priority", defaultValue = "") String priority,
+			@RequestParam(value="robots", defaultValue = "") String robots,
+			@RequestParam(value="links") String links, 
+			Model model) {
+		if (!robots.toLowerCase().contains("noindex")) {
+			try {
+				String docId = "contenido-" + String.valueOf(uri.hashCode()).replace("-", "n");
+				SolrInputDocument registro = new SolrInputDocument();
+				registro.addField("id", docId);
+				registro.addField("uri", Funciones.corregirUri(uri));
+				if (StringUtils.isNotEmpty(category)) {
+					registro.addField("category", category);
+				}
+				if (uri.endsWith("/") || !"".equals(priority.trim())) { //A las páginas índice les damos más popularidad
+					registro.addField("title",  title, 2);
+				} else {
+					registro.addField("title",  title);	
+				} 
+				if (StringUtils.isNotEmpty(author)) {
+					registro.addField("author",  author);
+				}
+	//			if (StringUtils.isNotEmpty(coverage)) {
+	//				registro.addField("coverage",  coverage);
+	//			}
+	//			if (handler.getX() != null && !"".equals(handler.getX())) {
+	//				
+	//				registro.addField("x_coordinate", Double.parseDouble(handler.getX()));
+	//				registro.addField("y_coordinate", Double.parseDouble(handler.getY()));
+	//				Punto p = conversor.getWgs84(Double.parseDouble(handler.getX()), Double.parseDouble(handler.getY()));
+	//				registro.addField("coordenadas_p", p.getLat() + "," + p.getLon());
+	//				
+	//			}
+				registro.addField("language", language);
+				registro.addField("keywords_smultiple", keywords);
+				registro.addField("description", Utils.removeHTMLEntity(description));
+				registro.addField("texto_t", Utils.removeHTMLEntity(description));
+				registro.addField("text", Utils.removeHTMLEntity(text));
+				registro.addField("content_type", "HTML");
+				if (StringUtils.isNotEmpty(lastModified)) {
+					registro.addField(Faceta.FACET_FECHA_MODIFICADO, lastModified);
+				} else {
+					registro.addField(Faceta.FACET_FECHA_MODIFICADO, ConvertDate.date2String(new Date(), ConvertDate.ISO8601_FORMAT));
+				}
+	
+		        if (links != null) {
+		            registro.addField("links", links);
+				}
+				String[] valores = subject.trim().split(",");
+				
+				for (int i = 0; i < valores.length; i++) {
+					if (!"".equals(valores[i].trim())) {
+						registro.addField(Faceta.FACET_TEMA, valores[i].trim());
+					}
+				}
+				valores = audience.split(",");
+				for (int i = 0; i < valores.length; i++) {
+					if (!"".equals(valores[i].trim())) {
+						registro.addField(Faceta.FACET_DIRIGIDO, valores[i].trim());
+					}
+				}
+				registro.addField("content_type", "HTML");
+
+				int resultado = Solr.getInstance().save(registro);
+				if (resultado < 0) {
+					model.addAttribute(ModelAttr.MENSAJE, new Mensaje(HttpStatus.BAD_REQUEST.value(), "No se ha indizado el contenido"));	
+				} else {
+					Solr.getInstance().commit();
+					model.addAttribute(ModelAttr.MENSAJE, new Mensaje(HttpStatus.OK.value(), "Registro indizado correctamente"));
+				}
+				
+			} catch (Exception e) {
+				model.addAttribute(ModelAttr.MENSAJE, new Mensaje(HttpStatus.BAD_REQUEST.value(), e.getMessage()));
+			}
+		} else {
+			Solr.getInstance().deleteUri(uri);
+			model.addAttribute(ModelAttr.MENSAJE, new Mensaje(HttpStatus.BAD_REQUEST.value(), "Registro eliminado del índice al contener robots noindex"));
+		}
+		
+		return "fragmentos/error";
+	}
+	
+	@Permisos(Permisos.DEL)
+	@RequestMapping(value = "/remove", method = RequestMethod.GET, produces = {MediaType.TEXT_HTML_VALUE, "*/*" })
+	public String remove(@RequestParam(value="path") String path, Model model) {
+		File f = new File(Propiedades.getPathVistas() + path + ".xml");
+		if (f.delete()) {
+			model.addAttribute(ModelAttr.MENSAJE, new Mensaje(HttpStatus.OK.value(), "Fichero en path " + path + " eliminado correctamente"));
+		} else {
+			model.addAttribute(ModelAttr.MENSAJE, new Mensaje(HttpStatus.BAD_REQUEST.value(), "Fichero en path " + path + " NO se ha eliminado"));
+		}
+		return "fragmentos/error";
+	}
+	
+}

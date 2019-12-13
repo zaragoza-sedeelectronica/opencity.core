@@ -1,0 +1,6 @@
+/.metadata/
+opencity.ext.core/.classpath
+*.prefs
+*.component
+opencity.ext.core/.settings/org.eclipse.wst.common.project.facet.core.xml
+opencity.ext.core/.project
