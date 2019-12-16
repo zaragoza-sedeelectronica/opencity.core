@@ -44,9 +44,9 @@
 		</dependency>
 	
 		<dependency>
-			<groupId>org.sede.zaragoza</groupId>
-			<artifactId>core</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<groupId>org.zaragoza</groupId>
+			  <artifactId>opencity.ext.core</artifactId>
+			  <version>0.0.1</version>
 		</dependency>
   </dependencies>
   
