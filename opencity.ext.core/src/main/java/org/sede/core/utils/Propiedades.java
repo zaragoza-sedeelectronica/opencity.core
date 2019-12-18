@@ -205,4 +205,7 @@ public class Propiedades {
 			return "";
 		}
 	}
+	public static boolean containsKey(String key) {
+		return RESOURCE_BUNDLE.containsKey(key);
+	}
 }
