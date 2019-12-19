@@ -37,11 +37,12 @@ import org.sede.core.anotaciones.Description;
 import org.sede.core.anotaciones.InList;
 import org.sede.core.anotaciones.PathId;
 import org.sede.core.dao.EntidadBase;
+import org.sede.servicio.acceso.ConfigCiudadano;
 import org.springframework.format.annotation.DateTimeFormat;
 
 @XmlRootElement(name = "perfilUsuario")
 @Entity
-@Table(name = "PERFILES_USUARIOS", schema = "NOTICIAS")
+@Table(name = "PERFILES_USUARIOS", schema = ConfigCiudadano.ESQUEMA)
 @PathId("/servicio/comunidad")
 @DynamicUpdate
 @Description("Perfil del ciudadano para la interacción en la Comunidad")
@@ -64,7 +65,7 @@ public class Perfil extends EntidadBase {
     //Definición preferencias en relación a actividades
     //  - tipología de actividades que son de su interés
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "USERS_TEMA", schema = "NOTICIAS",
+    @JoinTable(name = "USERS_TEMA", schema = ConfigCiudadano.ESQUEMA,
     		joinColumns = { @JoinColumn(name = "ID_USUARIO_ADENTRA", nullable = false, updatable = false) },
             inverseJoinColumns = { @JoinColumn(name = "COD_TEMA", nullable = false, updatable = false) })
     @Access(AccessType.FIELD)
@@ -76,7 +77,7 @@ public class Perfil extends EntidadBase {
     
     //  - valores que promueven las actividades),
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(schema = "NOTICIAS", name = "USERS_VALOR",
+    @JoinTable(schema = ConfigCiudadano.ESQUEMA, name = "USERS_VALOR",
     		joinColumns = { @JoinColumn(name = "ID_USUARIO_ADENTRA", nullable = false, updatable = false) },
             inverseJoinColumns = { @JoinColumn(name = "COD_VALOR", nullable = false, updatable = false) })
     @Access(AccessType.FIELD)

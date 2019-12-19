@@ -28,6 +28,7 @@ import org.sede.core.utils.Funciones;
 import org.sede.core.utils.ProcesadorImagenes;
 import org.sede.core.utils.Propiedades;
 import org.sede.core.utils.RandomGUID;
+import org.sede.servicio.acceso.ConfigCiudadano;
 import org.sede.servicio.acceso.entity.Ciudadano;
 import org.sede.servicio.padron.dao.PadronGenericDAO;
 import org.sede.servicio.sms.dao.SmsGenericDAO;
@@ -42,7 +43,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.googlecode.genericdao.dao.jpa.GenericDAOImpl;
 
 @Repository
-@Transactional(Esquema.TMNOTICIAS)
+@Transactional(ConfigCiudadano.TM)
 public class CiudadanoGenericDAOImpl extends GenericDAOImpl <Ciudadano, Integer> implements CiudadanoGenericDAO {
 	private static final Logger logger = LoggerFactory.getLogger(CiudadanoGenericDAOImpl.class);
 	public static final String IMG_DISK_PATH = Propiedades.getPathContDisk() + "paginas/zona-personal/";
@@ -53,7 +54,7 @@ public class CiudadanoGenericDAOImpl extends GenericDAOImpl <Ciudadano, Integer>
 	private SmsGenericDAO daoSms;
 
 	
-	@PersistenceContext(unitName=Esquema.NOTICIAS)
+	@PersistenceContext(unitName=ConfigCiudadano.ESQUEMA)
 	public void setEntityManager(EntityManager entityManager) {
 		this.setEm(entityManager);
 	}

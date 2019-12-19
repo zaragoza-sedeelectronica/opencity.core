@@ -28,7 +28,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.thymeleaf.util.StringUtils;
 
 @Gcz(servicio="OGOB",seccion="OGOB")
-@Transactional(Esquema.TMNOTICIAS)
+@Transactional(ConfigCiudadano.TM)
 @Controller
 @RequestMapping(value = "/" + CiudadanoAdminController.MAPPING, method = RequestMethod.GET)
 public class CiudadanoAdminController {

@@ -5,11 +5,15 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class ConfigCiudadano implements PropertyFileInterface {
+	
+	public static final String ESQUEMA = "GENERAL";
+	public static final String TM = "transactionManagerGeneral";
+	
 	public String getSchema() {
-		return "noticias";
+		return "general";
 	}
 	public String getJndi() {
-		return "WebNoticiasDS";
+		return "WebGeneralDS";
 	}
 
 	public String getEntity() {

@@ -7,6 +7,7 @@ import javax.persistence.PostLoad;
 
 import org.sede.core.anotaciones.Esquema;
 import org.sede.core.dao.AutowireHelper;
+import org.sede.servicio.acceso.ConfigCiudadano;
 import org.sede.servicio.acceso.entity.Ciudadano;
 import org.sede.servicio.acceso.entity.GczGrupoUsuario;
 import org.sede.servicio.acceso.entity.GczUsuario;
@@ -16,10 +17,10 @@ import org.slf4j.LoggerFactory;
 
 public class LiderListener {
 
-	@PersistenceContext(unitName = Esquema.NOTICIAS)
+	@PersistenceContext(unitName = ConfigCiudadano.ESQUEMA)
     EntityManager emNoticias;
 
-	@PersistenceContext(unitName = Esquema.MOVIL)
+	@PersistenceContext(unitName = ConfigCiudadano.ESQUEMA)
     EntityManager emMovil;
 
 	@PersistenceContext(unitName = Esquema.AGENDA)

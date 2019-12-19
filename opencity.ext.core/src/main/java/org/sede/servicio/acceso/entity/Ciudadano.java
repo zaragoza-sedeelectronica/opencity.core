@@ -31,12 +31,13 @@ import org.sede.core.anotaciones.Interno;
 import org.sede.core.anotaciones.Permisos;
 import org.sede.core.dao.BooleanConverter;
 import org.sede.core.dao.EntidadBase;
+import org.sede.servicio.acceso.ConfigCiudadano;
 import org.sede.servicio.acceso.dao.CiudadanoGenericDAOImpl;
 
 @XmlRootElement(name = "user")
 @Entity
 @DynamicUpdate
-@Table(name = "USERS", schema = "NOTICIAS")
+@Table(name = "USERS", schema = ConfigCiudadano.ESQUEMA)
 @XmlAccessorType(XmlAccessType.FIELD)
 @SequenceGenerator(name = "SECUENCIA_SEQ_USERS", sequenceName = "SEQ_USERS", allocationSize = 1)
 public class Ciudadano extends EntidadBase {

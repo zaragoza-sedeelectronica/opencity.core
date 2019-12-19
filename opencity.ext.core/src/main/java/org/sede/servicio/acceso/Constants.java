@@ -6,7 +6,7 @@ public class Constants {
 	private Constants() {
 		super();
 	}
-	public static final String ESQUEMA = Esquema.MOVIL;
-	public static final String TM = Esquema.TMMOVIL;
+	public static final String ESQUEMA = ConfigAcceso.ESQUEMA;
+	public static final String TM = ConfigAcceso.TM;
 	
 }

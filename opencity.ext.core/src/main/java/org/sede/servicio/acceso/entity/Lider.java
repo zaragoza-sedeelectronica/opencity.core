@@ -17,13 +17,14 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import org.hibernate.annotations.DynamicUpdate;
 import org.sede.core.dao.EntidadBase;
+import org.sede.servicio.acceso.ConfigCiudadano;
 import org.sede.servicio.acceso.dao.LiderListener;
 
 @XmlRootElement(name = "lider")
 @Entity(name = "Lider")
 @DynamicUpdate
-@SequenceGenerator(name = "SECUENCIA", sequenceName = "NOTICIAS.SEQ_LIDERES", allocationSize = 1)
-@Table(name = "LIDERES", schema = "NOTICIAS")
+@SequenceGenerator(name = "SECUENCIA", sequenceName = "GENERAL.SEQ_LIDERES", allocationSize = 1)
+@Table(name = "LIDERES", schema = ConfigCiudadano.ESQUEMA)
 @EntityListeners(LiderListener.class)
 public class Lider extends EntidadBase {
 

@@ -496,7 +496,7 @@ public class LoginController {
 		}
 	}
 
-	@Transactional(Esquema.TMNOTICIAS)
+	@Transactional(ConfigCiudadano.TM)
 	@RequestMapping(value = "/save", method = RequestMethod.POST, produces = {
 			MediaType.TEXT_HTML_VALUE, "*/*" })
 	public String crear(Ciudadano dato, @RequestParam(name = "pass", required = true) String pass,
@@ -525,7 +525,7 @@ public class LoginController {
 
 	}
 	
-	@Transactional(Esquema.TMNOTICIAS)
+	@Transactional(ConfigCiudadano.TM)
 	@ResponseClass(value = Ciudadano.class)
 	@Permisos(Permisos.NEW_USER)
 	@RequestMapping(value="/save-api", method = RequestMethod.POST, consumes = { MimeTypes.JSON, MimeTypes.XML },
@@ -557,7 +557,7 @@ public class LoginController {
 		}
 	}
 	
-	@Transactional(Esquema.TMNOTICIAS)
+	@Transactional(ConfigCiudadano.TM)
 	@RequestMapping(value = "/activate", method = RequestMethod.POST, produces = {
 			MediaType.TEXT_HTML_VALUE, "*/*" })
 	public String activate(@RequestParam(name = "email", required = true) String email,
