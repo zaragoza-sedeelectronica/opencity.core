@@ -17,7 +17,7 @@ public class ConfigAcceso implements PropertyFileInterface {
 	}
 
 	public String getEntity() {
-		return "org.sede.servicio.mapacolaborativo.entity";
+		return "org.sede.servicio.acceso.entity";
 	}
 
 }
