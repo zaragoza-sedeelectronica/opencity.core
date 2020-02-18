@@ -235,13 +235,15 @@ public class Funciones {
 	public static void sendMail(final String titulo, final String txtMensaje, 
 			final String destino, final String respuesta, 
 			final String tipo) throws MessagingException {
-		Funciones.sendMail(titulo, txtMensaje, "Ayuntamiento de Zaragoza<" + Propiedades.getMailUser() + "@zaragoza.es>", 
+//		Funciones.sendMail(titulo, txtMensaje, "Ayuntamiento de Zaragoza<" + Propiedades.getMailUser() + "@zaragoza.es>", 
+//				destino, respuesta, Propiedades.getMailUser(), Propiedades.getMailPass(), tipo);
+		Funciones.sendMail(titulo, txtMensaje, Propiedades.getMailUser() + "@" + Propiedades.getMailServer() , 
 				destino, respuesta, Propiedades.getMailUser(), Propiedades.getMailPass(), tipo);
 	}
 	public static void sendMailAdjunto(final String titulo, final String txtMensaje, 
 			final String destino, final String respuesta, 
 			final String tipo, byte[] adjunto, String nombreAdjunto, String mimetype) throws MessagingException {
-		Funciones.sendMail(titulo, txtMensaje, "Ayuntamiento de Zaragoza<" + Propiedades.getMailUser() + "@zaragoza.es>", destino, respuesta, Propiedades.getMailUser(), Propiedades.getMailPass(), tipo, null, adjunto, nombreAdjunto, mimetype);
+		Funciones.sendMail(titulo, txtMensaje, Propiedades.getMailUser() + "@" + Propiedades.getMailServer(), destino, respuesta, Propiedades.getMailUser(), Propiedades.getMailPass(), tipo, null, adjunto, nombreAdjunto, mimetype);
 	}
 	public static void sendMail(final String titulo, final String txtMensaje, final String origen, 
 			final String destino, final String respuesta, final String usuario, final String password, 
@@ -259,6 +261,7 @@ public class Funciones {
 		if (Propiedades.getMailServer() != null && Propiedades.getMailServer().length() > 0 && destino != null && destino.length() > 0) {
 			try {
 				final Properties props = new Properties();
+				props.put("mail.smtp.host", Propiedades.getMailServer());
 				props.put("mail.smtp.auth", "true");
 				final Session ses = Session.getInstance(props, null);
 				
@@ -318,7 +321,7 @@ public class Funciones {
 					message.saveChanges();
 				}
 				
-				final Transport transport = ses.getTransport("smtp");
+				final Transport transport = ses.getTransport("smtp");				
 				transport.connect(Propiedades.getMailServer(), usuario, password);
 				transport.sendMessage(message, message.getAllRecipients());
 				transport.close();
