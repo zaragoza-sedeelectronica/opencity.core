@@ -198,7 +198,7 @@ public class GczUsuarioGenericDAOImpl extends GenericDAOImpl <GczUsuario, BigDec
 
 		if(grupos.length() > 0){
 			Query q = em().createNativeQuery("select ID_LIDER, ID_ASOCIADO, TIPO_ASOCIADO, ID_USUARIO, TIPO_USUARIO "
-					+ "from noticias.lideres "
+					+ "from lideres "
 					+ "where (id_usuario=" + gczUsuario.getId()
 					+ " and tipo_usuario='" + GczUsuario.class.getName() + "') or "
 					+ " (id_usuario in (" + grupos + ") and tipo_usuario = '" + GczGrupoUsuario.class.getName() + "')");
