@@ -51,7 +51,7 @@ import com.googlecode.genericdao.search.SearchResult;
 
 @Gcz(servicio="REUTILIZADOR",seccion="APLICACION")
 @Description("Desarrolladores")
-@Transactional(Esquema.TMPARTICIPACION)
+@Transactional(ConfigCiudadano.TM)
 @Controller
 @RequestMapping(value = "/" + CiudadanoController.MAPPING, method = RequestMethod.GET)
 public class CiudadanoController {
