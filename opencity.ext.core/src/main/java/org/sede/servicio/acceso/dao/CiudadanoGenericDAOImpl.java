@@ -563,7 +563,7 @@ public class CiudadanoGenericDAOImpl extends GenericDAOImpl <Ciudadano, Integer>
 
 	@Override
 	public void sendActivationMail(Ciudadano ciudadano) throws MessagingException, InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException {
-		String url = "https://www.zaragoza.es/sede/acceso/activate?email=" + ciudadano.getEmail() + "&amp;token=" + AESSec.encrypt(ciudadano.getId() + "#" + ciudadano.getAccount_id());
+		String url = Propiedades.getActivationUrl()+"/acceso/activate?email=" + ciudadano.getEmail() + "&amp;token=" + AESSec.encrypt(ciudadano.getId() + "#" + ciudadano.getAccount_id());
 		String txtMensaje = "<p>Se ha creado una nueva cuenta de usuario con su direcci&oacute;n de correo electr&oacute;nico en la " +
 				"Plataforma de Gobierno Abierto del Ayuntamiento de Zaragoza. <br/> Para confirmar dicha " +
 				"cuenta de usuario y poder acceder a las funciones de la Plataforma deber&aacute; confirmar su cuenta accediendo al siguiente " +

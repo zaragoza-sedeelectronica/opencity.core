@@ -198,6 +198,11 @@ public class Propiedades {
 	public static String getPathi18n() {
 		return Propiedades.getString("path.i18n");
 	}
+	
+	public static String getActivationUrl() {
+		return Propiedades.getString("activation.url");
+	}
+	
 	public static String getDatasourcePrefix() {
 		if (RESOURCE_BUNDLE.containsKey("datasource.prefix")) {
 			return Propiedades.getString("datasource.prefix");
