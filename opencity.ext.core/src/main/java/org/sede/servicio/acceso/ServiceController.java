@@ -49,33 +49,67 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.googlecode.genericdao.search.SearchResult;
 
+// TODO: Auto-generated Javadoc
+/**
+ * Class ServiceController.
+ * 
+ * @author Ayuntamiento Zaragoza
+ * 
+ */
 @Gcz(servicio="ADMIN",seccion="ADMIN")
 @Transactional(Constants.TM)
 @Controller
 @RequestMapping(value = "/" + ServiceController.MAPPING, method = RequestMethod.GET)
 @PlantillaHTML(CredencialesController.MAPPING)
 public class ServiceController {
+	
+	/** Constant RAIZ. */
 	private static final String RAIZ = "credenciales/";
+	
+	/** Constant SERVICIO. */
 	private static final String SERVICIO = "service";
+	
+	/** Constant MAPPING. */
 	public static final String MAPPING = "servicio/" + RAIZ + SERVICIO;
+	
+	/** Constant MAPPING_FORM. */
 	private static final String MAPPING_FORM = MAPPING + "/formulario";
+	
+	/** Constant MAPPING_FORM_PERFIL. */
 	private static final String MAPPING_FORM_PERFIL = MAPPING + "/formulario-perfil";
+	
+	/** Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(ServiceController.class);
 
+	/** message source. */
 	@Autowired
 	private MessageSource messageSource;
 	
+	/** dao. */
 	@Autowired
 	GczServicioGenericDAO dao;
+	
+	/** dao perfil. */
 	@Autowired
 	GczPerfilGenericDAO daoPerfil;
 	
+	/**
+	 * Redirect.
+	 *
+	 * @return string
+	 */
 	@RequestMapping(method = RequestMethod.GET, produces = {
 			MediaType.TEXT_HTML_VALUE, "*/*" })
 	public String redirect() {
 		return "redirect:" + SERVICIO + "/";
 	}
 	
+	/**
+	 * Api detalle.
+	 *
+	 * @param identificador Identificador
+	 * @return response entity
+	 */
 	@Permisos(Permisos.DET)
 	@Cache(Cache.DURACION_30MIN)
 	@ResponseClass(GczServicio.class)
@@ -89,6 +123,13 @@ public class ServiceController {
 		}
 	}
 	
+	/**
+	 * Api modificar.
+	 *
+	 * @param identificador Identificador
+	 * @param registro Registro
+	 * @return response entity
+	 */
 	@ResponseClass(value = GczServicio.class)
 	@RequestMapping(value = "/{identificador}", method = RequestMethod.PUT, consumes = {
 			MimeTypes.JSON, MimeTypes.XML }, produces = { MimeTypes.JSON,
@@ -114,6 +155,12 @@ public class ServiceController {
 		}
 	}
 	
+	/**
+	 * Api crear.
+	 *
+	 * @param registro Registro
+	 * @return response entity
+	 */
 	@RequestMapping(method = RequestMethod.POST, consumes = { MimeTypes.JSON,
 			MimeTypes.XML }, produces = { MimeTypes.JSON, MimeTypes.XML })
 	@Permisos(Permisos.NEW)
@@ -134,6 +181,14 @@ public class ServiceController {
 		}
 	}
 	
+	/**
+	 * New form.
+	 *
+	 * @param dato Dato
+	 * @param bindingResult Binding result
+	 * @param model Model
+	 * @return string
+	 */
 	@Permisos(Permisos.NEW)
 	@RequestMapping(value = "/new", method = RequestMethod.POST, produces = {
 			MediaType.TEXT_HTML_VALUE, "*/*" })
@@ -144,6 +199,15 @@ public class ServiceController {
 		return MAPPING_FORM;
 	}
 	
+	/**
+	 * Crear.
+	 *
+	 * @param dato Dato
+	 * @param bindingResult Binding result
+	 * @param model Model
+	 * @param attr Attr
+	 * @return string
+	 */
 	@Permisos(Permisos.NEW)
 	@RequestMapping(value = "/save", method = RequestMethod.POST, produces = {
 			MediaType.TEXT_HTML_VALUE, "*/*" })
@@ -162,6 +226,13 @@ public class ServiceController {
 		}
 	}
 	
+	/**
+	 * Api list user.
+	 *
+	 * @param search Search
+	 * @return response entity
+	 * @throws SearchParseException the search parse exception
+	 */
 	@NoCache
 	@Permisos(Permisos.DET)
 	@ResponseClass(value = GczServicio.class, entity = SearchResult.class)
@@ -172,6 +243,15 @@ public class ServiceController {
 		return ResponseEntity.ok(dao.searchAndCount(search.getConditions(GczServicio.class)));
     }
 	
+	/**
+	 * Index.
+	 *
+	 * @param model Model
+	 * @param dato Dato
+	 * @param search Search
+	 * @return string
+	 * @throws SearchParseException the search parse exception
+	 */
 	@NoCache
 	@RequestMapping(value = "/", method = RequestMethod.GET, produces = {
 			MediaType.TEXT_HTML_VALUE, "*/*" })
@@ -184,6 +264,15 @@ public class ServiceController {
 		return MAPPING + "/index";
 	}
 	
+	/**
+	 * Edits the.
+	 *
+	 * @param identificador Identificador
+	 * @param dato Dato
+	 * @param bindingResult Binding result
+	 * @param model Model
+	 * @return string
+	 */
 	@Permisos(Permisos.MOD)
 	@NoCache
 	@RequestMapping(value = "/{identificador}/edit", method = RequestMethod.POST, produces = {
@@ -202,6 +291,16 @@ public class ServiceController {
 		return MAPPING_FORM;
 	}
 	
+	/**
+	 * Modificar.
+	 *
+	 * @param identificador Identificador
+	 * @param dato Dato
+	 * @param bindingResult Binding result
+	 * @param model Model
+	 * @param attr Attr
+	 * @return string
+	 */
 	@Permisos(Permisos.MOD)
 	@RequestMapping(value = "/{identificador}/save", method = RequestMethod.POST, produces = {
 			MediaType.TEXT_HTML_VALUE, "*/*" })
@@ -221,6 +320,15 @@ public class ServiceController {
 			return MAPPING_FORM;
 		}
 	}
+	
+	/**
+	 * Lock.
+	 *
+	 * @param identificador Identificador
+	 * @param model Model
+	 * @param attr Attr
+	 * @return string
+	 */
 	@Permisos(Permisos.PUB)
 	@RequestMapping(value = "/{identificador}/lock", method = RequestMethod.GET, produces = {
 			MediaType.TEXT_HTML_VALUE, "*/*" })
@@ -233,6 +341,15 @@ public class ServiceController {
 		}
 		return "redirect:/" + MAPPING + "/";
 	}
+	
+	/**
+	 * Unlock.
+	 *
+	 * @param identificador Identificador
+	 * @param model Model
+	 * @param attr Attr
+	 * @return string
+	 */
 	@Permisos(Permisos.PUB)
 	@RequestMapping(value = "/{identificador}/unlock", method = RequestMethod.GET, produces = {
 			MediaType.TEXT_HTML_VALUE, "*/*" })
@@ -247,6 +364,13 @@ public class ServiceController {
 	}
 	
 	
+	/**
+	 * Api crear perfil.
+	 *
+	 * @param servicio Servicio
+	 * @param registro Registro
+	 * @return response entity
+	 */
 	@RequestMapping(value = "/{servicio}/profile", method = RequestMethod.POST, consumes = { MimeTypes.JSON,
 			MimeTypes.XML }, produces = { MimeTypes.JSON, MimeTypes.XML })
 	@Permisos(Permisos.NEW)
@@ -269,6 +393,15 @@ public class ServiceController {
 		}
 	}
 	
+	/**
+	 * New form.
+	 *
+	 * @param servicio Servicio
+	 * @param dato Dato
+	 * @param bindingResult Binding result
+	 * @param model Model
+	 * @return string
+	 */
 	@Permisos(Permisos.NEW)
 	@RequestMapping(value = "/{servicio}/profile/new", method = RequestMethod.POST, produces = {
 			MediaType.TEXT_HTML_VALUE, "*/*" })
@@ -281,6 +414,16 @@ public class ServiceController {
 		return MAPPING_FORM_PERFIL;
 	}
 	
+	/**
+	 * Crear.
+	 *
+	 * @param servicio Servicio
+	 * @param dato Dato
+	 * @param bindingResult Binding result
+	 * @param model Model
+	 * @param attr Attr
+	 * @return string
+	 */
 	@Permisos(Permisos.NEW)
 	@RequestMapping(value = "/{servicio}/profile/save", method = RequestMethod.POST, produces = {
 			MediaType.TEXT_HTML_VALUE, "*/*" })
@@ -303,6 +446,13 @@ public class ServiceController {
 	}
 	
 	
+	/**
+	 * Api detalle perfil.
+	 *
+	 * @param servicio Servicio
+	 * @param identificador Identificador
+	 * @return response entity
+	 */
 	@Permisos(Permisos.DET)
 	@Cache(Cache.DURACION_30MIN)
 	@ResponseClass(GczPerfil.class)
@@ -316,6 +466,14 @@ public class ServiceController {
 		}
 	}
 	
+	/**
+	 * Api modificar perfil.
+	 *
+	 * @param servicio Servicio
+	 * @param idPerfil Id perfil
+	 * @param registro Registro
+	 * @return response entity
+	 */
 	@ResponseClass(value = GczPerfil.class)
 	@RequestMapping(value = "/{servicio}/profile/{idPerfil}", method = RequestMethod.PUT, consumes = {
 			MimeTypes.JSON, MimeTypes.XML }, produces = { MimeTypes.JSON,
@@ -343,6 +501,16 @@ public class ServiceController {
 		}
 	}
 	
+	/**
+	 * Edits the perfil.
+	 *
+	 * @param servicio Servicio
+	 * @param idPerfil Id perfil
+	 * @param dato Dato
+	 * @param bindingResult Binding result
+	 * @param model Model
+	 * @return string
+	 */
 	@Permisos(Permisos.MOD)
 	@NoCache
 	@RequestMapping(value = "/{servicio}/profile/{idPerfil}/edit", method = RequestMethod.POST, produces = {
@@ -362,6 +530,17 @@ public class ServiceController {
 		return MAPPING_FORM_PERFIL;
 	}
 	
+	/**
+	 * Modificar perfil.
+	 *
+	 * @param servicio Servicio
+	 * @param idPerfil Id perfil
+	 * @param dato Dato
+	 * @param bindingResult Binding result
+	 * @param model Model
+	 * @param attr Attr
+	 * @return string
+	 */
 	@Permisos(Permisos.MOD)
 	@RequestMapping(value = "/{servicio}/profile/{idPerfil}/save", method = RequestMethod.POST, produces = {
 			MediaType.TEXT_HTML_VALUE, "*/*" })
@@ -417,6 +596,16 @@ public class ServiceController {
 			return MAPPING_FORM_PERFIL;
 		}
 	}
+	
+	/**
+	 * Lock perfil.
+	 *
+	 * @param servicio Servicio
+	 * @param idPerfil Id perfil
+	 * @param model Model
+	 * @param attr Attr
+	 * @return string
+	 */
 	@Permisos(Permisos.PUB)
 	@RequestMapping(value = "/{servicio}/profile/{idPerfil}/lock", method = RequestMethod.GET, produces = {
 			MediaType.TEXT_HTML_VALUE, "*/*" })
@@ -429,6 +618,16 @@ public class ServiceController {
 		}
 		return "redirect:/" + MAPPING + "/" + servicio + "/edit";
 	}
+	
+	/**
+	 * Unlock perfil.
+	 *
+	 * @param servicio Servicio
+	 * @param idPerfil Id perfil
+	 * @param model Model
+	 * @param attr Attr
+	 * @return string
+	 */
 	@Permisos(Permisos.PUB)
 	@RequestMapping(value = "/{servicio}/profile/{idPerfil}/unlock", method = RequestMethod.GET, produces = {
 			MediaType.TEXT_HTML_VALUE, "*/*" })

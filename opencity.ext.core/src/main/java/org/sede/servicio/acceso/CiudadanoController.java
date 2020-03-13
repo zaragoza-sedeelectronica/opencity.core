@@ -1,14 +1,11 @@
 package org.sede.servicio.acceso;
 
 
-import java.math.BigDecimal;
-
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.axis.utils.StringUtils;
 import org.apache.cxf.jaxrs.ext.search.SearchParseException;
 import org.sede.core.anotaciones.Description;
-import org.sede.core.anotaciones.Esquema;
 import org.sede.core.anotaciones.Fiql;
 import org.sede.core.anotaciones.Gcz;
 import org.sede.core.anotaciones.NoCache;
@@ -25,9 +22,6 @@ import org.sede.servicio.acceso.dao.CiudadanoGenericDAO;
 import org.sede.servicio.acceso.entity.Ciudadano;
 import org.sede.servicio.acceso.userrequirements.Mobile;
 import org.sede.servicio.acceso.userrequirements.Padron;
-//import org.sede.servicio.preguntas.dao.PreguntaGenericDAO;
-//import org.sede.servicio.presupuestosparticipativos.dao.PropuestaGenericDAO;
-//import org.sede.servicio.presupuestosparticipativos.entity.Propuesta;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,6 +43,13 @@ import com.googlecode.genericdao.search.Filter;
 import com.googlecode.genericdao.search.Search;
 import com.googlecode.genericdao.search.SearchResult;
 
+// TODO: Auto-generated Javadoc
+/**
+ * Class CiudadanoController.
+ * 
+ * @author Ayuntamiento Zaragoza1
+ * 
+ */
 @Gcz(servicio="REUTILIZADOR",seccion="APLICACION")
 @Description("Desarrolladores")
 @Transactional(ConfigCiudadano.TM)
@@ -56,23 +57,33 @@ import com.googlecode.genericdao.search.SearchResult;
 @RequestMapping(value = "/" + CiudadanoController.MAPPING, method = RequestMethod.GET)
 public class CiudadanoController {
 	
+	/** Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(CiudadanoController.class);
 	
+	/** Constant SERVICIO. */
 	private static final String SERVICIO = "zona-personal";
+	
+	/** Constant MAPPING. */
 	public static final String MAPPING = "servicio/" + SERVICIO;
+	
+	/** Constant MAPPING_DETALLE. */
 	public static final String MAPPING_DETALLE = "servicio/" + SERVICIO + "/detalle";
+	
+	/** Constant MAPPING_CREAR. */
 	public static final String MAPPING_CREAR = "servicio/" + SERVICIO + "/new";
 	
+	/** dao. */
 	@Autowired
 	private CiudadanoGenericDAO dao;
-
-//	@Autowired
-//	private PropuestaGenericDAO daoPropuesta;
-//
-//	@Autowired
-//	private PreguntaGenericDAO daoPregunta;
 	
-	@PermisosUser
+	/**
+ * Detalle.
+ *
+ * @param model Model
+ * @param request Request
+ * @return string
+ */
+@PermisosUser
 	@RequestMapping(method = RequestMethod.GET, produces = {
 			MediaType.TEXT_HTML_VALUE, "*/*" })
 	public String detalle(Model model, HttpServletRequest request) {
@@ -83,25 +94,21 @@ public class CiudadanoController {
 		Ciudadano ciudadano = Funciones.getUser(request);
 		if ("Si".equals(ciudadano.getEmpadronado())) {
 			busqueda.addFilter(Filter.equal("userId", dao.obtenerUsuario(ciudadano.getAccount_id()).getId()));
-//			SearchResult<Propuesta> listado = daoPropuesta.searchAndCount(busqueda);
-//			BigDecimal numComentariosPropuestas = daoPropuesta.numComentariosTotalesUsuario(ciudadano);
-//			BigDecimal numVotos = daoPropuesta.numVotosTotalesUsuario(ciudadano);
-//			
-//			if (listado.getResult().isEmpty() && numComentariosPropuestas.intValue() == 0 && numVotos.intValue() == 0) {
-//				model.addAttribute("modificarJunta", true);
-//			} 
-			
-//			model.addAttribute("propuestas", listado);
-//			model.addAttribute("comentariosPropuestas", numComentariosPropuestas);
-//			model.addAttribute("votosPropuestas", numVotos);
-//			model.addAttribute("preguntas", daoPregunta.searchAndCount(busqueda));
-//			model.addAttribute("votoLinea2Tranvia", daoPropuesta.usuarioHaVotadoLinea2Tranvia(ciudadano.getNif()));
 		}
 		
 		model.addAttribute(ModelAttr.DATO, ciudadano);
 		return MAPPING_DETALLE;
 	}
 
+	/**
+	 * Save.
+	 *
+	 * @param dato Dato
+	 * @param bindingResult Binding result
+	 * @param model Model
+	 * @param request Request
+	 * @return string
+	 */
 	@PermisosUser
 	@RequestMapping(value = "/update", method = RequestMethod.POST, produces = {
 			MediaType.TEXT_HTML_VALUE, "*/*" })
@@ -130,6 +137,15 @@ public class CiudadanoController {
 		}
 	}
 	
+	/**
+	 * Change password.
+	 *
+	 * @param pass Pass
+	 * @param passRep Pass rep
+	 * @param model Model
+	 * @param request Request
+	 * @return string
+	 */
 	@PermisosUser
 	@RequestMapping(value = "/change-password", method = RequestMethod.POST, produces = {
 			MediaType.TEXT_HTML_VALUE, "*/*" })
@@ -152,6 +168,15 @@ public class CiudadanoController {
 		return detalle(model, request);
 	}
 
+	/**
+	 * Change domain.
+	 *
+	 * @param domain Domain
+	 * @param model Model
+	 * @param request Request
+	 * @param attr Attr
+	 * @return string
+	 */
 	@PermisosUser
 	@RequestMapping(value = "/change-domain", method = RequestMethod.POST, produces = {
 			MediaType.TEXT_HTML_VALUE, "*/*" })
@@ -169,6 +194,13 @@ public class CiudadanoController {
 		return detalle(model, request);
 	}
 	
+	/**
+	 * Asociar padron.
+	 *
+	 * @param model Model
+	 * @param request Request
+	 * @return string
+	 */
 	@PermisosUser(requirements = Padron.class)
 	@RequestMapping(value = "/asociar-padron", method = RequestMethod.POST, produces = {
 			MediaType.TEXT_HTML_VALUE, "*/*" })
@@ -176,6 +208,13 @@ public class CiudadanoController {
 		return "redirect:/" + MAPPING + "/";
 	}
 	
+	/**
+	 * Asociar movil.
+	 *
+	 * @param model Model
+	 * @param request Request
+	 * @return string
+	 */
 	@PermisosUser(requirements = Mobile.class)
 	@RequestMapping(value = "/asociar-movil", method = RequestMethod.POST, produces = {
 			MediaType.TEXT_HTML_VALUE, "*/*" })
@@ -184,7 +223,11 @@ public class CiudadanoController {
 	}
 	
 //	@OpenData
-//	@Permisos(Permisos.DET)
+/**
+ * Api update padron.
+ *
+ * @return response entity
+ */
 	@NoCache
 	@ResponseClass(Mensaje.class)
 	@RequestMapping(value = "/update-padron", method = RequestMethod.GET, produces = {MimeTypes.JSON})
@@ -194,7 +237,11 @@ public class CiudadanoController {
 	}
 
 //	@OpenData
-//	@Permisos(Permisos.DET)
+/**
+ * Api update distrito seccion.
+ *
+ * @return response entity
+ */
 	@NoCache
 	@ResponseClass(Mensaje.class)
 	@RequestMapping(value = "/update-distrito-seccion", method = RequestMethod.GET, produces = {MimeTypes.JSON})
@@ -204,6 +251,17 @@ public class CiudadanoController {
 		
 	}
 	
+	/**
+	 * Asociar imagen.
+	 *
+	 * @param c C
+	 * @param file File
+	 * @param bindingResult Binding result
+	 * @param model Model
+	 * @param attr Attr
+	 * @param request Request
+	 * @return string
+	 */
 	@PermisosUser
 	@RequestMapping(value = "/set-image", method = RequestMethod.POST, produces = {
 			MediaType.TEXT_HTML_VALUE, "*/*" })
@@ -219,7 +277,13 @@ public class CiudadanoController {
 		return "redirect:/" + MAPPING;
 	}
 
-//	@Cacheable(Cache.DURACION_30MIN)
+/**
+ * Api usuarios listar.
+ *
+ * @param search Search
+ * @return response entity
+ * @throws SearchParseException the search parse exception
+ */
 	@Permisos(Permisos.ADJ)
 	@ResponseClass(value = Ciudadano.class, entity = SearchResult.class)
 	@RequestMapping(value = "/usuarios", method = RequestMethod.GET, produces = {MimeTypes.JSON, MimeTypes.XML, MimeTypes.CSV, MimeTypes.JSONLD, MimeTypes.RDF, MimeTypes.TURTLE, MimeTypes.RDF_N3})

@@ -54,29 +54,67 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.googlecode.genericdao.dao.jpa.GenericDAOImpl;
+// TODO: Auto-generated Javadoc
+
+/**
+ * The Class GczUsuarioGenericDAOImpl.
+ * 
+ * @autor Ayuntamiento de Zaragoza
+ * 
+ */
 @Repository
 @Transactional(Constants.TM)
 public class GczUsuarioGenericDAOImpl extends GenericDAOImpl <GczUsuario, BigDecimal> implements GczUsuarioGenericDAO {
 	
+	/** Constant logger. */
 	private static final Logger logger = LoggerFactory
 			.getLogger(GczUsuarioGenericDAOImpl.class);
 	
+	/** Constant CODIGOGRUPOUSUARIO. */
 	private static final int CODIGOGRUPOUSUARIO = 750;
+	
+	/** Constant SAFE. */
 	public static final String SAFE = "SAFE";
 	
+	/**
+	 * Sets the entity manager.
+	 *
+	 * @param entityManager the new entity manager
+	 */
 	@PersistenceContext(unitName=Constants.ESQUEMA)
 	public void setEntityManager(EntityManager entityManager) {
 		this.setEm(entityManager);
 	}
+	
+	/**
+	 * Gets the credenciales.
+	 *
+	 * @param login Login
+	 * @return the credenciales
+	 */
 	public Credenciales getCredenciales(String login) {
 		return getCredenciales(login, SAFE);
 	}
 	
+	/**
+	 * Validar.
+	 *
+	 * @param registro Registro
+	 * @return sets the
+	 */
 	public Set<ConstraintViolation<Object>> validar(Object registro) {
 		ValidatorFactory factory = Validation.byDefaultProvider().configure().traversableResolver(new JPAIgnoreTraversableResolver()).buildValidatorFactory();
 		Validator validator = factory.getValidator();
 		return validator.validate(registro);
 	}
+	
+	/**
+	 * Update visible.
+	 *
+	 * @param id Id
+	 * @param value Value
+	 * @return int
+	 */
 	public int updateVisible(BigDecimal id, String value) {
 		String update = ", estado = 'P', bloqueado = 'S'";
 		if ("S".equals(value)) {
@@ -89,6 +127,13 @@ public class GczUsuarioGenericDAOImpl extends GenericDAOImpl <GczUsuario, BigDec
 		return propWeb.executeUpdate();
 
 	}
+	
+	/**
+	 * New password.
+	 *
+	 * @param user User
+	 * @return mensaje
+	 */
 	public Mensaje newPassword(GczUsuario user) {
 		
 		Query propWeb = em().createNativeQuery("update " + persistentClass.getAnnotation(Table.class).name() 
@@ -115,6 +160,14 @@ public class GczUsuarioGenericDAOImpl extends GenericDAOImpl <GczUsuario, BigDec
 		}
 
 	}
+	
+	/**
+	 * Gets the credenciales.
+	 *
+	 * @param login Login
+	 * @param pwd Pwd
+	 * @return the credenciales
+	 */
 	public Credenciales getCredenciales(String login, String pwd) {
 		try {
 			String estado = " and secc.estado='S'";
@@ -176,6 +229,12 @@ public class GczUsuarioGenericDAOImpl extends GenericDAOImpl <GczUsuario, BigDec
 	    } 
     }
 
+	/**
+	 * Grupos.
+	 *
+	 * @param gczGrupoUsuarios Gcz grupo usuarios
+	 * @return list
+	 */
 	private List<Grupo> grupos(
 			List<GczGrupoUsuario> gczGrupoUsuarios) {
 		List<Grupo> l = new ArrayList<Grupo>();
@@ -184,6 +243,13 @@ public class GczUsuarioGenericDAOImpl extends GenericDAOImpl <GczUsuario, BigDec
 		}
 		return l;
 	}
+	
+	/**
+	 * Liderazgos.
+	 *
+	 * @param gczUsuario Gcz usuario
+	 * @return list
+	 */
 	private List<Lider> liderazgos(GczUsuario gczUsuario) {
 
 		List<Lider> lider = new ArrayList<Lider>();
@@ -218,6 +284,13 @@ public class GczUsuarioGenericDAOImpl extends GenericDAOImpl <GczUsuario, BigDec
 
     	return lider;
 	}
+	
+	/**
+	 * Obtener propiedades.
+	 *
+	 * @param usuario Usuario
+	 * @return hash map
+	 */
 	private HashMap<String, String> obtenerPropiedades(Usuario usuario) {
 		Query queryPermisosGrupo = this.em().createNativeQuery("select etiqueta,valor from gcz_propiedad_usuario where id_usuario=?");
 		@SuppressWarnings("unchecked")
@@ -234,6 +307,12 @@ public class GczUsuarioGenericDAOImpl extends GenericDAOImpl <GczUsuario, BigDec
 		}
 	}
 
+	/**
+	 * Obtener de cache.
+	 *
+	 * @param id Id
+	 * @return credenciales
+	 */
 	private Credenciales obtenerDeCache(String id) {
 		CacheManager manager = CacheManager.getInstance();
 		Cache cache = manager.getCache("usuarios");
@@ -244,6 +323,11 @@ public class GczUsuarioGenericDAOImpl extends GenericDAOImpl <GczUsuario, BigDec
 		}
 	}
 	
+	/**
+	 * Borrar de cache.
+	 *
+	 * @param id Id
+	 */
 	private void borrarDeCache(String id) {
 		CacheManager manager = CacheManager.getInstance();
 		Cache cache = manager.getCache("usuarios");
@@ -253,6 +337,12 @@ public class GczUsuarioGenericDAOImpl extends GenericDAOImpl <GczUsuario, BigDec
 	}
 	
 	
+	/**
+	 * Poner en cache.
+	 *
+	 * @param id Id
+	 * @param credenciales Credenciales
+	 */
 	private void ponerEnCache(String id, Credenciales credenciales) {
 		CacheManager manager = CacheManager.getInstance();
 		Cache cache = manager.getCache("usuarios");
@@ -261,6 +351,13 @@ public class GczUsuarioGenericDAOImpl extends GenericDAOImpl <GczUsuario, BigDec
 		}
 	}
 
+	/**
+	 * Obtener permisos.
+	 *
+	 * @param queryPermisosPropios Query permisos propios
+	 * @param id Id
+	 * @return list
+	 */
 	private List<Servicio> obtenerPermisos(Query queryPermisosPropios, String id) {
 		
 		@SuppressWarnings("unchecked")
@@ -297,6 +394,13 @@ public class GczUsuarioGenericDAOImpl extends GenericDAOImpl <GczUsuario, BigDec
     	return listado;
 	}
 
+	/**
+	 * Sets the pk.
+	 *
+	 * @param id Id
+	 * @param pk Pk
+	 * @return true, if successful
+	 */
 	public boolean setPk(String id, String pk) {
 		try {
 			
@@ -316,6 +420,14 @@ public class GczUsuarioGenericDAOImpl extends GenericDAOImpl <GczUsuario, BigDec
 		}
 	}
 
+	/**
+	 * Update.
+	 *
+	 * @param id Id
+	 * @param usuario Usuario
+	 * @param password Password
+	 * @return true, if successful
+	 */
 	public boolean update(String id, Usuario usuario, String password) {
 		try {
 			StringBuilder sqlUpdate = new StringBuilder();
@@ -400,6 +512,13 @@ public class GczUsuarioGenericDAOImpl extends GenericDAOImpl <GczUsuario, BigDec
 	}
 	
 	
+	/**
+	 * Crear.
+	 *
+	 * @param usuario Usuario
+	 * @param password Password
+	 * @return string
+	 */
 	public String crear(Usuario usuario, String password) {
 		
 		try {
@@ -475,6 +594,13 @@ public class GczUsuarioGenericDAOImpl extends GenericDAOImpl <GczUsuario, BigDec
 			return "No se ha podido dar de alta al usuario";
 		}
 	}
+	
+	/**
+	 * Removes the.
+	 *
+	 * @param login Login
+	 * @return true, if successful
+	 */
 	public boolean remove(String login) {
 		
 		try {
@@ -497,6 +623,12 @@ public class GczUsuarioGenericDAOImpl extends GenericDAOImpl <GczUsuario, BigDec
 	}
 	
 	
+	/**
+	 * Usuario existente.
+	 *
+	 * @param usuario Usuario
+	 * @return true, if successful
+	 */
 	public boolean usuarioExistente(Usuario usuario) {
 		
 		Query query = this.em().createNativeQuery("select login from GCZ_USUARIO where upper(login) like ?");
@@ -510,6 +642,13 @@ public class GczUsuarioGenericDAOImpl extends GenericDAOImpl <GczUsuario, BigDec
 		
 	}
 	
+	/**
+	 * Generar token.
+	 *
+	 * @param clientId Client id
+	 * @param idAplicacion Id aplicacion
+	 * @return object
+	 */
 	public Object generarToken(final String clientId, final String idAplicacion) {
 		// TODO comprobar que la aplicación existe y es del usuario y preparar anulación de acceso a aplicacion
 		
@@ -555,6 +694,15 @@ public class GczUsuarioGenericDAOImpl extends GenericDAOImpl <GczUsuario, BigDec
 		}
 		
 	}
+	
+	/**
+	 * Crear statement.
+	 *
+	 * @param modulo Modulo
+	 * @param proc Proc
+	 * @param numParametros Num parametros
+	 * @return string
+	 */
 	protected String crearStatement(String modulo,String proc,int numParametros) {
 		StringBuilder sb = new StringBuilder("{call ");
 		sb.append("PCK_USUARIO_" + modulo);
@@ -570,6 +718,12 @@ public class GczUsuarioGenericDAOImpl extends GenericDAOImpl <GczUsuario, BigDec
 		
 	 }
 
+	/**
+	 * Enviar token recuperacion.
+	 *
+	 * @param email Email
+	 * @return mensaje
+	 */
 	public Mensaje enviarTokenRecuperacion(String email) {
 		String sql = "select id_usuario,login from gcz_usuario where trim(lower(correo_electronico)) = ?";
 		Query query = this.em().createNativeQuery(sql);
@@ -606,6 +760,12 @@ public class GczUsuarioGenericDAOImpl extends GenericDAOImpl <GczUsuario, BigDec
 		
 	}
 
+	/**
+	 * Obtener login de token.
+	 *
+	 * @param token Token
+	 * @return string
+	 */
 	public String obtenerLoginDeToken(String token) {
 
 		String sql = "select u.login from gcz_usuario u, GCZ_USUARIO_RECUPERAR_PASS p where u.id_usuario=p.id_usuario and p.token=?";

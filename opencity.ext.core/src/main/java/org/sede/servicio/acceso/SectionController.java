@@ -44,29 +44,59 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.googlecode.genericdao.search.SearchResult;
 
+// TODO: Auto-generated Javadoc
+/**
+ * Class SectionController.
+ * 
+ * @author Ayuntamiento Zaragoza
+ * 
+ * 
+ */
 @Gcz(servicio="ADMIN",seccion="ADMIN")
 @Transactional(Constants.TM)
 @Controller
 @RequestMapping(value = "/" + SectionController.MAPPING, method = RequestMethod.GET)
 @PlantillaHTML(CredencialesController.MAPPING)
 public class SectionController {
+	
+	/** Constant RAIZ. */
 	private static final String RAIZ = "credenciales/";
+	
+	/** Constant SERVICIO. */
 	private static final String SERVICIO = "section";
+	
+	/** Constant MAPPING. */
 	public static final String MAPPING = "servicio/" + RAIZ + SERVICIO;
+	
+	/** Constant MAPPING_FORM. */
 	private static final String MAPPING_FORM = MAPPING + "/formulario";
 	
+	/** message source. */
 	@Autowired
 	private MessageSource messageSource;
 	
+	/** dao. */
 	@Autowired
 	GczSectionGenericDAO dao;
 	
+	/**
+	 * Redirect.
+	 *
+	 * @return string
+	 */
 	@RequestMapping(method = RequestMethod.GET, produces = {
 			MediaType.TEXT_HTML_VALUE, "*/*" })
 	public String redirect() {
 		return "redirect:" + SERVICIO + "/";
 	}
 	
+	/**
+	 * Api detalle.
+	 *
+	 * @param seccion Seccion
+	 * @param servicio Servicio
+	 * @return response entity
+	 */
 	@Permisos(Permisos.DET)
 	@Cache(Cache.DURACION_30MIN)
 	@ResponseClass(GczSeccion.class)
@@ -81,6 +111,13 @@ public class SectionController {
 	}
 	
 	
+	/**
+	 * Api crear.
+	 *
+	 * @param servicio Servicio
+	 * @param registro Registro
+	 * @return response entity
+	 */
 	@RequestMapping(value = "/{servicio}", method = RequestMethod.POST, consumes = { MimeTypes.JSON,
 			MimeTypes.XML }, produces = { MimeTypes.JSON, MimeTypes.XML })
 	@Permisos(Permisos.NEW)
@@ -103,6 +140,15 @@ public class SectionController {
 		}
 	}
 	
+	/**
+	 * New form.
+	 *
+	 * @param servicio Servicio
+	 * @param dato Dato
+	 * @param bindingResult Binding result
+	 * @param model Model
+	 * @return string
+	 */
 	@Permisos(Permisos.NEW)
 	@RequestMapping(value = "/{servicio}/new", method = RequestMethod.POST, produces = {
 			MediaType.TEXT_HTML_VALUE, "*/*" })
@@ -114,6 +160,16 @@ public class SectionController {
 		return MAPPING_FORM;
 	}
 	
+	/**
+	 * Crear.
+	 *
+	 * @param servicio Servicio
+	 * @param dato Dato
+	 * @param bindingResult Binding result
+	 * @param model Model
+	 * @param attr Attr
+	 * @return string
+	 */
 	@Permisos(Permisos.NEW)
 	@RequestMapping(value = "/{servicio}/save", method = RequestMethod.POST, produces = {
 			MediaType.TEXT_HTML_VALUE, "*/*" })
@@ -135,6 +191,14 @@ public class SectionController {
 	}
 	
 	
+	/**
+	 * Api modificar.
+	 *
+	 * @param seccion Seccion
+	 * @param servicio Servicio
+	 * @param registro Registro
+	 * @return response entity
+	 */
 	@ResponseClass(value = GczSeccion.class)
 	@RequestMapping(value = "/{seccion}/{servicio}", method = RequestMethod.PUT, consumes = {
 			MimeTypes.JSON, MimeTypes.XML }, produces = { MimeTypes.JSON,
@@ -162,6 +226,13 @@ public class SectionController {
 	}
 	
 	
+	/**
+	 * Api list user.
+	 *
+	 * @param search Search
+	 * @return response entity
+	 * @throws SearchParseException the search parse exception
+	 */
 	@NoCache
 	@Permisos(Permisos.DET)
 	@ResponseClass(value = GczSeccion.class, entity = SearchResult.class)
@@ -172,6 +243,15 @@ public class SectionController {
 		return ResponseEntity.ok(dao.searchAndCount(search.getConditions(GczSeccion.class)));
     }
 	
+	/**
+	 * Index.
+	 *
+	 * @param model Model
+	 * @param dato Dato
+	 * @param search Search
+	 * @return string
+	 * @throws SearchParseException the search parse exception
+	 */
 	@NoCache
 	@RequestMapping(value = "/", method = RequestMethod.GET, produces = {
 			MediaType.TEXT_HTML_VALUE, "*/*" })
@@ -184,6 +264,16 @@ public class SectionController {
 		return MAPPING + "/index";
 	}
 	
+	/**
+	 * Edits the.
+	 *
+	 * @param seccion Seccion
+	 * @param servicio Servicio
+	 * @param dato Dato
+	 * @param bindingResult Binding result
+	 * @param model Model
+	 * @return string
+	 */
 	@Permisos(Permisos.MOD)
 	@NoCache
 	@RequestMapping(value = "/{seccion}/{servicio}/edit", method = RequestMethod.POST, produces = {
@@ -196,6 +286,17 @@ public class SectionController {
 		return MAPPING_FORM;
 	}
 	
+	/**
+	 * Modificar.
+	 *
+	 * @param seccion Seccion
+	 * @param servicio Servicio
+	 * @param dato Dato
+	 * @param bindingResult Binding result
+	 * @param model Model
+	 * @param attr Attr
+	 * @return string
+	 */
 	@Permisos(Permisos.MOD)
 	@RequestMapping(value = "/{seccion}/{servicio}/save", method = RequestMethod.POST, produces = {
 			MediaType.TEXT_HTML_VALUE, "*/*" })
@@ -215,6 +316,16 @@ public class SectionController {
 		}
 	
 	}
+	
+	/**
+	 * Lock.
+	 *
+	 * @param seccion Seccion
+	 * @param servicio Servicio
+	 * @param model Model
+	 * @param attr Attr
+	 * @return string
+	 */
 	@Permisos(Permisos.PUB)
 	@RequestMapping(value = "/{seccion}/{servicio}/lock", method = RequestMethod.GET, produces = {
 			MediaType.TEXT_HTML_VALUE, "*/*" })
@@ -227,6 +338,16 @@ public class SectionController {
 		}
 		return "redirect:/" + ServiceController.MAPPING + "/" + servicio + "/edit";
 	}
+	
+	/**
+	 * Unlock.
+	 *
+	 * @param seccion Seccion
+	 * @param servicio Servicio
+	 * @param model Model
+	 * @param attr Attr
+	 * @return string
+	 */
 	@Permisos(Permisos.PUB)
 	@RequestMapping(value = "/{seccion}/{servicio}/unlock", method = RequestMethod.GET, produces = {
 			MediaType.TEXT_HTML_VALUE, "*/*" })

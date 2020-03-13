@@ -19,21 +19,48 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.googlecode.genericdao.dao.jpa.GenericDAOImpl;
+// TODO: Auto-generated Javadoc
+
+/**
+ * The Class GczPerfilGenericDAOImpl.
+ * 
+ * @author Ayuntamiento Zaragoza
+ * 
+ */
 @Repository
 @Transactional(Constants.TM)
 public class GczPerfilGenericDAOImpl extends GenericDAOImpl <GczPerfil, BigDecimal> implements GczPerfilGenericDAO {
 
+	/**
+	 * Sets the entity manager.
+	 *
+	 * @param entityManager the new entity manager
+	 */
 	@PersistenceContext(unitName=Constants.ESQUEMA)
 	public void setEntityManager(EntityManager entityManager) {
 		this.setEm(entityManager);
 	}
 
+	/**
+	 * Validar.
+	 *
+	 * @param registro Registro
+	 * @return sets the
+	 */
 	public Set<ConstraintViolation<Object>> validar(Object registro) {
 		ValidatorFactory factory = Validation.byDefaultProvider().configure().traversableResolver(new JPAIgnoreTraversableResolver()).buildValidatorFactory();
 		Validator validator = factory.getValidator();
 		return validator.validate(registro);
 	}
 	
+	/**
+	 * Update visible.
+	 *
+	 * @param servicio Servicio
+	 * @param id Id
+	 * @param value Value
+	 * @return int
+	 */
 	public int updateVisible(String servicio, BigDecimal id, String value) {
 		
 		Query propWeb = getSession().createSQLQuery("update " + persistentClass.getAnnotation(Table.class).name() 

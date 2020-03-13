@@ -11,14 +11,31 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 
+// TODO: Auto-generated Javadoc
+/**
+ * Class ComprobarIntegridad.
+ * 
+ * @author Ayuntamiento Zaragoza
+ * 
+ */
 @Service
 public class ComprobarIntegridad {
+	
+	/** Constant logger. */
 	private static final Logger logger = LoggerFactory
 			.getLogger(ComprobarIntegridad.class);
 	
+	/** dao acceso. */
 	@Autowired
 	private GczUsuarioGenericDAO daoAcceso;
 	
+    /**
+     * Revisar mensaje.
+     *
+     * @param peticion Peticion
+     * @param usuarioEnSesion Usuario en sesion
+     * @throws ErrorEnPeticionHMAC the error en peticion HMAC
+     */
     public void revisarMensaje(Peticion peticion, boolean usuarioEnSesion) throws ErrorEnPeticionHMAC {
     	String clientId = peticion.getClientId();
     	if (clientId == null) {
@@ -31,6 +48,13 @@ public class ComprobarIntegridad {
 		}
     }
 
+    /**
+     * Comprobar integridad del mensaje.
+     *
+     * @param peticion Peticion
+     * @param clientId Client id
+     * @throws ErrorEnPeticionHMAC the error en peticion HMAC
+     */
     private void comprobarIntegridadDelMensaje(Peticion peticion, String clientId) throws ErrorEnPeticionHMAC {
     	Credenciales credenciales = getCredenciales(clientId);
     	peticion.setCredenciales(credenciales);
@@ -50,6 +74,12 @@ public class ComprobarIntegridad {
 		
 	}
 	
+	/**
+	 * Gets the credenciales.
+	 *
+	 * @param strLogin Str login
+	 * @return the credenciales
+	 */
 	private Credenciales getCredenciales(String strLogin) {
 		return daoAcceso.getCredenciales(strLogin);
 

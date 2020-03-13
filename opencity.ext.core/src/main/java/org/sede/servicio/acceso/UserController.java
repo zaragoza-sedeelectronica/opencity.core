@@ -43,29 +43,58 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.googlecode.genericdao.search.SearchResult;
 
+// TODO: Auto-generated Javadoc
+/**
+ * Class UserController.
+ * 
+ * @author Ayuntamiento Zaragoza
+ * 
+ * 
+ */
 @Gcz(servicio="ADMIN",seccion="ADMIN")
 @Transactional(Constants.TM)
 @Controller
 @RequestMapping(value = "/" + UserController.MAPPING, method = RequestMethod.GET)
 @PlantillaHTML(CredencialesController.MAPPING)
 public class UserController {
+	
+	/** Constant RAIZ. */
 	private static final String RAIZ = "credenciales/";
+	
+	/** Constant SERVICIO. */
 	private static final String SERVICIO = "user";
+	
+	/** Constant MAPPING. */
 	public static final String MAPPING = "servicio/" + RAIZ + SERVICIO;
+	
+	/** Constant MAPPING_FORM. */
 	private static final String MAPPING_FORM = MAPPING + "/formulario";
 
+	/** message source. */
 	@Autowired
 	private MessageSource messageSource;
 	
+	/** dao. */
 	@Autowired
 	GczUsuarioGenericDAO dao;
 	
+	/**
+	 * Redirect.
+	 *
+	 * @return string
+	 */
 	@RequestMapping(method = RequestMethod.GET, produces = {
 			MediaType.TEXT_HTML_VALUE, "*/*" })
 	public String redirect() {
 		return "redirect:" + SERVICIO + "/";
 	}
 	
+	/**
+	 * Api detalle.
+	 *
+	 * @param identificador Identificador
+	 * @return response entity
+	 */
 	@Permisos(Permisos.DET)
 	@Cache(Cache.DURACION_30MIN)
 	@ResponseClass(GczUsuario.class)
@@ -79,6 +108,13 @@ public class UserController {
 		}
 	}
 	
+	/**
+	 * Api modificar.
+	 *
+	 * @param identificador Identificador
+	 * @param registro Registro
+	 * @return response entity
+	 */
 	@ResponseClass(value = GczUsuario.class)
 	@RequestMapping(value = "/{identificador}", method = RequestMethod.PUT, consumes = {
 			MimeTypes.JSON, MimeTypes.XML }, produces = { MimeTypes.JSON,
@@ -105,6 +141,13 @@ public class UserController {
 	}
 	
 	
+	/**
+	 * Api list user.
+	 *
+	 * @param search Search
+	 * @return response entity
+	 * @throws SearchParseException the search parse exception
+	 */
 	@NoCache
 	@Permisos(Permisos.DET)
 	@ResponseClass(value = GczUsuario.class, entity = SearchResult.class)
@@ -114,6 +157,15 @@ public class UserController {
 		return ResponseEntity.ok(dao.searchAndCount(search.getConditions(GczUsuario.class)));
     }
 	
+	/**
+	 * Index.
+	 *
+	 * @param model Model
+	 * @param dato Dato
+	 * @param search Search
+	 * @return string
+	 * @throws SearchParseException the search parse exception
+	 */
 	@NoCache
 	@RequestMapping(value = "/", method = RequestMethod.GET, produces = {
 			MediaType.TEXT_HTML_VALUE, "*/*" })
@@ -126,6 +178,15 @@ public class UserController {
 		return MAPPING + "/index";
 	}
 	
+	/**
+	 * Edits the.
+	 *
+	 * @param identificador Identificador
+	 * @param dato Dato
+	 * @param bindingResult Binding result
+	 * @param model Model
+	 * @return string
+	 */
 	@Permisos(Permisos.MOD)
 	@NoCache
 	@RequestMapping(value = "/{identificador}/edit", method = RequestMethod.POST, produces = {
@@ -143,6 +204,14 @@ public class UserController {
 		model.addAttribute(ModelAttr.REGISTRO, registro);
 		return MAPPING_FORM;
 	}
+	
+	/**
+	 * Profile.
+	 *
+	 * @param identificador Identificador
+	 * @param model Model
+	 * @return string
+	 */
 	@Permisos(Permisos.MOD)
 	@NoCache
 	@RequestMapping(value = "/{identificador}/profile", method = RequestMethod.POST, produces = {
@@ -153,6 +222,17 @@ public class UserController {
 		model.addAttribute(ModelAttr.REGISTRO, ResponseEntity.ok(credenciales));
 		return MAPPING + "/profile";
 	}
+	
+	/**
+	 * Modificar.
+	 *
+	 * @param identificador Identificador
+	 * @param dato Dato
+	 * @param bindingResult Binding result
+	 * @param model Model
+	 * @param attr Attr
+	 * @return string
+	 */
 	@Permisos(Permisos.MOD)
 	@RequestMapping(value = "/{identificador}/save", method = RequestMethod.POST, produces = {
 			MediaType.TEXT_HTML_VALUE, "*/*" })
@@ -183,6 +263,15 @@ public class UserController {
 			return MAPPING_FORM;
 		}
 	}
+	
+	/**
+	 * Lock.
+	 *
+	 * @param identificador Identificador
+	 * @param model Model
+	 * @param attr Attr
+	 * @return string
+	 */
 	@Permisos(Permisos.PUB)
 	@RequestMapping(value = "/{identificador}/lock", method = RequestMethod.GET, produces = {
 			MediaType.TEXT_HTML_VALUE, "*/*" })
@@ -195,6 +284,15 @@ public class UserController {
 		}
 		return "redirect:/" + MAPPING + "/";
 	}
+	
+	/**
+	 * Unlock.
+	 *
+	 * @param identificador Identificador
+	 * @param model Model
+	 * @param attr Attr
+	 * @return string
+	 */
 	@Permisos(Permisos.PUB)
 	@RequestMapping(value = "/{identificador}/unlock", method = RequestMethod.GET, produces = {
 			MediaType.TEXT_HTML_VALUE, "*/*" })
@@ -208,6 +306,14 @@ public class UserController {
 		return "redirect:/" + MAPPING + "/";
 	}
 	
+	/**
+	 * Newpass.
+	 *
+	 * @param identificador Identificador
+	 * @param model Model
+	 * @param attr Attr
+	 * @return string
+	 */
 	@Permisos(Permisos.MOD)
 	@RequestMapping(value = "/{identificador}/newpass", method = RequestMethod.GET, produces = {
 			MediaType.TEXT_HTML_VALUE, "*/*" })

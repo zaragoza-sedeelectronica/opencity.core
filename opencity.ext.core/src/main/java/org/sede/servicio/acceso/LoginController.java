@@ -21,7 +21,6 @@ import javax.validation.ConstraintViolation;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.sede.core.anotaciones.Esquema;
 import org.sede.core.anotaciones.Gcz;
 import org.sede.core.anotaciones.NoCache;
 import org.sede.core.anotaciones.OpenData;
@@ -43,7 +42,6 @@ import org.sede.servicio.acceso.entity.Ciudadano;
 import org.sede.servicio.acceso.entity.Credenciales;
 import org.sede.servicio.acceso.entity.Usuario;
 import org.sede.servicio.acceso.userrequirements.RequirementsInterface;
-//import org.sede.servicio.actividades.ZGZ16Controller;
 import org.sede.servicio.padron.dao.PadronGenericDAO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -66,25 +64,48 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.googlecode.genericdao.search.Filter;
 import com.googlecode.genericdao.search.Search;
 
+// TODO: Auto-generated Javadoc
+/**
+ * Class LoginController.
+ * 
+ * @author Ayuntamiento Zaragoza
+ * 
+ */
 @Controller
 @RequestMapping(value = "/acceso", method = RequestMethod.GET)
 @Gcz(servicio="ACCESO",seccion="REST")
 public class LoginController {
+	
+	/** Constant logger. */
 	private static final Logger logger = LoggerFactory
 			.getLogger(LoginController.class);
+	
+	/** dao. */
 	@Autowired
 	private CiudadanoGenericDAO dao;
+	
+	/** acc. */
 	@Autowired
 	private GczUsuarioGenericDAO acc;
 	
+	/** dao padron. */
 	@Autowired
 	private PadronGenericDAO daoPadron;
 	
+	/** requirements. */
 	@Autowired
 	private Map<String, RequirementsInterface> requirements;
 	
 	
 	
+	/**
+	 * Home.
+	 *
+	 * @param model Model
+	 * @param r R
+	 * @param t T
+	 * @return string
+	 */
 	@RequestMapping(method = RequestMethod.GET, produces = {
 			MediaType.TEXT_HTML_VALUE, "*/*" })
 	public String home(Model model, 
@@ -99,6 +120,16 @@ public class LoginController {
 		return "/login";
 	}
 	
+	/**
+	 * Salir.
+	 *
+	 * @param model Model
+	 * @param r R
+	 * @param request Request
+	 * @param response Response
+	 * @return string
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	@RequestMapping(value="/salir", method = RequestMethod.GET, produces = {
 			MediaType.TEXT_HTML_VALUE, "*/*" })
 	public String salir(Model model,
@@ -115,6 +146,15 @@ public class LoginController {
 	    }
 	}
 	
+	/**
+	 * Requirements.
+	 *
+	 * @param model Model
+	 * @param r R
+	 * @param request Request
+	 * @param attr Attr
+	 * @return string
+	 */
 	@NoCache
 	@RequestMapping(value="/requirements", method = RequestMethod.GET, produces = {
 			MediaType.TEXT_HTML_VALUE, "*/*" })
@@ -140,6 +180,17 @@ public class LoginController {
 	    return "/requirements";
 	}
 	
+	/**
+	 * Save requirements.
+	 *
+	 * @param model Model
+	 * @param redirigir Redirigir
+	 * @param request Request
+	 * @param response Response
+	 * @param attr Attr
+	 * @return string
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	@RequestMapping(value="/requirements/save", method = RequestMethod.POST, produces = {
 			MediaType.TEXT_HTML_VALUE, "*/*" })
 	public String saveRequirements(Model model,
@@ -174,6 +225,13 @@ public class LoginController {
 	    
 	}
 	
+	/**
+	 * Api login gcz OPTIONS.
+	 *
+	 * @param user User
+	 * @param password Password
+	 * @return response entity
+	 */
 	@ResponseClass(value = Credenciales.class)
 	@RequestMapping(value="/credenciales", method = RequestMethod.OPTIONS, produces = {
 			MediaType.TEXT_HTML_VALUE, "*/*" })
@@ -184,6 +242,13 @@ public class LoginController {
 		return ResponseEntity.ok(new Mensaje(HttpStatus.OK.value(), "Acceso habilitado"));
     }
 	
+	/**
+	 * Api login gcz.
+	 *
+	 * @param user User
+	 * @param password Password
+	 * @return response entity
+	 */
 	@Transactional(Constants.TM)
 	@ResponseClass(value = Credenciales.class)
 	@RequestMapping(value="/credenciales", method = RequestMethod.POST, consumes = {MimeTypes.JSON, MimeTypes.XML}, produces = {MimeTypes.JSON, MimeTypes.XML})
@@ -205,11 +270,24 @@ public class LoginController {
 		}
     }
 
+	/**
+	 * Clone.
+	 *
+	 * @return object
+	 * @throws CloneNotSupportedException the clone not supported exception
+	 */
 	@Override
 	protected Object clone() throws CloneNotSupportedException {
 		return super.clone();
 	}
 
+	/**
+	 * Api login ciudadano.
+	 *
+	 * @param email Email
+	 * @param password Password
+	 * @return response entity
+	 */
 	@Transactional(Constants.TM)
 	@ResponseClass(value = Ciudadano.class)
 	@RequestMapping(method = RequestMethod.POST, consumes = {MimeTypes.JSON, MimeTypes.XML}, produces = {MimeTypes.JSON, MimeTypes.XML})
@@ -259,6 +337,11 @@ public class LoginController {
 		}
     }
 	
+	/**
+	 * Api regenerar PK.
+	 *
+	 * @return response entity
+	 */
 	@Transactional(Constants.TM)
 	@Permisos(Permisos.DET)
 	@RequestMapping(value = "/regenerar-pk", method = RequestMethod.GET, consumes = {
@@ -283,6 +366,12 @@ public class LoginController {
 			return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new Mensaje(HttpStatus.FORBIDDEN.value(), "Error en el acceso"));
 		}	
     }
+	
+	/**
+	 * Api cambiar password.
+	 *
+	 * @return response entity
+	 */
 	@Transactional(Constants.TM)
 	@Permisos(Permisos.DET)
 	@RequestMapping(value = "/{id}/change-password", method = RequestMethod.PUT, consumes = {
@@ -302,6 +391,12 @@ public class LoginController {
 		}	
     }
 	
+	/**
+	 * Api crear.
+	 *
+	 * @param usuario Usuario
+	 * @return response entity
+	 */
 	@Transactional(Constants.TM)
 	@ResponseClass(value = Usuario.class)
 	@Permisos(Permisos.NEW)
@@ -327,6 +422,13 @@ public class LoginController {
 		}	
     }
 	
+	/**
+	 * Api modificar.
+	 *
+	 * @param id Id
+	 * @param usuario Usuario
+	 * @return response entity
+	 */
 	@Transactional(Constants.TM)
 	@ResponseClass(value = Usuario.class)
 	@RequestMapping(value = "/{id}", method = RequestMethod.PUT, consumes = {
@@ -347,6 +449,21 @@ public class LoginController {
 		}	
     }
 	
+	/**
+	 * Login.
+	 *
+	 * @param model Model
+	 * @param email Email
+	 * @param user User
+	 * @param password Password
+	 * @param redirigir Redirigir
+	 * @param t T
+	 * @param gRecaptchaResponse G recaptcha response
+	 * @param request Request
+	 * @param response Response
+	 * @return string
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	@Transactional(Constants.TM)
 	@RequestMapping(value="/login", method = RequestMethod.POST, produces = {
 			MediaType.TEXT_HTML_VALUE, "*/*" })
@@ -393,6 +510,19 @@ public class LoginController {
 		return null;
 	}
 
+	/**
+	 * Recuperar.
+	 *
+	 * @param model Model
+	 * @param email Email
+	 * @param redirigir Redirigir
+	 * @param t T
+	 * @param gRecaptchaResponse G recaptcha response
+	 * @param request Request
+	 * @param response Response
+	 * @return string
+	 * @throws MessagingException the messaging exception
+	 */
 	@Transactional(Constants.TM)
 	@RequestMapping(value="/recuperar", method = RequestMethod.POST, produces = {
 			MediaType.TEXT_HTML_VALUE, "*/*" })
@@ -443,6 +573,19 @@ public class LoginController {
 			}
 		}
 	}
+	
+	/**
+	 * Reset.
+	 *
+	 * @param model Model
+	 * @param token Token
+	 * @param pass Pass
+	 * @param passRep Pass rep
+	 * @param gRecaptchaResponse G recaptcha response
+	 * @param request Request
+	 * @param response Response
+	 * @return string
+	 */
 	@Transactional(Constants.TM)
 	@RequestMapping(value="/reset", method = RequestMethod.POST, produces = {
 			MediaType.TEXT_HTML_VALUE, "*/*" })
@@ -496,6 +639,18 @@ public class LoginController {
 		}
 	}
 
+	/**
+	 * Crear.
+	 *
+	 * @param dato Dato
+	 * @param pass Pass
+	 * @param passRep Pass rep
+	 * @param redirigir Redirigir
+	 * @param bindingResult Binding result
+	 * @param model Model
+	 * @param request Request
+	 * @return string
+	 */
 	@Transactional(ConfigCiudadano.TM)
 	@RequestMapping(value = "/save", method = RequestMethod.POST, produces = {
 			MediaType.TEXT_HTML_VALUE, "*/*" })
@@ -525,6 +680,13 @@ public class LoginController {
 
 	}
 	
+	/**
+	 * Api crear ciudadano.
+	 *
+	 * @param ciudadano Ciudadano
+	 * @param servicioRegistro Servicio registro
+	 * @return response entity
+	 */
 	@Transactional(ConfigCiudadano.TM)
 	@ResponseClass(value = Ciudadano.class)
 	@Permisos(Permisos.NEW_USER)
@@ -557,6 +719,20 @@ public class LoginController {
 		}
 	}
 	
+	/**
+	 * Activate.
+	 *
+	 * @param email Email
+	 * @param token Token
+	 * @param model Model
+	 * @param request Request
+	 * @return string
+	 * @throws InvalidKeyException the invalid key exception
+	 * @throws NoSuchAlgorithmException the no such algorithm exception
+	 * @throws NoSuchPaddingException the no such padding exception
+	 * @throws IllegalBlockSizeException the illegal block size exception
+	 * @throws BadPaddingException the bad padding exception
+	 */
 	@Transactional(ConfigCiudadano.TM)
 	@RequestMapping(value = "/activate", method = RequestMethod.POST, produces = {
 			MediaType.TEXT_HTML_VALUE, "*/*" })
@@ -574,6 +750,14 @@ public class LoginController {
 	}
 
 
+	/**
+	 * Dis allow mail.
+	 *
+	 * @param model Model
+	 * @param attr Attr
+	 * @param request Request
+	 * @return string
+	 */
 	@PermisosUser
 	@RequestMapping(value = "/disallow-mail", method = RequestMethod.GET, produces = {
 			MediaType.TEXT_HTML_VALUE, "*/*" })
@@ -590,6 +774,14 @@ public class LoginController {
 		return "redirect:/servicio/zona-personal";
 	}
 	
+	/**
+	 * Lock.
+	 *
+	 * @param model Model
+	 * @param attr Attr
+	 * @param request Request
+	 * @return string
+	 */
 	@PermisosUser
 	@RequestMapping(value = "/allow-mail", method = RequestMethod.GET, produces = {
 			MediaType.TEXT_HTML_VALUE, "*/*" })
@@ -606,6 +798,11 @@ public class LoginController {
 		return "redirect:/servicio/zona-personal";
 	}
 	
+	/**
+	 * Gets the contrasena.
+	 *
+	 * @return the contrasena
+	 */
 	private String getContrasena() {
 		if (Funciones.getPeticion().getPassword() != null) {
 			return Funciones.getPeticion().getPassword();

@@ -4,7 +4,6 @@ package org.sede.servicio.acceso;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.cxf.jaxrs.ext.search.SearchParseException;
-import org.sede.core.anotaciones.Esquema;
 import org.sede.core.anotaciones.Fiql;
 import org.sede.core.anotaciones.Gcz;
 import org.sede.core.anotaciones.NoCache;
@@ -27,26 +26,53 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.thymeleaf.util.StringUtils;
 
+/**
+ * Controlador CiudadanoAdmin
+ *
+ * @author Ayuntamiento Zaragoza
+ *
+ */
 @Gcz(servicio="OGOB",seccion="OGOB")
 @Transactional(ConfigCiudadano.TM)
 @Controller
 @RequestMapping(value = "/" + CiudadanoAdminController.MAPPING, method = RequestMethod.GET)
 public class CiudadanoAdminController {
+	
+	/** Constant SERVICIO. */
 	private static final String SERVICIO = "admin-user";
+	
+	/** Constant MAPPING. */
 	public static final String MAPPING = "servicio/" + SERVICIO;
 	
+	/** dao. */
 	@Autowired
 	private CiudadanoGenericDAO dao;
 
+	/** dao padron. */
 	@Autowired
 	private PadronGenericDAO daoPadron;
 	
+	/**
+	 * Redirect.
+	 *
+	 * @return string
+	 */
 	@RequestMapping(method = RequestMethod.GET, produces = {
 			MediaType.TEXT_HTML_VALUE, "*/*" })
 	public String redirect() {
 		return "redirect:" + SERVICIO + "/";
 	}
 	
+	/**
+	 * Index.
+	 *
+	 * @param model Model
+	 * @param dato Dato
+	 * @param search Search
+	 * @param request Request
+	 * @return string
+	 * @throws SearchParseException the search parse exception
+	 */
 	@NoCache
 	@RequestMapping(value = "/", method = RequestMethod.GET, produces = {
 			MediaType.TEXT_HTML_VALUE, "*/*" })

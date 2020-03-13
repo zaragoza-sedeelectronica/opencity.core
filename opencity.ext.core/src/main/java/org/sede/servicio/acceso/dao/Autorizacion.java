@@ -18,8 +18,23 @@ import org.sede.servicio.acceso.entity.Credenciales;
 import org.sede.servicio.acceso.entity.Seccion;
 import org.sede.servicio.acceso.entity.Servicio;
 
+// TODO: Auto-generated Javadoc
+/**
+ * Class Autorizacion.
+ * 
+ * @author Ayuntamiento Zaragoza
+ * 
+ */
 public class Autorizacion {
 
+	/**
+	 * Revisar peticion.
+	 *
+	 * @param peticion Peticion
+	 * @param httprequest Httprequest
+	 * @throws SinCredencialesDefinidas the sin credenciales definidas
+	 * @throws SinPermisoParaEjecutar the sin permiso para ejecutar
+	 */
 	public void revisarPeticion(Peticion peticion, HttpServletRequest httprequest) throws SinCredencialesDefinidas, SinPermisoParaEjecutar {
 		if (!peticion.getMetodo().isAnnotationPresent(OpenData.class)) {
 			if (peticion.getMetodo().isAnnotationPresent(Permisos.class)) {
@@ -46,6 +61,14 @@ public class Autorizacion {
 
     
 
+	/**
+	 * Obtener permisos seccion.
+	 *
+	 * @param credenciales Credenciales
+	 * @param servicio Servicio
+	 * @param seccion Seccion
+	 * @return list
+	 */
 	public static List<String> obtenerPermisosSeccion(Credenciales credenciales, String servicio, String seccion) {
 		for (int i = 0; (i < credenciales.getServicios().size()); i++) {
 			Servicio s = credenciales.getServicios().get(i);
@@ -62,6 +85,15 @@ public class Autorizacion {
 		return new ArrayList<String>();
 	}
 
+	/**
+	 * Comprobar permiso.
+	 *
+	 * @param credenciales Credenciales
+	 * @param permisoNecesario Permiso necesario
+	 * @param servicio Servicio
+	 * @param seccion Seccion
+	 * @return true, if successful
+	 */
 	public static boolean comprobarPermiso(Credenciales credenciales, String permisoNecesario, String servicio, String seccion) {
 		boolean puedeEjecutar = false;
 		if (permisoNecesario != null) {
@@ -85,6 +117,13 @@ public class Autorizacion {
 		return puedeEjecutar;
 	}
 
+	/**
+	 * Puede acceder servicio.
+	 *
+	 * @param cred Cred
+	 * @param clase Clase
+	 * @return true, if successful
+	 */
 	public boolean puedeAccederServicio(Credenciales cred, Class<?> clase) {
 		if (clase.isAnnotationPresent(Gcz.class)){
 			String servicio = clase.getAnnotation(Gcz.class).servicio();
@@ -104,6 +143,12 @@ public class Autorizacion {
 		return usuarioLogueado(cred);
 	}
 	
+	/**
+	 * Usuario logueado.
+	 *
+	 * @param cred Cred
+	 * @return true, if successful
+	 */
 	public static boolean usuarioLogueado(Credenciales cred) {
 		return cred.getUsuario().getLogin() != null && cred.getUsuario().getLogin().length() > 0;
 	}

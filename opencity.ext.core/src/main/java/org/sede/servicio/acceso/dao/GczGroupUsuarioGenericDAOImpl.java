@@ -31,22 +31,48 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.googlecode.genericdao.dao.jpa.GenericDAOImpl;
 import com.googlecode.genericdao.search.SearchResult;
+// TODO: Auto-generated Javadoc
+
+/**
+ * The Class GczGroupUsuarioGenericDAOImpl.
+ * 
+ * @author Ayuntamiento Zaragoza
+ * 
+ */
 @Repository
 @Transactional(Constants.TM)
 public class GczGroupUsuarioGenericDAOImpl extends GenericDAOImpl <GczGrupoUsuario, BigDecimal> implements GczGroupUsuarioGenericDAO {
 	
+	/**
+	 * Sets the entity manager.
+	 *
+	 * @param entityManager the new entity manager
+	 */
 	@PersistenceContext(unitName=Constants.ESQUEMA)
 	public void setEntityManager(EntityManager entityManager) {
 		this.setEm(entityManager);
 	}
 	
 	
+	/**
+	 * Validar.
+	 *
+	 * @param registro Registro
+	 * @return sets the
+	 */
 	public Set<ConstraintViolation<Object>> validar(Object registro) {
 		ValidatorFactory factory = Validation.byDefaultProvider().configure().traversableResolver(new JPAIgnoreTraversableResolver()).buildValidatorFactory();
 		Validator validator = factory.getValidator();
 		return validator.validate(registro);
 	}
 	
+	/**
+	 * Update visible.
+	 *
+	 * @param id Id
+	 * @param value Value
+	 * @return int
+	 */
 	public int updateVisible(BigDecimal id, String value) {
 	
 		Query propWeb = getSession().createSQLQuery("update " + persistentClass.getAnnotation(Table.class).name() 
@@ -59,6 +85,12 @@ public class GczGroupUsuarioGenericDAOImpl extends GenericDAOImpl <GczGrupoUsuar
 
 	}
 
+	/**
+	 * Obtener grupos asociados persona.
+	 *
+	 * @param credenciales Credenciales
+	 * @return response entity
+	 */
 	@Override
 	public ResponseEntity<?> obtenerGruposAsociadosPersona(Credenciales credenciales) {
 		
@@ -79,6 +111,13 @@ public class GczGroupUsuarioGenericDAOImpl extends GenericDAOImpl <GczGrupoUsuar
 		return ResponseEntity.ok(res);
 	}
 
+	/**
+	 * Asociar user A group.
+	 *
+	 * @param groupId Group id
+	 * @param userId User id
+	 * @return mensaje
+	 */
 	@Override
 	public Mensaje asociarUserAGroup(BigDecimal groupId, Long userId) {
 		if (!usuarioAsociado(groupId, userId)) {
@@ -94,6 +133,14 @@ public class GczGroupUsuarioGenericDAOImpl extends GenericDAOImpl <GczGrupoUsuar
 			return new Mensaje(HttpStatus.BAD_REQUEST.value(), "La persona ya está asociada al grupo");
 		}
 	}
+	
+	/**
+	 * Usuario asociado.
+	 *
+	 * @param groupId Group id
+	 * @param userId User id
+	 * @return true, if successful
+	 */
 	private boolean usuarioAsociado(BigDecimal groupId, Long userId) {
 		try {
 			javax.persistence.Query q = em().createNativeQuery("select id_usuario from GCZ_USUARIO_GRUPO_USUARIO "
@@ -108,6 +155,13 @@ public class GczGroupUsuarioGenericDAOImpl extends GenericDAOImpl <GczGrupoUsuar
 		}
 	}
 
+	/**
+	 * Eliminar de grupo.
+	 *
+	 * @param groupId Group id
+	 * @param userId User id
+	 * @return mensaje
+	 */
 	@Override
 	public Mensaje eliminarDeGrupo(BigDecimal groupId, BigDecimal userId) {
 		try {

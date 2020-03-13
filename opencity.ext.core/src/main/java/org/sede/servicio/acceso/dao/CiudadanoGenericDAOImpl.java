@@ -21,7 +21,6 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
 import org.apache.commons.lang3.StringUtils;
-import org.sede.core.anotaciones.Esquema;
 import org.sede.core.rest.Mensaje;
 import org.sede.core.utils.AESSec;
 import org.sede.core.utils.Funciones;
@@ -42,22 +41,51 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.googlecode.genericdao.dao.jpa.GenericDAOImpl;
 
+// TODO: Auto-generated Javadoc
+/**
+ * Class CiudadanoGenericDAOImpl.
+ * 
+ * @author Ayuntamiento Zaragoza
+ * 
+ */
 @Repository
 @Transactional(ConfigCiudadano.TM)
 public class CiudadanoGenericDAOImpl extends GenericDAOImpl <Ciudadano, Integer> implements CiudadanoGenericDAO {
+	
+	/** Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(CiudadanoGenericDAOImpl.class);
+	
+	/** Constant IMG_DISK_PATH. */
 	public static final String IMG_DISK_PATH = Propiedades.getPathContDisk() + "paginas/zona-personal/";
+	
+	/** Constant IMG_HTTP_PATH. */
 	public static final String IMG_HTTP_PATH = Propiedades.getPathContExternal() + "paginas/zona-personal/";
+	
+	/** dao padron. */
 	@Autowired
 	private PadronGenericDAO daoPadron;
+	
+	/** dao sms. */
 	@Autowired
 	private SmsGenericDAO daoSms;
 
 	
+	/**
+	 * Sets the entity manager.
+	 *
+	 * @param entityManager the new entity manager
+	 */
 	@PersistenceContext(unitName=ConfigCiudadano.ESQUEMA)
 	public void setEntityManager(EntityManager entityManager) {
 		this.setEm(entityManager);
 	}
+	
+	/**
+	 * Usuario existente.
+	 *
+	 * @param usuario Usuario
+	 * @return true, if successful
+	 */
 	public boolean usuarioExistente(Ciudadano usuario) {
 		
 		Query query = this.em().createNativeQuery("select email from USERS where upper(email) = ?");
@@ -67,6 +95,14 @@ public class CiudadanoGenericDAOImpl extends GenericDAOImpl <Ciudadano, Integer>
 		
 	}
 	
+	/**
+	 * Activate.
+	 *
+	 * @param id Id
+	 * @param email Email
+	 * @param accountId Account id
+	 * @return true, if successful
+	 */
 	public boolean activate(BigDecimal id, String email, String accountId) {
 		Query update = this.em().createNativeQuery("Update USERS set activado = 1 where upper(EMAIL) like ? and id =? and guid = ?");
 		update.setParameter(1, email.toUpperCase());
@@ -75,6 +111,13 @@ public class CiudadanoGenericDAOImpl extends GenericDAOImpl <Ciudadano, Integer>
 		int registros = update.executeUpdate();
 		return registros > 0;
 	}
+	
+	/**
+	 * Sets the new password.
+	 *
+	 * @param email Email
+	 * @return string
+	 */
 	@Override
 	public String setNewPassword(String email) {
 		String newPassword = Funciones.generateRandomPassword();
@@ -90,6 +133,14 @@ public class CiudadanoGenericDAOImpl extends GenericDAOImpl <Ciudadano, Integer>
 			return "";
 		}
 	}
+	
+	/**
+	 * Update password.
+	 *
+	 * @param id Id
+	 * @param password Password
+	 * @return true, if successful
+	 */
 	@Override
 	public boolean updatePassword(Integer id, String password) {
 		Query deletePropWeb = this.em().createNativeQuery("Update USERS set password = ? where id = ?");
@@ -107,6 +158,14 @@ public class CiudadanoGenericDAOImpl extends GenericDAOImpl <Ciudadano, Integer>
 			return false;
 		}
 	}
+	
+	/**
+	 * Update screen name.
+	 *
+	 * @param id Id
+	 * @param screenName Screen name
+	 * @return true, if successful
+	 */
 	@Override
 	public boolean updateScreenName(Integer id, String screenName) {
 		Query update = this.em().createNativeQuery("Update USERS set screenname = ? where id = ?");
@@ -114,6 +173,13 @@ public class CiudadanoGenericDAOImpl extends GenericDAOImpl <Ciudadano, Integer>
 		update.setParameter(2, id);
 		return (update.executeUpdate() > 0);
 	}
+	
+	/**
+	 * Usuario nif existente.
+	 *
+	 * @param usuario Usuario
+	 * @return true, if successful
+	 */
 	public boolean usuarioNifExistente(Ciudadano usuario) {
 		
 		Query query = this.em().createNativeQuery("select nif from USERS where upper(nif) like ? and ANIO_NACIMIENTO is not null");
@@ -122,6 +188,13 @@ public class CiudadanoGenericDAOImpl extends GenericDAOImpl <Ciudadano, Integer>
 		return (!lista.isEmpty());
 		
 	}
+	
+	/**
+	 * Usuario mobile existente.
+	 *
+	 * @param mobile Mobile
+	 * @return true, if successful
+	 */
 	public boolean usuarioMobileExistente(String mobile) {
 		
 		Query query = this.em().createNativeQuery("select mobile from USERS where mobile like ?");
@@ -131,6 +204,12 @@ public class CiudadanoGenericDAOImpl extends GenericDAOImpl <Ciudadano, Integer>
 		
 	}
 	
+	/**
+	 * Update padron data.
+	 *
+	 * @param c C
+	 * @return true, if successful
+	 */
 	@Override
 	public boolean updatePadronData(Ciudadano c) {
 		Query update = this.em().createNativeQuery("Update USERS set NIF=?, EMPADRONADO = 'Si', ANIO_NACIMIENTO=?,ID_DISTRITO=?,ID_SECCION=?,JUNTA=? where ID = ?");
@@ -143,6 +222,13 @@ public class CiudadanoGenericDAOImpl extends GenericDAOImpl <Ciudadano, Integer>
 		int registros = update.executeUpdate();
 		return (registros > 0);
 	}
+	
+	/**
+	 * Update district.
+	 *
+	 * @param c C
+	 * @return boolean
+	 */
 	@Override
 	public Boolean updateDistrict(Ciudadano c) {
 		Query update = this.em().createNativeQuery("Update USERS set ID_DISTRITO=? where ID = ?");
@@ -153,6 +239,12 @@ public class CiudadanoGenericDAOImpl extends GenericDAOImpl <Ciudadano, Integer>
 		
 	}
 	
+	/**
+	 * Update junta usuario.
+	 *
+	 * @param c C
+	 * @return boolean
+	 */
 	@Override
 	public Boolean updateJuntaUsuario(Ciudadano c) {
 		Query update = this.em().createNativeQuery("Update USERS set JUNTA_USER=? where ID = ?");
@@ -163,6 +255,12 @@ public class CiudadanoGenericDAOImpl extends GenericDAOImpl <Ciudadano, Integer>
 		
 	}
 	
+	/**
+	 * Update documento identificativo.
+	 *
+	 * @param c C
+	 * @return boolean
+	 */
 	@Override
 	public Boolean updateDocumentoIdentificativo(Ciudadano c) {
 		Query update = this.em().createNativeQuery("Update USERS set DOCUMENTO_IDENTIFICATIVO=? where ID = ?");
@@ -173,6 +271,9 @@ public class CiudadanoGenericDAOImpl extends GenericDAOImpl <Ciudadano, Integer>
 		
 	}
 	
+	/**
+	 * Update datos junta padron.
+	 */
 	public void updateDatosJuntaPadron() {
     	try {
 	    	Query q = this.em().createNativeQuery("select nif,anio_nacimiento,junta from noticias.users where empadronado='Si' and nif is not null and anio_nacimiento is not null");
@@ -210,6 +311,10 @@ public class CiudadanoGenericDAOImpl extends GenericDAOImpl <Ciudadano, Integer>
     	}
     	
     }
+	
+	/**
+	 * Update datos distrito seccion padron.
+	 */
 	public void updateDatosDistritoSeccionPadron() {
     	try {
 	    	Query q = this.em().createNativeQuery("select nif,anio_nacimiento,id_distrito,id_seccion from noticias.users where empadronado='Si' and nif is not null and anio_nacimiento is not null");
@@ -285,6 +390,13 @@ public class CiudadanoGenericDAOImpl extends GenericDAOImpl <Ciudadano, Integer>
 //    		}
 //		}
 //    	
+/**
+ * Creates the token mobile.
+ *
+ * @param id Id
+ * @param mobile Mobile
+ * @return mensaje
+ */
 //    }
 	@Override
 	public Mensaje createTokenMobile(Integer id, String mobile) {
@@ -309,6 +421,14 @@ public class CiudadanoGenericDAOImpl extends GenericDAOImpl <Ciudadano, Integer>
 			return new Mensaje(HttpStatus.BAD_REQUEST.value(), "No se ha creado el código sms");
 		}
 	}
+	
+	/**
+	 * Asociar movil.
+	 *
+	 * @param c C
+	 * @param token Token
+	 * @return true, if successful
+	 */
 	@Override
 	public boolean asociarMovil(Ciudadano c, String token) {
 		try {
@@ -333,6 +453,13 @@ public class CiudadanoGenericDAOImpl extends GenericDAOImpl <Ciudadano, Integer>
 		
 	}
 
+	/**
+	 * Crear usuario.
+	 *
+	 * @param c C
+	 * @param password Password
+	 * @return mensaje
+	 */
 	public Mensaje crearUsuario(Ciudadano c, String password) {
 		if (this.usuarioExistente(c)) {
 			return new Mensaje(HttpStatus.BAD_REQUEST.value(), "Ya existe un usuario/a asociado al correo electrónico introducido");
@@ -359,6 +486,13 @@ public class CiudadanoGenericDAOImpl extends GenericDAOImpl <Ciudadano, Integer>
 			}
 		}
 	}
+	
+	/**
+	 * Obtener usuario.
+	 *
+	 * @param accountId Account id
+	 * @return ciudadano
+	 */
 	@Override
 	public Ciudadano obtenerUsuario(String accountId) {
 		Query q = em().createNativeQuery("select id, person_name, email, screenname,EMPADRONADO,ANIO_NACIMIENTO,id_distrito,junta,nif,junta_user, mobile, image from noticias.users where activado=1 and guid=?");
@@ -384,6 +518,13 @@ public class CiudadanoGenericDAOImpl extends GenericDAOImpl <Ciudadano, Integer>
 		}
 
 	}
+	
+	/**
+	 * Obtener usuario.
+	 *
+	 * @param id Id
+	 * @return ciudadano
+	 */
 	@Override
 	public Ciudadano obtenerUsuario(Integer id) {
 		Query q = em().createNativeQuery("select id, person_name, email, screenname,EMPADRONADO,ANIO_NACIMIENTO,id_distrito,junta,nif,junta_user, mobile, image, ACEPTAMAIL,guid from noticias.users where activado=1 and id=?");
@@ -411,6 +552,13 @@ public class CiudadanoGenericDAOImpl extends GenericDAOImpl <Ciudadano, Integer>
 		}
 
 	}
+	
+	/**
+	 * Obtener usuario empadronado.
+	 *
+	 * @param accountId Account id
+	 * @return ciudadano
+	 */
 	@Override
 	public Ciudadano obtenerUsuarioEmpadronado(String accountId) {
 		Query q = em().createNativeQuery("select id, person_name, email, screenname,EMPADRONADO,ANIO_NACIMIENTO,id_distrito,junta,nif,junta_user, mobile, image from noticias.users where empadronado='Si' and activado=1 and guid=?");
@@ -436,6 +584,13 @@ public class CiudadanoGenericDAOImpl extends GenericDAOImpl <Ciudadano, Integer>
 		}
 
 	}
+	
+	/**
+	 * Obtener usuario by nif.
+	 *
+	 * @param nif Nif
+	 * @return ciudadano
+	 */
 	public Ciudadano obtenerUsuarioByNif(String nif) {
 		Query q = em().createNativeQuery("select id, person_name, email, screenname,EMPADRONADO,ANIO_NACIMIENTO,id_distrito,junta,nif,junta_user, mobile,image,documento_identificativo from noticias.users where upper(nif)=? and junta is not null");
 		try {
@@ -460,6 +615,13 @@ public class CiudadanoGenericDAOImpl extends GenericDAOImpl <Ciudadano, Integer>
 			return null;
 		}
 	}
+	
+	/**
+	 * Obtener usuario by email.
+	 *
+	 * @param email Email
+	 * @return ciudadano
+	 */
 	public Ciudadano obtenerUsuarioByEmail(String email) {
 		Query q = em().createNativeQuery("select id, person_name, email, screenname,EMPADRONADO,ANIO_NACIMIENTO,id_distrito,junta,nif,junta_user, mobile,image,documento_identificativo from noticias.users where upper(email)=?");
 		try {
@@ -485,6 +647,12 @@ public class CiudadanoGenericDAOImpl extends GenericDAOImpl <Ciudadano, Integer>
 		}
 	}
 	
+	/**
+	 * Obtener usuario by documento identificativo.
+	 *
+	 * @param documentoIdentificativo Documento identificativo
+	 * @return ciudadano
+	 */
 	@Override
 	public Ciudadano obtenerUsuarioByDocumentoIdentificativo(String documentoIdentificativo) {
 		Query q = em().createNativeQuery("select id, person_name, email, screenname, EMPADRONADO, ANIO_NACIMIENTO, id_distrito, junta, nif, junta_user, mobile, image, documento_identificativo from noticias.users where upper(documento_identificativo)=?");
@@ -511,6 +679,13 @@ public class CiudadanoGenericDAOImpl extends GenericDAOImpl <Ciudadano, Integer>
 		}
 	}
 	
+	/**
+	 * Asociar imagen.
+	 *
+	 * @param ciudadano Ciudadano
+	 * @param file File
+	 * @return mensaje
+	 */
 	@Override
 	public Mensaje asociarImagen(Ciudadano ciudadano, MultipartFile file) {
 		try {
@@ -547,11 +722,25 @@ public class CiudadanoGenericDAOImpl extends GenericDAOImpl <Ciudadano, Integer>
 
 	}
 
+	/**
+	 * Find by email.
+	 *
+	 * @param email Email
+	 * @return big decimal
+	 */
 	public BigDecimal findByEmail(String email) {
 		Query query = this.em().createNativeQuery("select id from USERS where upper(email) = ?");
 		return (BigDecimal) query.setParameter(1, email.toUpperCase()).getSingleResult();
 
 	}
+	
+	/**
+	 * Change allow mail.
+	 *
+	 * @param c C
+	 * @param valor Valor
+	 * @return long
+	 */
 	@Override
 	public long changeAllowMail(Ciudadano c, String valor) {
 		Query propWeb = this.em().createNativeQuery("update users set ACEPTAMAIL=? where id=?");
@@ -561,6 +750,17 @@ public class CiudadanoGenericDAOImpl extends GenericDAOImpl <Ciudadano, Integer>
 		return propWeb.executeUpdate();
 	}
 
+	/**
+	 * Send activation mail.
+	 *
+	 * @param ciudadano Ciudadano
+	 * @throws MessagingException the messaging exception
+	 * @throws InvalidKeyException the invalid key exception
+	 * @throws NoSuchAlgorithmException the no such algorithm exception
+	 * @throws NoSuchPaddingException the no such padding exception
+	 * @throws IllegalBlockSizeException the illegal block size exception
+	 * @throws BadPaddingException the bad padding exception
+	 */
 	@Override
 	public void sendActivationMail(Ciudadano ciudadano) throws MessagingException, InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException {
 		String url = Propiedades.getActivationUrl()+"/acceso/activate?email=" + ciudadano.getEmail() + "&amp;token=" + AESSec.encrypt(ciudadano.getId() + "#" + ciudadano.getAccount_id());
@@ -572,6 +772,12 @@ public class CiudadanoGenericDAOImpl extends GenericDAOImpl <Ciudadano, Integer>
 	}
 
 	
+	/**
+	 * Enviar token recuperacion.
+	 *
+	 * @param email Email
+	 * @return mensaje
+	 */
 	public Mensaje enviarTokenRecuperacion(String email) {
 		String sql = "select id,email from users where trim(lower(email)) = ?";
 		Query query = this.em().createNativeQuery(sql);
@@ -613,6 +819,12 @@ public class CiudadanoGenericDAOImpl extends GenericDAOImpl <Ciudadano, Integer>
 		
 	}
 
+	/**
+	 * Obtener id from token.
+	 *
+	 * @param token Token
+	 * @return big decimal
+	 */
 	public BigDecimal obtenerIdFromToken(String token) {
 
 		String sql = "select id_usuario from USERS_RECUPERAR_PASS where token=?";

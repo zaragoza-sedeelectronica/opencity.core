@@ -10,24 +10,48 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+// TODO: Auto-generated Javadoc
+/**
+ * Class CredencialesController.
+ * 
+ *  @author Ayuntamiento Zaragoza
+ *  
+ */
 @Gcz(servicio="ADMIN",seccion="ADMIN")
 @Transactional(Constants.TM)
 @Controller
 @RequestMapping(value = "/" + CredencialesController.MAPPING, method = RequestMethod.GET)
 public class CredencialesController {
+	
+	/** Constant SERVICIO. */
 	private static final String SERVICIO = "credenciales";
+	
+	/** Constant MAPPING_PLANTILLA. */
 	public static final String MAPPING_PLANTILLA = "portal/" + SERVICIO;
+	
+	/** Constant MAPPING. */
 	public static final String MAPPING = "servicio/" + SERVICIO;
 		
+	/** dao. */
 	@Autowired
 	GczUsuarioGenericDAO dao;
 	
+	/**
+	 * Redirect.
+	 *
+	 * @return string
+	 */
 	@RequestMapping(method = RequestMethod.GET, produces = {
 			MediaType.TEXT_HTML_VALUE, "*/*" })
 	public String redirect() {
 		return "redirect:" + SERVICIO + "/";
 	}
 	
+	/**
+	 * Home.
+	 *
+	 * @return string
+	 */
 	@RequestMapping(path = "/", method = RequestMethod.GET, produces = {
 			MediaType.TEXT_HTML_VALUE, "*/*" })
 	@Permisos(Permisos.DET)

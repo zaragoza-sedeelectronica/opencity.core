@@ -54,6 +54,14 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.googlecode.genericdao.search.SearchResult;
 
+// TODO: Auto-generated Javadoc
+/**
+ * Class GroupController.
+ * 
+ *  @author Ayuntamiento Zaragoza
+ *  
+ * 
+ */
 @Gcz(servicio="ADMIN",seccion="ADMIN")
 @Transactional(Constants.TM)
 @Controller
@@ -61,27 +69,53 @@ import com.googlecode.genericdao.search.SearchResult;
 @PlantillaHTML(CredencialesController.MAPPING)
 public class GroupController {
 	
+	/** Constant RAIZ. */
 	private static final String RAIZ = "credenciales/";
+	
+	/** Constant SERVICIO. */
 	private static final String SERVICIO = "group";
+	
+	/** Constant MAPPING. */
 	public static final String MAPPING = "servicio/" + RAIZ + SERVICIO;
+	
+	/** Constant MAPPING_FORM. */
 	private static final String MAPPING_FORM = MAPPING + "/formulario";
+	
+	/** Constant MAPPING_FORM_LIDER. */
 	private static final String MAPPING_FORM_LIDER = MAPPING + "/formulario-lider";
+	
+	/** Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(GroupController.class);
 
+	/** message source. */
 	@Autowired
 	private MessageSource messageSource;
 	
+	/** dao. */
 	@Autowired
 	GczGroupUsuarioGenericDAO dao;
 	
+	/** dao usuario. */
 	@Autowired
 	GczUsuarioGenericDAO daoUsuario;
+	
+	/**
+	 * Redirect.
+	 *
+	 * @return string
+	 */
 	@RequestMapping(method = RequestMethod.GET, produces = {
 			MediaType.TEXT_HTML_VALUE, "*/*" })
 	public String redirect() {
 		return "redirect:" + SERVICIO + "/";
 	}
 	
+	/**
+	 * Api detalle.
+	 *
+	 * @param identificador Identificador
+	 * @return response entity
+	 */
 	@Permisos(Permisos.DET)
 	@Cache(Cache.DURACION_30MIN)
 	@ResponseClass(GczGrupoUsuario.class)
@@ -95,6 +129,13 @@ public class GroupController {
 		}
 	}
 	
+	/**
+	 * Api modificar.
+	 *
+	 * @param identificador Identificador
+	 * @param registro Registro
+	 * @return response entity
+	 */
 	@ResponseClass(value = GczGrupoUsuario.class)
 	@RequestMapping(value = "/{identificador}", method = RequestMethod.PUT, consumes = {
 			MimeTypes.JSON, MimeTypes.XML }, produces = { MimeTypes.JSON,
@@ -121,6 +162,13 @@ public class GroupController {
 	}
 	
 	
+	/**
+	 * Api list.
+	 *
+	 * @param search Search
+	 * @return response entity
+	 * @throws SearchParseException the search parse exception
+	 */
 	@NoCache
 	@Permisos(Permisos.DET)
 	@ResponseClass(value = GczGrupoUsuario.class, entity = SearchResult.class)
@@ -134,6 +182,15 @@ public class GroupController {
 		}
     }
 	
+	/**
+	 * Index.
+	 *
+	 * @param model Model
+	 * @param dato Dato
+	 * @param search Search
+	 * @return string
+	 * @throws SearchParseException the search parse exception
+	 */
 	@NoCache
 	@RequestMapping(value = "/", method = RequestMethod.GET, produces = {
 			MediaType.TEXT_HTML_VALUE, "*/*" })
@@ -146,6 +203,12 @@ public class GroupController {
 		return MAPPING + "/index";
 	}
 	
+	/**
+	 * Api crear.
+	 *
+	 * @param registro Registro
+	 * @return response entity
+	 */
 	@RequestMapping(method = RequestMethod.POST, consumes = { MimeTypes.JSON,
 			MimeTypes.XML }, produces = { MimeTypes.JSON, MimeTypes.XML })
 	@Permisos(Permisos.NEW)
@@ -166,6 +229,14 @@ public class GroupController {
 		}
 	}
 	
+	/**
+	 * New form.
+	 *
+	 * @param dato Dato
+	 * @param bindingResult Binding result
+	 * @param model Model
+	 * @return string
+	 */
 	@Permisos(Permisos.NEW)
 	@RequestMapping(value = "/new", method = RequestMethod.POST, produces = {
 			MediaType.TEXT_HTML_VALUE, "*/*" })
@@ -176,6 +247,15 @@ public class GroupController {
 		return MAPPING_FORM;
 	}
 	
+	/**
+	 * Crear.
+	 *
+	 * @param dato Dato
+	 * @param bindingResult Binding result
+	 * @param model Model
+	 * @param attr Attr
+	 * @return string
+	 */
 	@Permisos(Permisos.NEW)
 	@RequestMapping(value = "/save", method = RequestMethod.POST, produces = {
 			MediaType.TEXT_HTML_VALUE, "*/*" })
@@ -196,6 +276,15 @@ public class GroupController {
 	
 	
 	
+	/**
+	 * Edits the.
+	 *
+	 * @param identificador Identificador
+	 * @param dato Dato
+	 * @param bindingResult Binding result
+	 * @param model Model
+	 * @return string
+	 */
 	@Permisos(Permisos.MOD)
 	@NoCache
 	@RequestMapping(value = "/{identificador}/edit", method = RequestMethod.POST, produces = {
@@ -214,6 +303,16 @@ public class GroupController {
 		return MAPPING_FORM;
 	}
 	
+	/**
+	 * Modificar.
+	 *
+	 * @param identificador Identificador
+	 * @param dato Dato
+	 * @param bindingResult Binding result
+	 * @param model Model
+	 * @param attr Attr
+	 * @return string
+	 */
 	@Permisos(Permisos.MOD)
 	@RequestMapping(value = "/{identificador}/save", method = RequestMethod.POST, produces = {
 			MediaType.TEXT_HTML_VALUE, "*/*" })
@@ -245,6 +344,15 @@ public class GroupController {
 			return MAPPING_FORM;
 		}
 	}
+	
+	/**
+	 * Lock.
+	 *
+	 * @param identificador Identificador
+	 * @param model Model
+	 * @param attr Attr
+	 * @return string
+	 */
 	@Permisos(Permisos.PUB)
 	@RequestMapping(value = "/{identificador}/lock", method = RequestMethod.GET, produces = {
 			MediaType.TEXT_HTML_VALUE, "*/*" })
@@ -257,6 +365,15 @@ public class GroupController {
 		}
 		return "redirect:/" + MAPPING + "/";
 	}
+	
+	/**
+	 * Unlock.
+	 *
+	 * @param identificador Identificador
+	 * @param model Model
+	 * @param attr Attr
+	 * @return string
+	 */
 	@Permisos(Permisos.PUB)
 	@RequestMapping(value = "/{identificador}/unlock", method = RequestMethod.GET, produces = {
 			MediaType.TEXT_HTML_VALUE, "*/*" })
@@ -269,6 +386,15 @@ public class GroupController {
 		}
 		return "redirect:/" + MAPPING + "/";
 	}
+	
+	/**
+	 * Eliminar.
+	 *
+	 * @param id Id
+	 * @param model Model
+	 * @param attr Attr
+	 * @return string
+	 */
 	@Permisos(Permisos.DEL)
 	@RequestMapping(value = "/{id}/delete", method = RequestMethod.POST, produces = {
 			MediaType.TEXT_HTML_VALUE, "*/*" })
@@ -281,6 +407,13 @@ public class GroupController {
 		}		
 		return "redirect:/" + MAPPING + "/";
 	}
+	
+	/**
+	 * Api delete.
+	 *
+	 * @param id Id
+	 * @return response entity
+	 */
 	@RequestMapping(value = "/{id}/remove", method = RequestMethod.DELETE, produces = { MimeTypes.JSON,
 			MimeTypes.XML })
 	@Permisos(Permisos.DEL)
@@ -296,6 +429,14 @@ public class GroupController {
 	}
 	
 	
+	/**
+	 * Admin por lideres.
+	 *
+	 * @param model Model
+	 * @param request Request
+	 * @return string
+	 * @throws SinCredencialesDefinidas the sin credenciales definidas
+	 */
 	@NoCache
 	@RequestMapping(value = "/admin/", method = RequestMethod.GET, produces = {
 			MediaType.TEXT_HTML_VALUE, "*/*" })
@@ -309,6 +450,17 @@ public class GroupController {
 		}
 	}
 	
+	/**
+	 * Edits the por lider.
+	 *
+	 * @param identificador Identificador
+	 * @param dato Dato
+	 * @param bindingResult Binding result
+	 * @param model Model
+	 * @param request Request
+	 * @return string
+	 * @throws SinPermisoParaEjecutar the sin permiso para ejecutar
+	 */
 	@NoCache
 	@RequestMapping(value = "/admin/{identificador}/edit", method = RequestMethod.POST, produces = {
 			MediaType.TEXT_HTML_VALUE, "*/*" })
@@ -333,6 +485,17 @@ public class GroupController {
 		}
 	}
 	
+	/**
+	 * Modificar por lider.
+	 *
+	 * @param identificador Identificador
+	 * @param login Login
+	 * @param model Model
+	 * @param attr Attr
+	 * @param request Request
+	 * @return string
+	 * @throws SinPermisoParaEjecutar the sin permiso para ejecutar
+	 */
 	@RequestMapping(value = "/admin/{identificador}/save", method = RequestMethod.POST, produces = {
 			MediaType.TEXT_HTML_VALUE, "*/*" })
 	public String modificarPorLider(@PathVariable BigDecimal identificador, 
@@ -356,6 +519,17 @@ public class GroupController {
 		}
 	}
 
+	/**
+	 * Eliminar por lider.
+	 *
+	 * @param id Id
+	 * @param userid Userid
+	 * @param model Model
+	 * @param attr Attr
+	 * @param request Request
+	 * @return string
+	 * @throws SinPermisoParaEjecutar the sin permiso para ejecutar
+	 */
 	@RequestMapping(value = "/admin/{id}/user/{userid}/remove", method = RequestMethod.POST, produces = {
 			MediaType.TEXT_HTML_VALUE, "*/*" })
 	public String eliminarPorLider(@PathVariable BigDecimal id, @PathVariable BigDecimal userid, Model model, 
