@@ -4,6 +4,7 @@ import org.sede.core.rest.CheckeoParametros;
 import org.sede.core.rest.Hmac;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -94,6 +95,21 @@ public class TestPeticion {
 		}
 	}
 	
+	public ResultActions post(String uri, String body, MockHttpSession session) {
+		try {
+			ResultActions result = this.mockMvc.perform(MockMvcRequestBuilders.post(uri)
+					.contentType(MediaType.APPLICATION_JSON)
+					.content(body)
+					.headers(setHeaders(uri, body, RequestMethod.POST))
+					.accept(MediaType.APPLICATION_JSON)
+					.session(session)
+					);
+			return result;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
 	public ResultActions put(String uri, String body) {
 		
 		try {
