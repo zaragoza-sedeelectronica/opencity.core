@@ -89,15 +89,18 @@ public class Solr {
 				Credentials defaultcreds = new UsernamePasswordCredentials(USERPROP, USERPASS);
 				server.getHttpClient().getState().setCredentials(new AuthScope(servidorUrl, puerto), defaultcreds);
 				server.getHttpClient().getParams().setAuthenticationPreemptive(true);
-				logger.info("Servidor SOLR definido con credenciales");
+				logger.info("Servidor SOLR definido con credenciales: " + servidorUrl);
 			} else {
 				server = new CommonsHttpSolrServer("http://" + servidorUrl + ":" + puerto + "/buscador");
-				logger.error("No se ha definido credenciales para SOLR");
+				logger.error("No se ha definido credenciales para SOLR: " + servidorUrl);
 			}
 
 			String proxy = Propiedades.getProxyHost();
 			if (proxy.length() > 0) {
 				server.getHttpClient().getHostConfiguration().setProxy(proxy, Integer.parseInt(Propiedades.getProxyPort()));
+				logger.info("Proxy: " + proxy);
+			} else {
+				logger.info("No proxy");
 			}
 
 		} catch (MalformedURLException e) {
@@ -595,7 +598,11 @@ public class Solr {
 		solrQuery.setQuery("id:" + id);
 		QueryResponse queryResponse = server.query(solrQuery);
 		SolrDocumentList solrDocumentList = queryResponse.getResults();
-		return solrDocumentList.get(0);
+		if (solrDocumentList.size() > 0) {
+			return solrDocumentList.get(0);
+		} else {
+			return null;
+		}
 	}
 
 }

@@ -64,7 +64,7 @@ public class TransformadorJson implements TransformadorGenerico {
 			return "\"" + nombreCampo + "\":" + Funciones.escape(valor.toString()) + "";
 		} else if (valor instanceof Date) {
 			Date fecha = (Date) valor;
-			return "\"" + nombreCampo + "\":\"" + ConvertDate.date2String(fecha, ConvertDate.ISO8601_FORMAT) + "\"";
+			return "\"" + nombreCampo + "\":\"" + ConvertDate.date2String(fecha, ConvertDate.ISO8601_FORMAT_SIN_ZONA) + "\"";
 		} else {
 			if (anotacionPresente && CheckeoParametros.RESPUESTAMARKDOWN.equals(formato)) {
 				return "\"" + nombreCampo + "\":\"" +  Funciones.escape(transformadorMarkDown.transformar(valor.toString())) + "\"";
@@ -78,7 +78,7 @@ public class TransformadorJson implements TransformadorGenerico {
 			return Funciones.escape(valor.toString());
 		} else if (valor instanceof Date) {
 			Date fecha = (Date) valor;
-			return "\"" + ConvertDate.date2String(fecha, ConvertDate.ISO8601_FORMAT) + "\"";
+			return "\"" + ConvertDate.date2String(fecha, ConvertDate.ISO8601_FORMAT_SIN_ZONA) + "\"";
 		} else {
 			if (anotacionPresente && CheckeoParametros.RESPUESTAMARKDOWN.equals(formato)) {
 				return "\"" + Funciones.escape(transformadorMarkDown.transformar(valor.toString())) + "\"";

@@ -26,7 +26,6 @@ import org.sede.core.anotaciones.RequiredSinValidacion;
 import org.sede.core.dao.EntidadBase;
 import org.sede.core.utils.Funciones;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class Tema.
  * 

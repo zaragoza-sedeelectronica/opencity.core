@@ -9,7 +9,6 @@ import org.sede.servicio.acceso.entity.GczSeccion;
 
 import com.googlecode.genericdao.dao.jpa.GenericDAO;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Interface GczSectionGenericDAO.
  * 

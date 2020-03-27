@@ -23,9 +23,8 @@ import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.validator.constraints.NotBlank;
 import org.sede.core.anotaciones.InList;
 import org.sede.core.dao.EntidadBase;
-import org.sede.servicio.acceso.Constants;
+import org.sede.servicio.acceso.ConfigAcceso;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class GczSeccion.
  * 
@@ -34,7 +33,7 @@ import org.sede.servicio.acceso.Constants;
  * 
  */
 @Entity
-@Table(name = "GCZ_SECCION", schema = Constants.ESQUEMA)
+@Table(name = "GCZ_SECCION", schema = ConfigAcceso.ESQUEMA)
 @DynamicUpdate(value = true)
 public class GczSeccion extends EntidadBase implements java.io.Serializable {
 

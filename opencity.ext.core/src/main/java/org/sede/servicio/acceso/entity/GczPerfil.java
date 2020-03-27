@@ -25,18 +25,17 @@ import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.validator.constraints.NotBlank;
 import org.sede.core.anotaciones.SoloEnEstaEntidad;
 import org.sede.core.dao.EntidadBase;
-import org.sede.servicio.acceso.Constants;
+import org.sede.servicio.acceso.ConfigAcceso;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class GczPerfil.
  * 
  * @autor Ayuntamiento de Zaragoza
  */
 @Entity
-@Table(name = "GCZ_PERFIL", schema = Constants.ESQUEMA, uniqueConstraints = @UniqueConstraint(columnNames = {
+@Table(name = "GCZ_PERFIL", schema = ConfigAcceso.ESQUEMA, uniqueConstraints = @UniqueConstraint(columnNames = {
 		"CODIGO_PERFIL", "CODIGO_SERVICIO" }))
 @SequenceGenerator(name = "SECUENCIA_GCZ_PERFIL_SEQ", sequenceName = "GCZ_PERFIL_SEQ", allocationSize = 1)
 @DynamicUpdate(value = true)
@@ -360,7 +359,7 @@ public class GczPerfil extends EntidadBase implements java.io.Serializable {
 	 * @return the gcz grupo usuarios
 	 */
 	@ManyToMany(fetch = FetchType.LAZY)
-	@JoinTable(name = "GCZ_PERFIL_GRUPO_USUARIO", schema = Constants.ESQUEMA, joinColumns = { @JoinColumn(name = "ID_PERFIL", nullable = false, updatable = false) }, inverseJoinColumns = { @JoinColumn(name = "ID_GRUPO_USUARIO", nullable = false, updatable = false) })
+	@JoinTable(name = "GCZ_PERFIL_GRUPO_USUARIO", schema = ConfigAcceso.ESQUEMA, joinColumns = { @JoinColumn(name = "ID_PERFIL", nullable = false, updatable = false) }, inverseJoinColumns = { @JoinColumn(name = "ID_GRUPO_USUARIO", nullable = false, updatable = false) })
 	public List<GczGrupoUsuario> getGczGrupoUsuarios() {
 		return this.gczGrupoUsuarios;
 	}
@@ -380,7 +379,7 @@ public class GczPerfil extends EntidadBase implements java.io.Serializable {
 	 * @return the gcz grupo operacioneses
 	 */
 	@ManyToMany(fetch = FetchType.LAZY)
-	@JoinTable(name = "GCZ_PERFIL_GRUPO_OPERACIONES", schema = Constants.ESQUEMA, joinColumns = { @JoinColumn(name = "ID_PERFIL", nullable = false, updatable = false) }, inverseJoinColumns = { @JoinColumn(name = "ID_GRUPO_OPERACIONES", nullable = false, updatable = false) })
+	@JoinTable(name = "GCZ_PERFIL_GRUPO_OPERACIONES", schema = ConfigAcceso.ESQUEMA, joinColumns = { @JoinColumn(name = "ID_PERFIL", nullable = false, updatable = false) }, inverseJoinColumns = { @JoinColumn(name = "ID_GRUPO_OPERACIONES", nullable = false, updatable = false) })
 	public List<GczGrupoOperaciones> getGczGrupoOperacioneses() {
 		return this.gczGrupoOperacioneses;
 	}
@@ -401,7 +400,7 @@ public class GczPerfil extends EntidadBase implements java.io.Serializable {
 	 * @return the gcz usuarios
 	 */
 	@ManyToMany(fetch = FetchType.LAZY)
-	@JoinTable(name = "GCZ_PERFIL_USUARIO", schema = Constants.ESQUEMA, joinColumns = { @JoinColumn(name = "ID_PERFIL", nullable = false, updatable = false) }, inverseJoinColumns = { @JoinColumn(name = "ID_USUARIO", nullable = false, updatable = false) })
+	@JoinTable(name = "GCZ_PERFIL_USUARIO", schema = ConfigAcceso.ESQUEMA, joinColumns = { @JoinColumn(name = "ID_PERFIL", nullable = false, updatable = false) }, inverseJoinColumns = { @JoinColumn(name = "ID_USUARIO", nullable = false, updatable = false) })
 	public List<GczUsuario> getGczUsuarios() {
 		return this.gczUsuarios;
 	}

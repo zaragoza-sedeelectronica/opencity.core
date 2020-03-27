@@ -43,7 +43,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.googlecode.genericdao.search.SearchResult;
 
-// TODO: Auto-generated Javadoc
 /**
  * Class UserController.
  * 
@@ -52,7 +51,7 @@ import com.googlecode.genericdao.search.SearchResult;
  * 
  */
 @Gcz(servicio="ADMIN",seccion="ADMIN")
-@Transactional(Constants.TM)
+@Transactional(ConfigAcceso.TM)
 @Controller
 @RequestMapping(value = "/" + UserController.MAPPING, method = RequestMethod.GET)
 @PlantillaHTML(CredencialesController.MAPPING)

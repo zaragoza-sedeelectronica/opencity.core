@@ -3,6 +3,7 @@ package org.sede.servicio.acceso.dao;
 import java.math.BigDecimal;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.util.List;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
@@ -15,7 +16,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.googlecode.genericdao.dao.jpa.GenericDAO;
 
-// TODO: Auto-generated Javadoc
 /**
  * Interface CiudadanoGenericDAO.
  * 
@@ -255,5 +255,6 @@ public interface CiudadanoGenericDAO extends GenericDAO<Ciudadano, Integer> {
 	 * @return boolean
 	 */
 	Boolean updateDocumentoIdentificativo(Ciudadano c);
+	List<Ciudadano> buscarUsuariosByDocumentoIdentificativo(String documentoIdentificativo);
 }
 

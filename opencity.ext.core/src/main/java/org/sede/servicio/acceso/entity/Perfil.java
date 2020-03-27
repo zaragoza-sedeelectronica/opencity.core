@@ -40,7 +40,6 @@ import org.sede.core.dao.EntidadBase;
 import org.sede.servicio.acceso.ConfigCiudadano;
 import org.springframework.format.annotation.DateTimeFormat;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class Perfil.
  */

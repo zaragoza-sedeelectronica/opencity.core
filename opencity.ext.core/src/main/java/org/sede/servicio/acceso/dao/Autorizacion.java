@@ -18,7 +18,6 @@ import org.sede.servicio.acceso.entity.Credenciales;
 import org.sede.servicio.acceso.entity.Seccion;
 import org.sede.servicio.acceso.entity.Servicio;
 
-// TODO: Auto-generated Javadoc
 /**
  * Class Autorizacion.
  * 

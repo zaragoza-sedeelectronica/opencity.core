@@ -77,6 +77,12 @@ public class SearchFiql {
 	}
 	
 	public String getSearchExpression() {
+		return getSearchExpression(false);
+	}
+	public String getSearchExpressionElastic() {
+		return getSearchExpression(true);
+	}
+	public String getSearchExpression(boolean elastic) {
 		
 		if ("".equals(this.searchExpression) && !ignoreQueryString) {
 		
@@ -89,13 +95,38 @@ public class SearchFiql {
 			while (parameterNames.hasMoreElements()) {
 				String paramName = parameterNames.nextElement();
 				if (CheckeoParametros.PARAMQUERY.equals(paramName)) {
-					query.append(req.getParameter(paramName) + ";");
+					if (elastic) {
+						query.append(convertirEspaciosAAND(req.getParameter(paramName)) + " AND ");
+					} else {
+						query.append(req.getParameter(paramName) + ";");
+					}
 				} else if (CheckeoParametros.PARAMDISTANCEQUERYSOLR.equals(paramName)) {
 					this.distance = Integer.parseInt(req.getParameter(paramName));
 				} else if (CheckeoParametros.PARAMSTART.equals(paramName)) {
 					this.start = Integer.parseInt(req.getParameter(paramName));
+				} else if (CheckeoParametros.PAGESIZE.equals(paramName) || CheckeoParametros.PAGE.equals(paramName)) {
+					Integer page = req.getParameter(CheckeoParametros.PAGE) == null 
+							? CheckeoParametros.defaultPage : Integer.parseInt(req.getParameter(CheckeoParametros.PAGE));
+					Integer pageSize = Integer.parseInt(req.getParameter(CheckeoParametros.PAGESIZE) == null 
+							? CheckeoParametros.ROWS : req.getParameter(CheckeoParametros.PAGESIZE));
+					
+					this.rows = pageSize;
+					this.start = (page - 1) * pageSize;
+					
 				} else if (CheckeoParametros.PARAMSORT.equals(paramName)) {
-					this.sort = req.getParameter(paramName);
+					String orden = req.getParameter(paramName);
+					if (orden.indexOf("-") >= 0) {
+						String[] ordenes = orden.split(",");
+						StringBuilder res = new StringBuilder();
+						for (String o : ordenes) {
+							if (o.indexOf("-") >= 0) {
+								o = o.replace("-", "") + " desc";
+							}
+							res.append(o + ",");
+						}
+						orden = res.toString();
+					}
+					this.sort = orden;
 				} else if (CheckeoParametros.PARAMSHOWALL.equals(paramName)) {
 					this.showAll = true;
 				} else if (CheckeoParametros.PARAMROWS.equals(paramName)) {
@@ -110,8 +141,17 @@ public class SearchFiql {
 						&& !CheckeoParametros.DEBUG.equals(paramName)
 						&& !CheckeoParametros.TEST.equals(paramName)
 						&& !CheckeoParametros.LOCALE.equals(paramName)
+
+						// Parametros que recibimos al publicar enlaces en FB o Google 
+						&& !"fbclid".equals(paramName)
+						&& !"gclid".equals(paramName)
+						
+						&& !CheckeoParametros.GEORSS_ICON.equals(paramName)
 						&& !CheckeoParametros.REFRESHPARAMETER.equals(paramName)
 						&& !CheckeoParametros.RESULTSONLY.equals(paramName)
+						&& !CheckeoParametros.PAGE.equals(paramName)
+						&& !CheckeoParametros.PAGESIZE.equals(paramName)
+						&& !"_".equals(paramName)
 						&& !CheckeoParametros.PARAMSRS.equals(paramName)
 						&& !isExcluded(paramName)) {
 					String[] paramValues = req.getParameterValues(paramName);
@@ -126,21 +166,33 @@ public class SearchFiql {
 								query.append(",");
 							}
 							tiene = true;
-							query.append(addParameter(paramName, paramValue));
+							if (elastic) {
+								query.append(addParameterElastic(paramName, paramValue));
+							} else {
+								query.append(addParameter(paramName, paramValue));
+							}
 						}
 					}
 					if (paramValues.length > 1) {
 						query.append(")");
 					}
 					if (tiene) {
-						query.append(";");
+						if (elastic) {
+							query.append(" AND ");
+						} else {
+							query.append(";");
+						}
 					}
 				}
 			}
 			if (query.length() > 0) {
-				query.deleteCharAt(query.length() - 1);
+				if (elastic) {
+					query.delete(query.lastIndexOf(" AND "), query.length());
+				} else {
+					query.deleteCharAt(query.length() - 1);	
+				}
 			}
-			logger.info("FIQL: " + query.toString());
+			logger.info((elastic ? "ElasticSearch: " : "FIQL: ") + query.toString());
 			searchExpression = query.toString();
 			return query.toString();
 		} else {
@@ -148,6 +200,7 @@ public class SearchFiql {
 		}
 	}
 
+	
 	private boolean isExcluded(String paramName) {
 		for (String s : excludedFields) {
 			if (paramName.equals(s)) {
@@ -194,6 +247,64 @@ public class SearchFiql {
 			retorno = paramName + operador + paramValue;
 		}
 		return retorno;
+	}
+	private String addParameterElastic(String paramName, String paramValue) {
+		String operador = ":";
+		String retorno = paramName + operador + convertirEspaciosAAND(paramValue);
+//		if (paramName.indexOf("Contains") > 0) {
+//			paramName = paramName.replace("Contains", "");
+//			paramValue = paramValue + "*";
+//			retorno = paramName + operador + paramValue;
+//		}
+//		if (paramName.indexOf("Till") > 0) {
+//			operador = "=lt=";
+//			paramName = paramName.replace("Till", "");
+//			retorno = paramName + operador + paramValue;
+//		}
+//		if (paramName.indexOf("From") > 0) {
+//			operador = "=ge=";
+//			paramName = paramName.replace("From", "");
+//			retorno = paramName + operador + paramValue;
+//		}
+//
+//		if (paramName.indexOf("InList") > 0) {
+//			StringBuilder consulta = new StringBuilder();
+//			String[] values = paramValue.split(",");
+//			paramName = paramName.replace("InList", "");
+//			for (int i = 0; i < values.length; i++) {
+//				if (i > 0) {
+//					consulta.append(",");
+//				}
+//				consulta.append(paramName + operador + values[i].trim());
+//			}
+//			retorno = consulta.toString();
+//		}
+//		if (paramName.indexOf("NotEquals") > 0) {
+//			paramName = paramName.replace("NotEquals", "");
+//			operador = "!=";
+//			retorno = paramName + operador + paramValue;
+//		}
+		return retorno;
+	}
+
+	private String convertirEspaciosAAND(String paramValue) {
+		if (paramValue.indexOf("AND") > 0) {
+			return paramValue;
+		} else {
+			String[] retorno = paramValue.split(" ");
+			StringBuilder req = new StringBuilder();
+			for (int i = 0; i < retorno.length; i++) {
+				if (i > 0) {
+					req.append(" AND ");
+				}
+				req.append(retorno[i]);
+			}
+			if (retorno.length > 1) {
+				return "(" + req.toString() + ")";
+			} else {
+				return req.toString();
+			}
+		}
 	}
 
 	public Integer getStart() {

@@ -13,9 +13,8 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.DynamicUpdate;
 import org.sede.core.anotaciones.SoloEnEstaEntidad;
-import org.sede.servicio.acceso.Constants;
+import org.sede.servicio.acceso.ConfigAcceso;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class GczPropiedadUsuario.
  * 
@@ -23,7 +22,7 @@ import org.sede.servicio.acceso.Constants;
  * 
  */
 @Entity
-@Table(name = "GCZ_PROPIEDAD_USUARIO", schema = Constants.ESQUEMA)
+@Table(name = "GCZ_PROPIEDAD_USUARIO", schema = ConfigAcceso.ESQUEMA)
 @DynamicUpdate(value = true)
 public class GczPropiedadUsuario implements java.io.Serializable {
 

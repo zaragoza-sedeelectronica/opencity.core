@@ -7,6 +7,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.apache.commons.codec.CharEncoding;
+import org.sede.core.utils.Funciones;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
@@ -23,7 +24,8 @@ public class Html2MarkDown {
 	private boolean enEncabezado = false;
 
 	public String transformar(String xml) {
-		xml = "<!DOCTYPE html [<!ENTITY aacute \"á\"><!ENTITY eacute \"é\"><!ENTITY iacute \"í\"><!ENTITY oacute \"ó\"><!ENTITY uacute \"ú\"><!ENTITY ntilde \"ñ\">]>"
+		
+		xml = "<!DOCTYPE html [<!ENTITY ordm \"º\"><!ENTITY Aacute \"Á\"><!ENTITY aacute \"á\"><!ENTITY Eacute \"É\"><!ENTITY eacute \"é\"><!ENTITY Iacute \"Í\"><!ENTITY iacute \"í\"><!ENTITY Oacute \"Ó\"><!ENTITY oacute \"ó\"><!ENTITY Uacute \"Ú\"><!ENTITY uacute \"ú\"><!ENTITY ntilde \"ñ\"><!ENTITY nbsp \" \">]>"
 				+ "<html>" + xml + "</html>";
 		try {
 			DocumentBuilder db = DocumentBuilderFactory.newInstance()
@@ -36,8 +38,12 @@ public class Html2MarkDown {
 			}
 			return retorno.toString();
 		} catch (Exception e) {
-			logger.error(e.getMessage());
-			return "";
+			if (xml.length() > 100) {
+			 logger.error(e.getMessage() + " texto: " + xml.substring(0,100));
+			} else {
+				
+			}
+			return Funciones.removeHTMLEntity(xml);
 		}
 	}
 

@@ -8,11 +8,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.googlecode.genericdao.search.SearchResult;
+
 import org.sede.core.anotaciones.Interno;
 import org.sede.core.anotaciones.Permisos;
 import org.sede.core.anotaciones.Rel;
 import org.sede.core.anotaciones.ResponseClass;
 import org.sede.core.anotaciones.SRSPorDefecto;
+import org.sede.core.anotaciones.SoloEnDetalle;
 import org.sede.core.anotaciones.SoloEnEstaEntidad;
 import org.sede.core.anotaciones.SourceSRS;
 import org.sede.core.utils.Propiedades;
@@ -222,12 +225,25 @@ public class Peticion {
 	
 	
 	public boolean puedeVerCampoEnSeccion(Field field, List<String> permisosEnSecc, Method metodoRespuesta) {
-		if (field.isAnnotationPresent(Interno.class) || "pathInterno".equals(field.getName()) || "transientField".equals(field.getName())  || "serialVersionUID".equals(field.getName())) {
+		if (field.isAnnotationPresent(Interno.class) || "handler".equals(field.getName()) || "pathInterno".equals(field.getName()) || "transientField".equals(field.getName())  || "serialVersionUID".equals(field.getName())) {
 			return false;
 		}
 		if (field.isAnnotationPresent(SoloEnEstaEntidad.class) && metodoRespuesta != null) {
 			if (metodoRespuesta.isAnnotationPresent(ResponseClass.class)) {
 				if (metodoRespuesta.getAnnotation(ResponseClass.class).value() == field.getDeclaringClass()) {
+					// continua
+				} else {
+					return false;
+				}
+			} else {
+				return false;
+			}
+		}
+		if (field.isAnnotationPresent(SoloEnDetalle.class) && metodoRespuesta != null) {
+			if (metodoRespuesta.isAnnotationPresent(ResponseClass.class)) {
+				if (metodoRespuesta.getAnnotation(ResponseClass.class).entity() != null 
+						&& metodoRespuesta.getAnnotation(ResponseClass.class).entity() != SearchResult.class
+						) {
 					// continua
 				} else {
 					return false;

@@ -35,7 +35,8 @@ import org.sede.core.utils.MD5;
 import org.sede.core.utils.PasswordGenerator;
 import org.sede.core.utils.Propiedades;
 import org.sede.core.utils.RandomGUID;
-import org.sede.servicio.acceso.Constants;
+import org.sede.servicio.acceso.ConfigCiudadano;
+import org.sede.servicio.acceso.ConfigAcceso;
 import org.sede.servicio.acceso.entity.Credenciales;
 import org.sede.servicio.acceso.entity.GczGrupoUsuario;
 import org.sede.servicio.acceso.entity.GczUsuario;
@@ -54,7 +55,6 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.googlecode.genericdao.dao.jpa.GenericDAOImpl;
-// TODO: Auto-generated Javadoc
 
 /**
  * The Class GczUsuarioGenericDAOImpl.
@@ -63,7 +63,7 @@ import com.googlecode.genericdao.dao.jpa.GenericDAOImpl;
  * 
  */
 @Repository
-@Transactional(Constants.TM)
+@Transactional(ConfigAcceso.TM)
 public class GczUsuarioGenericDAOImpl extends GenericDAOImpl <GczUsuario, BigDecimal> implements GczUsuarioGenericDAO {
 	
 	/** Constant logger. */
@@ -81,7 +81,7 @@ public class GczUsuarioGenericDAOImpl extends GenericDAOImpl <GczUsuario, BigDec
 	 *
 	 * @param entityManager the new entity manager
 	 */
-	@PersistenceContext(unitName=Constants.ESQUEMA)
+	@PersistenceContext(unitName=ConfigAcceso.ESQUEMA)
 	public void setEntityManager(EntityManager entityManager) {
 		this.setEm(entityManager);
 	}
@@ -264,7 +264,7 @@ public class GczUsuarioGenericDAOImpl extends GenericDAOImpl <GczUsuario, BigDec
 
 		if(grupos.length() > 0){
 			Query q = em().createNativeQuery("select ID_LIDER, ID_ASOCIADO, TIPO_ASOCIADO, ID_USUARIO, TIPO_USUARIO "
-					+ "from lideres "
+					+ "from " + ConfigCiudadano.ESQUEMA + ".lideres "
 					+ "where (id_usuario=" + gczUsuario.getId()
 					+ " and tipo_usuario='" + GczUsuario.class.getName() + "') or "
 					+ " (id_usuario in (" + grupos + ") and tipo_usuario = '" + GczGrupoUsuario.class.getName() + "')");

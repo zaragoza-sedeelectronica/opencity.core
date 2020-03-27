@@ -76,7 +76,7 @@ public class Utils {
 		return Funciones.getPathSecure(request) + "/acceso?r=" + URLEncoder.encode(request.getRequestURI() + q, CharEncoding.UTF_8);
 	}
 	public static String getLinkCloseSession(HttpServletRequest request) throws UnsupportedEncodingException {
-		return "/opencityext/acceso/salir?r=" + URLEncoder.encode(request.getRequestURI(), CharEncoding.UTF_8);
+		return Propiedades.getContexto() + "/acceso/salir?r=" + URLEncoder.encode(request.getRequestURI(), CharEncoding.UTF_8);
 	}
 	// Para incluir el día actual se debe marcar el día siguiente
 	public static boolean enPlazo(Date inicio, Date fin) {

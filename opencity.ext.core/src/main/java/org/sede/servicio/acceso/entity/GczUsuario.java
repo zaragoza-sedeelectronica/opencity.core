@@ -25,9 +25,8 @@ import org.hibernate.annotations.SelectBeforeUpdate;
 import org.sede.core.anotaciones.SoloEnEstaEntidad;
 import org.sede.core.dao.EntidadBase;
 import org.sede.core.dao.PersistenceContextListener;
-import org.sede.servicio.acceso.Constants;
+import org.sede.servicio.acceso.ConfigAcceso;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class GczUsuario.
  * 
@@ -35,7 +34,7 @@ import org.sede.servicio.acceso.Constants;
  */
 @Entity
 @EntityListeners(PersistenceContextListener.class)
-@Table(name = "GCZ_USUARIO", schema = Constants.ESQUEMA, uniqueConstraints = @UniqueConstraint(columnNames = "LOGIN"))
+@Table(name = "GCZ_USUARIO", schema = ConfigAcceso.ESQUEMA, uniqueConstraints = @UniqueConstraint(columnNames = "LOGIN"))
 @DynamicUpdate
 @SelectBeforeUpdate
 public class GczUsuario extends EntidadBase implements java.io.Serializable {
@@ -589,7 +588,7 @@ public class GczUsuario extends EntidadBase implements java.io.Serializable {
 	 * @return the gcz grupo usuarios
 	 */
 	@ManyToMany(fetch = FetchType.LAZY)
-	@JoinTable(name = "GCZ_USUARIO_GRUPO_USUARIO", schema = Constants.ESQUEMA, joinColumns = { @JoinColumn(name = "ID_USUARIO", nullable = false, updatable = false) }, inverseJoinColumns = { @JoinColumn(name = "ID_GRUPO_USUARIO", nullable = false, updatable = false) })
+	@JoinTable(name = "GCZ_USUARIO_GRUPO_USUARIO", schema = ConfigAcceso.ESQUEMA, joinColumns = { @JoinColumn(name = "ID_USUARIO", nullable = false, updatable = false) }, inverseJoinColumns = { @JoinColumn(name = "ID_GRUPO_USUARIO", nullable = false, updatable = false) })
 	public List<GczGrupoUsuario> getGczGrupoUsuarios() {
 		return this.gczGrupoUsuarios;
 	}
@@ -609,7 +608,7 @@ public class GczUsuario extends EntidadBase implements java.io.Serializable {
 	 * @return the gcz perfils
 	 */
 	@ManyToMany(fetch = FetchType.LAZY)
-	@JoinTable(name = "GCZ_PERFIL_USUARIO", schema = Constants.ESQUEMA, joinColumns = { @JoinColumn(name = "ID_USUARIO", nullable = false, updatable = false) }, inverseJoinColumns = { @JoinColumn(name = "ID_PERFIL", nullable = false, updatable = false) })
+	@JoinTable(name = "GCZ_PERFIL_USUARIO", schema = ConfigAcceso.ESQUEMA, joinColumns = { @JoinColumn(name = "ID_USUARIO", nullable = false, updatable = false) }, inverseJoinColumns = { @JoinColumn(name = "ID_PERFIL", nullable = false, updatable = false) })
 	public List<GczPerfil> getGczPerfils() {
 		return this.gczPerfils;
 	}

@@ -20,7 +20,7 @@ import org.sede.core.dao.JPAIgnoreTraversableResolver;
 import org.sede.core.rest.Mensaje;
 import org.sede.core.utils.Funciones;
 import org.sede.core.utils.LiderUtils;
-import org.sede.servicio.acceso.Constants;
+import org.sede.servicio.acceso.ConfigAcceso;
 import org.sede.servicio.acceso.entity.Credenciales;
 import org.sede.servicio.acceso.entity.GczGrupoUsuario;
 import org.sede.servicio.acceso.entity.Lider;
@@ -31,8 +31,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.googlecode.genericdao.dao.jpa.GenericDAOImpl;
 import com.googlecode.genericdao.search.SearchResult;
-// TODO: Auto-generated Javadoc
-
 /**
  * The Class GczGroupUsuarioGenericDAOImpl.
  * 
@@ -40,7 +38,7 @@ import com.googlecode.genericdao.search.SearchResult;
  * 
  */
 @Repository
-@Transactional(Constants.TM)
+@Transactional(ConfigAcceso.TM)
 public class GczGroupUsuarioGenericDAOImpl extends GenericDAOImpl <GczGrupoUsuario, BigDecimal> implements GczGroupUsuarioGenericDAO {
 	
 	/**
@@ -48,7 +46,7 @@ public class GczGroupUsuarioGenericDAOImpl extends GenericDAOImpl <GczGrupoUsuar
 	 *
 	 * @param entityManager the new entity manager
 	 */
-	@PersistenceContext(unitName=Constants.ESQUEMA)
+	@PersistenceContext(unitName=ConfigAcceso.ESQUEMA)
 	public void setEntityManager(EntityManager entityManager) {
 		this.setEm(entityManager);
 	}

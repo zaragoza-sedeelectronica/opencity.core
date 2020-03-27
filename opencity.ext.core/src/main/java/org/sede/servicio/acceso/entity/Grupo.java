@@ -2,7 +2,6 @@ package org.sede.servicio.acceso.entity;
 
 import java.io.Serializable;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class Grupo.
  * 

@@ -13,13 +13,12 @@ import javax.validation.ValidatorFactory;
 
 import org.hibernate.Query;
 import org.sede.core.dao.JPAIgnoreTraversableResolver;
-import org.sede.servicio.acceso.Constants;
+import org.sede.servicio.acceso.ConfigAcceso;
 import org.sede.servicio.acceso.entity.GczPerfil;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.googlecode.genericdao.dao.jpa.GenericDAOImpl;
-// TODO: Auto-generated Javadoc
 
 /**
  * The Class GczPerfilGenericDAOImpl.
@@ -28,7 +27,7 @@ import com.googlecode.genericdao.dao.jpa.GenericDAOImpl;
  * 
  */
 @Repository
-@Transactional(Constants.TM)
+@Transactional(ConfigAcceso.TM)
 public class GczPerfilGenericDAOImpl extends GenericDAOImpl <GczPerfil, BigDecimal> implements GczPerfilGenericDAO {
 
 	/**
@@ -36,7 +35,7 @@ public class GczPerfilGenericDAOImpl extends GenericDAOImpl <GczPerfil, BigDecim
 	 *
 	 * @param entityManager the new entity manager
 	 */
-	@PersistenceContext(unitName=Constants.ESQUEMA)
+	@PersistenceContext(unitName=ConfigAcceso.ESQUEMA)
 	public void setEntityManager(EntityManager entityManager) {
 		this.setEm(entityManager);
 	}

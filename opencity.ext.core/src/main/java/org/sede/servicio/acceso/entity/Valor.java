@@ -21,7 +21,6 @@ import org.sede.core.utils.Funciones;
 
 import java.math.BigDecimal;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class Valor.
  * 

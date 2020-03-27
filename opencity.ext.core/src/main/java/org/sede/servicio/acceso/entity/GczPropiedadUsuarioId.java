@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class GczPropiedadUsuarioId.
  * 

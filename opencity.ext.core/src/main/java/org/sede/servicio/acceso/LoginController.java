@@ -64,7 +64,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.googlecode.genericdao.search.Filter;
 import com.googlecode.genericdao.search.Search;
 
-// TODO: Auto-generated Javadoc
 /**
  * Class LoginController.
  * 
@@ -249,7 +248,7 @@ public class LoginController {
 	 * @param password Password
 	 * @return response entity
 	 */
-	@Transactional(Constants.TM)
+	@Transactional(ConfigAcceso.TM)
 	@ResponseClass(value = Credenciales.class)
 	@RequestMapping(value="/credenciales", method = RequestMethod.POST, consumes = {MimeTypes.JSON, MimeTypes.XML}, produces = {MimeTypes.JSON, MimeTypes.XML})
 	@OpenData
@@ -288,7 +287,7 @@ public class LoginController {
 	 * @param password Password
 	 * @return response entity
 	 */
-	@Transactional(Constants.TM)
+	@Transactional(ConfigAcceso.TM)
 	@ResponseClass(value = Ciudadano.class)
 	@RequestMapping(method = RequestMethod.POST, consumes = {MimeTypes.JSON, MimeTypes.XML}, produces = {MimeTypes.JSON, MimeTypes.XML})
 	@Permisos(Permisos.ADMIN)
@@ -342,7 +341,7 @@ public class LoginController {
 	 *
 	 * @return response entity
 	 */
-	@Transactional(Constants.TM)
+	@Transactional(ConfigAcceso.TM)
 	@Permisos(Permisos.DET)
 	@RequestMapping(value = "/regenerar-pk", method = RequestMethod.GET, consumes = {
 			MimeTypes.JSON, MimeTypes.XML }, produces = { MimeTypes.JSON,
@@ -372,7 +371,7 @@ public class LoginController {
 	 *
 	 * @return response entity
 	 */
-	@Transactional(Constants.TM)
+	@Transactional(ConfigAcceso.TM)
 	@Permisos(Permisos.DET)
 	@RequestMapping(value = "/{id}/change-password", method = RequestMethod.PUT, consumes = {
 			MimeTypes.JSON, MimeTypes.XML }, produces = { MimeTypes.JSON,
@@ -397,7 +396,7 @@ public class LoginController {
 	 * @param usuario Usuario
 	 * @return response entity
 	 */
-	@Transactional(Constants.TM)
+	@Transactional(ConfigAcceso.TM)
 	@ResponseClass(value = Usuario.class)
 	@Permisos(Permisos.NEW)
 	@RequestMapping(value="/new", method = RequestMethod.POST, consumes = { MimeTypes.JSON,
@@ -429,7 +428,7 @@ public class LoginController {
 	 * @param usuario Usuario
 	 * @return response entity
 	 */
-	@Transactional(Constants.TM)
+	@Transactional(ConfigAcceso.TM)
 	@ResponseClass(value = Usuario.class)
 	@RequestMapping(value = "/{id}", method = RequestMethod.PUT, consumes = {
 			MimeTypes.JSON, MimeTypes.XML }, produces = { MimeTypes.JSON,
@@ -464,7 +463,7 @@ public class LoginController {
 	 * @return string
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
-	@Transactional(Constants.TM)
+	@Transactional(ConfigAcceso.TM)
 	@RequestMapping(value="/login", method = RequestMethod.POST, produces = {
 			MediaType.TEXT_HTML_VALUE, "*/*" })
 	public String login(Model model, 
@@ -506,7 +505,7 @@ public class LoginController {
 			model.addAttribute(ModelAttr.DATO, new Ciudadano());
 			return "/login";
 		}
-		response.sendRedirect(("".equals(redirigir) && "".equals(t)) ? "/opencityext/servicio/zona-personal/" : Funciones.getPathSecureWithoutContext() + redirigir);
+		response.sendRedirect(("".equals(redirigir) && "".equals(t)) ? (Propiedades.getContexto() + "/servicio/zona-personal/") : Funciones.getPathSecureWithoutContext() + redirigir);
 		return null;
 	}
 
@@ -523,7 +522,7 @@ public class LoginController {
 	 * @return string
 	 * @throws MessagingException the messaging exception
 	 */
-	@Transactional(Constants.TM)
+	@Transactional(ConfigAcceso.TM)
 	@RequestMapping(value="/recuperar", method = RequestMethod.POST, produces = {
 			MediaType.TEXT_HTML_VALUE, "*/*" })
 	public String recuperar(Model model, 
@@ -586,7 +585,7 @@ public class LoginController {
 	 * @param response Response
 	 * @return string
 	 */
-	@Transactional(Constants.TM)
+	@Transactional(ConfigAcceso.TM)
 	@RequestMapping(value="/reset", method = RequestMethod.POST, produces = {
 			MediaType.TEXT_HTML_VALUE, "*/*" })
 	public String reset(Model model, 

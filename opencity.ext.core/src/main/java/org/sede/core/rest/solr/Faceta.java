@@ -2,6 +2,7 @@ package org.sede.core.rest.solr;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 
@@ -221,9 +222,15 @@ public class Faceta {
 		int showAll = this.getValues().size();
 		return getLista(request, "", showAll);
 	}
+	public String getLista(String prefijoEnlace) {
+		return getLista(Funciones.getRequest(), prefijoEnlace);
+	}
 	public String getLista(HttpServletRequest request, String prefijoEnlace) {
 		int showAll = this.getValues().size();
 		return getLista(request, prefijoEnlace, showAll);
+	}
+	public String getLista(String prefijoEnlace, int toShow) {
+		return getLista(Funciones.getRequest(), prefijoEnlace, toShow);
 	}
 	public String getLista(HttpServletRequest request, String prefijoEnlace, int toShow) {
 		StringBuilder xhtm = new StringBuilder();
@@ -280,16 +287,22 @@ public class Faceta {
 	private String facetaNoSeleccionadaBlock(HttpServletRequest request, String prefijoEnlace, ValorFaceta v, String liClass) {
 		return "<li class=\"" + liClass + "\"><a href=\"" + trataEnlace(v, request, prefijoEnlace) + "\">" + v.getNameParsed() + " <span class=\"badge\">" + v.getCount() + "</span></a></li>";
 	}
-
+	public String enlaceEliminarFaceta(String valorFaceta) {
+		return enlaceEliminarFaceta(valorFaceta, Funciones.getRequest());
+	}
 	public String enlaceEliminarFaceta(String valorFaceta, HttpServletRequest request) {
 		try {
-			String facetaName = this.getName() + escaparEnlace(valorFaceta);
+			
+			StringBuilder queryString = generarQueryString(request);
+			
+			String facetaName = URLEncoder.encode(this.getName(), CharEncoding.UTF_8) + escaparEnlace(valorFaceta);
 			String fq = URLEncoder.encode(request.getParameter(CheckeoParametros.PARAMFQ), CharEncoding.UTF_8);
+			
 			fq = fq.replace("+AND+" + facetaName, "");
 			fq = fq.replace(facetaName + "+AND+", "");
 			fq = fq.replace(facetaName, "");
 			fq = CheckeoParametros.PARAMFQ + "=" + fq;
-			return "?" + fq + (request.getParameter(CheckeoParametros.PARAMQUERYSOLR) == null ? "" : "&" + CheckeoParametros.PARAMQUERYSOLR + "=" + request.getParameter(CheckeoParametros.PARAMQUERYSOLR));
+			return "?" + fq + (request.getParameter(CheckeoParametros.PARAMQUERYSOLR) == null ? "" : "&" + CheckeoParametros.PARAMQUERYSOLR + "=" + request.getParameter(CheckeoParametros.PARAMQUERYSOLR) + queryString);
 		} catch (UnsupportedEncodingException e) {
 			logger.error(e.getMessage());
 			return "";
@@ -310,13 +323,16 @@ public class Faceta {
 
 	private String trataEnlace(ValorFaceta v, HttpServletRequest request, String prefijoEnlace) {
 		String fq;
+		
 		try {
+			StringBuilder queryString = generarQueryString(request);
+			
 			if (request.getParameter(CheckeoParametros.PARAMFQ) != null && request.getParameter(CheckeoParametros.PARAMFQ).trim().length() > 0) {
 				fq = CheckeoParametros.PARAMFQ + "=" + URLEncoder.encode(request.getParameter(CheckeoParametros.PARAMFQ), CharEncoding.UTF_8) + " AND " + this.getName() + escaparEnlace(v.getName());
 			} else {
 				fq = CheckeoParametros.PARAMFQ + "=" + this.getName() + escaparEnlace(v.getName());
 			}
-			return prefijoEnlace + "?" + fq + (request.getParameter(CheckeoParametros.PARAMQUERYSOLR) == null ? "" : "&" + CheckeoParametros.PARAMQUERYSOLR + "=" + request.getParameter(CheckeoParametros.PARAMQUERYSOLR));
+			return prefijoEnlace + "?" + fq + (request.getParameter(CheckeoParametros.PARAMQUERYSOLR) == null ? "" : "&" + CheckeoParametros.PARAMQUERYSOLR + "=" + request.getParameter(CheckeoParametros.PARAMQUERYSOLR) + queryString);
 		} catch (UnsupportedEncodingException e) {
 			logger.error(e.getMessage());
 			return "";
@@ -327,5 +343,17 @@ public class Faceta {
 		return URLEncoder.encode(":(\"" + Utils.toUnicode(valor) + "\")", CharEncoding.UTF_8);
 	}
 
-
+	private StringBuilder generarQueryString(HttpServletRequest request) {
+		StringBuilder queryString = new StringBuilder();
+		Enumeration<String> parameterNames = request.getParameterNames();
+		while (parameterNames.hasMoreElements()) {
+			String paramName = parameterNames.nextElement();
+			if (!CheckeoParametros.PARAMFQ.equals(paramName) && !CheckeoParametros.PARAMQUERYSOLR.equals(paramName)) {
+				for (String s : request.getParameterValues(paramName)) {
+					queryString.append("&" + paramName + "=" + s);
+				}
+			}
+		}
+		return queryString;
+	}
 }

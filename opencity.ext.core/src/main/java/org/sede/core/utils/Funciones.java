@@ -142,7 +142,12 @@ public class Funciones {
 					Map<?,?> map = (Map<?,?>) obj;
 					ivalue = map.get(props[0]);
 				} else {
-					Method method = obj.getClass().getMethod(getGetterMethodName(props[0]));
+					Method method;
+					if (obj.getClass().getCanonicalName().equals("org.elasticsearch.action.get.GetResponse")) {
+						method = obj.getClass().getMethod("getSource");
+					} else {
+						method = obj.getClass().getMethod(getGetterMethodName(props[0]));
+					}
 					ivalue = method.invoke(obj);
 				}
 				
@@ -161,7 +166,7 @@ public class Funciones {
 					return HbUtils.deproxy(map.get(property));
 				} else {
 					Method method;
-					if (obj instanceof GetResponse) {
+					if (obj.getClass().getCanonicalName().equals("org.elasticsearch.action.get.GetResponse")) {
 						method = obj.getClass().getMethod("getSource");
 					} else {
 						method = obj.getClass().getMethod(getGetterMethodName(property));
@@ -195,7 +200,11 @@ public class Funciones {
 				return ClaseGeojsonVacia.class;
 			}
 		} else {
-			return retorno.getClass();
+			if (retorno.getClass().getCanonicalName().indexOf(retorno.getClass().getSuperclass().getCanonicalName()) >= 0) {
+				return retorno.getClass().getSuperclass();
+			} else {
+				return retorno.getClass();
+			}
 		}
 	}
 

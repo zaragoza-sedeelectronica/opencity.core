@@ -10,7 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-// TODO: Auto-generated Javadoc
 /**
  * Class CredencialesController.
  * 
@@ -18,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
  *  
  */
 @Gcz(servicio="ADMIN",seccion="ADMIN")
-@Transactional(Constants.TM)
+@Transactional(ConfigAcceso.TM)
 @Controller
 @RequestMapping(value = "/" + CredencialesController.MAPPING, method = RequestMethod.GET)
 public class CredencialesController {

@@ -43,7 +43,6 @@ import com.googlecode.genericdao.search.Filter;
 import com.googlecode.genericdao.search.Search;
 import com.googlecode.genericdao.search.SearchResult;
 
-// TODO: Auto-generated Javadoc
 /**
  * Class CiudadanoController.
  * 

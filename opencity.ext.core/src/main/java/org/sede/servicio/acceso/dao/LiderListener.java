@@ -15,7 +15,6 @@ import org.sede.servicio.acceso.entity.Lider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-// TODO: Auto-generated Javadoc
 /**
  * The listener interface for receiving lider events.
  * The class that is interested in processing a lider
@@ -63,7 +62,21 @@ public class LiderListener {
         		AutowireHelper.autowire(this, emMovil);
                 AutowireHelper.autowire(this, emActividades);
                 AutowireHelper.autowire(this, emIntra);
-
+// FIXME modularizacion
+//                // Obtener el recurso liderado según la clase asociada
+//            	if (Acto.class.getName().equals(lider.getAssociatedType())) {
+//                    lider.setAssociatedResource(emActividades.find(Acto.class, lider.getAssociatedId()));
+//            	}
+//            	else if (Equipamiento.class.getName().equals(lider.getAssociatedType())) {
+//                    lider.setAssociatedResource(emIntra.find(Equipamiento.class, lider.getAssociatedId()));
+//            	}
+//            	else if (CentroSubtema.class.getName().equals(lider.getAssociatedType())) {
+//                    lider.setAssociatedResource(emIntra.find(CentroSubtema.class, lider.getAssociatedId()));
+//            	}
+//            	else if (GczGrupoUsuario.class.getName().equals(lider.getAssociatedType())) {
+//            	    lider.setAssociatedResource(emMovil.find(GczGrupoUsuario.class, lider.getAssociatedId()));
+//                }
+//            	
             	// Obtener el usuario líder según la clase
             	if (Ciudadano.class.getName().equals(lider.getUserType())) {
                     lider.setUserResource(emNoticias.find(Ciudadano.class, lider.getUserId().intValue()));

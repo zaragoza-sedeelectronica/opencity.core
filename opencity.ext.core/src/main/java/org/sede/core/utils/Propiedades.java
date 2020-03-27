@@ -141,18 +141,22 @@ public class Propiedades {
 		return Propiedades.getString("path.aplicaciones.disk");
 	}
 	public static boolean excludedFromRecaptcha(HttpServletRequest request) {
-		String[] lista = Propiedades.getString("recaptcha.exclude").split(",");
-		String ip = Funciones.getIpUser(request);
-		if (lista.length > 0) {
-			for (String val : lista) {
-				if (StringUtils.isNotEmpty(ip)
-						&& StringUtils.isNotEmpty(val)
-						&& ip.contains(val)) {
-					return true;
+		if (Propiedades.isLocal()) {
+			return true;
+		} else {
+			String[] lista = Propiedades.getString("recaptcha.exclude").split(",");
+			String ip = Funciones.getIpUser(request);
+			if (lista.length > 0) {
+				for (String val : lista) {
+					if (StringUtils.isNotEmpty(ip)
+							&& StringUtils.isNotEmpty(val)
+							&& ip.contains(val)) {
+						return true;
+					}
 				}
 			}
+			return false;
 		}
-		return false;
 	}
 
 	public static String getHostTarjetaCiudadana() {
@@ -195,10 +199,25 @@ public class Propiedades {
 	public static String getThymeleafView() {
 		return Propiedades.getString("thymeleaf.view");
 	}
+	public static boolean isThymeleafStrictMode() {
+		if (RESOURCE_BUNDLE.containsKey("thymeleaf.strictMode")) {
+			return "true".equals(Propiedades.getString("thymeleaf.strictMode"));
+		}else {
+			return true;
+		}
+		
+	}
+	
 	public static String getPathi18n() {
 		return Propiedades.getString("path.i18n");
 	}
-	
+	public static boolean isDatasourceJdbc() {
+		if (RESOURCE_BUNDLE.containsKey("datasource.jdbc")) {
+			return "true".equals(Propiedades.getString("datasource.jdbc"));
+		} else {
+			return false;
+		}
+	}
 	public static String getActivationUrl() {
 		return Propiedades.getString("activation.url");
 	}

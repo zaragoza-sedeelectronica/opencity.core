@@ -21,14 +21,13 @@ import org.hibernate.validator.constraints.NotBlank;
 import org.sede.core.anotaciones.InList;
 import org.sede.core.anotaciones.SoloEnEstaEntidad;
 import org.sede.core.dao.EntidadBase;
-import org.sede.servicio.acceso.Constants;
+import org.sede.servicio.acceso.ConfigAcceso;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class GczServicio.
  */
 @Entity
-@Table(name = "GCZ_SERVICIO", schema = Constants.ESQUEMA)
+@Table(name = "GCZ_SERVICIO", schema = ConfigAcceso.ESQUEMA)
 @DynamicUpdate(value = true)
 public class GczServicio extends EntidadBase implements java.io.Serializable {
 
@@ -405,7 +404,7 @@ public class GczServicio extends EntidadBase implements java.io.Serializable {
 	 * @return the gcz usuarios
 	 */
 	@ManyToMany(fetch = FetchType.LAZY)
-	@JoinTable(name = "GCZ_SERVICIO_AUDITOR", schema = Constants.ESQUEMA, joinColumns = { @JoinColumn(name = "CODIGO_SERVICIO", nullable = false, updatable = false) }, inverseJoinColumns = { @JoinColumn(name = "ID_USUARIO", nullable = false, updatable = false) })
+	@JoinTable(name = "GCZ_SERVICIO_AUDITOR", schema = ConfigAcceso.ESQUEMA, joinColumns = { @JoinColumn(name = "CODIGO_SERVICIO", nullable = false, updatable = false) }, inverseJoinColumns = { @JoinColumn(name = "ID_USUARIO", nullable = false, updatable = false) })
 	public List<GczUsuario> getGczUsuarios() {
 		return this.gczUsuarios;
 	}

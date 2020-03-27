@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.googlecode.genericdao.search.SearchResult;
-import com.ibm.icu.util.Calendar;
+import java.util.Calendar;
 
 @Controller
 @PlantillaHTML(HomeController.MAPPING)

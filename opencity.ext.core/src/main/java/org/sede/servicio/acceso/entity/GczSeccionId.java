@@ -3,7 +3,6 @@ package org.sede.servicio.acceso.entity;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class GczSeccionId.
  *

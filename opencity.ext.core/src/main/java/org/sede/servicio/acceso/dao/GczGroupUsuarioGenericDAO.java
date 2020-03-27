@@ -12,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 
 import com.googlecode.genericdao.dao.jpa.GenericDAO;
 
-// TODO: Auto-generated Javadoc
 /**
  * Interface GczGroupUsuarioGenericDAO.
  * 

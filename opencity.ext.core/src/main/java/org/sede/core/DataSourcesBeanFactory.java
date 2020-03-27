@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
+import org.sede.core.utils.Funciones;
 import org.sede.core.utils.Propiedades;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,6 +18,7 @@ import org.springframework.context.annotation.ClassPathScanningCandidateComponen
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.type.filter.AnnotationTypeFilter;
 import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
+import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.jndi.JndiObjectFactoryBean;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
@@ -59,8 +61,7 @@ public class DataSourcesBeanFactory implements BeanDefinitionRegistryPostProcess
 		    		
 		    	}
 			} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				logger.error(Funciones.getStackTrace(e));
 			}
 		    
 		}
@@ -77,7 +78,7 @@ public class DataSourcesBeanFactory implements BeanDefinitionRegistryPostProcess
 				logger.info("----- {}", c);
 			}
 			registry.registerBeanDefinition(entityManagerFactoryBean, defineEntityManagerFactoryBean(esquema, "dataSource" + capitalisedName, clases).getBeanDefinition());
-			registry.registerBeanDefinition("dataSource" + capitalisedName, defineDataSourceJndi(jndi).getBeanDefinition());
+			registry.registerBeanDefinition("dataSource" + capitalisedName, defineDataSourceJndi(esquema, jndi).getBeanDefinition());
 			registry.registerBeanDefinition("transactionManager" + capitalisedName, defineTransactionManager(entityManagerFactoryBean).getBeanDefinition());
 			registry.registerBeanDefinition("os" + capitalisedName, defineOEIVI(entityManagerFactoryBean).getBeanDefinition());
 		}
@@ -100,12 +101,33 @@ public class DataSourcesBeanFactory implements BeanDefinitionRegistryPostProcess
 	    return definitionBuilder;  
 	}
 	
-	private BeanDefinitionBuilder defineDataSourceJndi(String dataSourceName) {
-		BeanDefinitionBuilder definitionBuilder = BeanDefinitionBuilder.genericBeanDefinition(JndiObjectFactoryBean.class); 
-	    definitionBuilder.setScope("singleton");
-	    definitionBuilder.setLazyInit(true);
-		definitionBuilder.addPropertyValue("jndiName", Propiedades.getDatasourcePrefix() + "jdbc/" + dataSourceName);
-	    return definitionBuilder;  
+	private BeanDefinitionBuilder defineDataSourceJndi(String esquema, String dataSourceName) {
+		if (Propiedades.isDatasourceJdbc()) {
+			logger.info(dataSourceName + ": Acceso a datos a través de jdbc");
+			BeanDefinitionBuilder definitionBuilder = BeanDefinitionBuilder.genericBeanDefinition(DriverManagerDataSource.class); 
+		    definitionBuilder.setScope("singleton");
+		    definitionBuilder.setLazyInit(true);
+		    if (!Propiedades.containsKey(esquema + ".url")) {
+		    	logger.info("default jdbc: " + Propiedades.getString("jdbc.default.url"));
+		    	definitionBuilder.addPropertyValue("url", Propiedades.getString("jdbc.default.url"));
+		    } else {
+		    	logger.info("specific jdbc: " + Propiedades.getString(esquema + ".url"));
+		    	definitionBuilder.addPropertyValue("url", Propiedades.getString(esquema + ".url"));
+		    }
+		    if (Propiedades.containsKey(esquema + ".driver")) {
+		    	definitionBuilder.addPropertyValue("driverClassName", Propiedades.getString(esquema + ".driver"));
+		    }
+		    definitionBuilder.addPropertyValue("username", Propiedades.getString(esquema + ".username"));
+		    definitionBuilder.addPropertyValue("password", Propiedades.getString(esquema + ".password"));
+		    return definitionBuilder;
+		} else {
+			logger.info(dataSourceName + ": Acceso a datos a través de jndi");
+			BeanDefinitionBuilder definitionBuilder = BeanDefinitionBuilder.genericBeanDefinition(JndiObjectFactoryBean.class); 
+		    definitionBuilder.setScope("singleton");
+		    definitionBuilder.setLazyInit(true);
+			definitionBuilder.addPropertyValue("jndiName", Propiedades.getDatasourcePrefix() + "jdbc/" + dataSourceName);
+		    return definitionBuilder;
+		}
 	}
 	private BeanDefinitionBuilder defineTransactionManager(String name) {
 		BeanDefinitionBuilder definitionBuilder = BeanDefinitionBuilder.genericBeanDefinition(JpaTransactionManager.class); 

@@ -54,6 +54,7 @@ import net.sf.ehcache.constructs.web.filter.Filter;
 import net.sf.ehcache.constructs.web.filter.FilterNonReentrantException;
 
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.apache.commons.lang3.StringUtils;
 import org.sede.core.anotaciones.Cache;
 import org.sede.core.plantilla.LayoutInterceptor;
 import org.sede.core.rest.CheckeoParametros;
@@ -62,11 +63,13 @@ import org.sede.core.rest.Peticion;
 import org.sede.core.rest.Rest;
 import org.sede.core.tag.Utils;
 import org.sede.core.utils.Funciones;
+import org.sede.core.utils.Propiedades;
 import org.sede.servicio.acceso.entity.Credenciales;
 import org.sede.servicio.analytics.AsyncLog;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
  * An abstract CachingFilter.
@@ -299,7 +302,7 @@ public abstract class CachingFilter extends Filter {
             + " </div>"
             + " <footer class=\"fnd-gris-claro margin-t3em\">"
             + "  <div class=\"container-fluid text-center\">"
-            + "   <a class=\"navbar-left\" href=\"/opencityext/portal/copy\">"
+            + "   <a class=\"navbar-left\" href=\"" + Propiedades.getContexto() + "/portal/copy\">"
             + "    <strong>&copy; Ayuntamiento de Zaragoza. " + Calendar.getInstance().get(Calendar.YEAR) + "</strong>"
             + "   </a>"
             + "  </div>"
@@ -360,6 +363,7 @@ public abstract class CachingFilter extends Filter {
                             logger.debug("PageInfo ok. Adding to cache {} with key {}",blockingCache.get(actualCache).getName(), key);
                         }
                         if ("GET".equalsIgnoreCase(request.getMethod()) 
+                        		&& !peticionClientId(request) 
                         		&& (request.getAttribute(CheckeoParametros.NOCACHE) != null 
                         		&& ((Boolean)request.getAttribute(CheckeoParametros.NOCACHE)).booleanValue() == true)) {
                         	blockingCache.get(actualCache).put(new Element(key, pageInfo));
@@ -396,7 +400,18 @@ public abstract class CachingFilter extends Filter {
         return pageInfo;
     }
 
-    /**
+    private boolean peticionClientId(HttpServletRequest request) {
+    	String clientId = request.getHeader(CheckeoParametros.HEADERCLIENTID);
+		if (clientId == null && request.getSession().getAttribute(CheckeoParametros.SESSIONGCZ) != null) {
+			return true;
+		} else if (StringUtils.isNotEmpty(clientId)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	/**
      * Builds the PageInfo object by passing the request along the filter chain
      * 
      * @param request
@@ -635,9 +650,12 @@ public abstract class CachingFilter extends Filter {
             final HttpServletResponse response, final PageInfo pageInfo)
             throws IOException {
         byte[] body;
-
+        
         boolean shouldBodyBeZero = ResponseUtil.shouldBodyBeZero(request,
                 pageInfo.getStatusCode());
+        if (RequestMethod.HEAD.equals(request.getMethod())) {
+        	shouldBodyBeZero = true;
+        }
         if (shouldBodyBeZero) {
             body = new byte[0];
         } else if (acceptsGzipEncoding(request)) {

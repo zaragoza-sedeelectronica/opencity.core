@@ -14,7 +14,6 @@ import org.hibernate.validator.constraints.URL;
 import org.sede.core.utils.AESSec;
 
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class Usuario.
  * 

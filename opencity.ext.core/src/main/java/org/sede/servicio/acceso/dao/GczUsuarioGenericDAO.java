@@ -12,7 +12,6 @@ import org.sede.servicio.acceso.entity.Usuario;
 
 import com.googlecode.genericdao.dao.jpa.GenericDAO;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Interface GczUsuarioGenericDAO.
  * 

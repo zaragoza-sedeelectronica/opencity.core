@@ -5,6 +5,7 @@ import java.io.File;
 import java.math.BigDecimal;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -41,7 +42,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.googlecode.genericdao.dao.jpa.GenericDAOImpl;
 
-// TODO: Auto-generated Javadoc
 /**
  * Class CiudadanoGenericDAOImpl.
  * 
@@ -672,11 +672,38 @@ public class CiudadanoGenericDAOImpl extends GenericDAOImpl <Ciudadano, Integer>
 			usr.setJuntaUser(row[9] == null ? null : (String) row[9]);
 			usr.setMobile(row[10] == null ? null : (String) row[10]);
 			usr.setImage(row[11] == null ? null : (String) row[11]);
-			usr.setDocumentoIdentificativo(row[12] == null ? null : (String) row[11]);
+			usr.setDocumentoIdentificativo(row[12] == null ? null : (String) row[12]);
 			return usr;
 		} catch (NoResultException e) {
 			return null;
 		}
+	}
+	
+	@Override
+	public List<Ciudadano> buscarUsuariosByDocumentoIdentificativo(String documentoIdentificativo) {
+		List<Ciudadano> users = new ArrayList<Ciudadano>();
+		Query q = em().createNativeQuery("select id, person_name, email, screenname, EMPADRONADO, ANIO_NACIMIENTO, id_distrito, junta, nif, junta_user, mobile, image, documento_identificativo from noticias.users where upper(documento_identificativo)=?");
+		@SuppressWarnings("unchecked")
+		List<Object[]> rows = (List<Object[]>) q.setParameter(1, documentoIdentificativo.toUpperCase().trim()).getResultList();
+		for (Object[] row : rows) {
+			Ciudadano usr = new Ciudadano();
+			usr.setId(((BigDecimal)row[0]).intValue());
+			usr.setName((String) row[1]);
+			usr.setEmail((String) row[2]);
+			usr.setScreen_name((String) row[3]);
+			usr.setEmpadronado(row[4] == null ? null : (String) row[4]);
+			
+			usr.setBirthYear(row[5] == null ? null : Integer.parseInt((String) row[5]));
+			usr.setDistrict(row[6] == null ? null : ((BigDecimal) row[6]).intValue());
+			usr.setJunta(row[7] == null ? null : (String) row[7]);
+			usr.setNif(row[8] == null ? null : (String) row[8]);
+			usr.setJuntaUser(row[9] == null ? null : (String) row[9]);
+			usr.setMobile(row[10] == null ? null : (String) row[10]);
+			usr.setImage(row[11] == null ? null : (String) row[11]);
+			usr.setDocumentoIdentificativo(row[12] == null ? null : (String) row[12]);
+			users.add(usr);
+		}
+		return users;
 	}
 	
 	/**

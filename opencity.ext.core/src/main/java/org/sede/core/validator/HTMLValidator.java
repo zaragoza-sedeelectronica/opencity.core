@@ -115,6 +115,7 @@ public class HTMLValidator implements ConstraintValidator<ValidHTML, String> {
 					    + "<!ENTITY yacute \"&#253;\">"
 					    + "<!ENTITY thorn  \"&#254;\">"
 					    + "<!ENTITY yuml   \"&#255;\">"
+					    + "<!ENTITY bull   \"&#8226;\">"
 					    + "<!ENTITY euro   \"&#8364;\">";
 	public boolean isValid(String object,
 			ConstraintValidatorContext constraintContext) {

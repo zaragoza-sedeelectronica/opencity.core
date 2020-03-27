@@ -8,7 +8,6 @@ import javax.validation.ConstraintViolation;
 import org.sede.servicio.acceso.entity.GczPerfil;
 
 import com.googlecode.genericdao.dao.jpa.GenericDAO;
-// TODO: Auto-generated Javadoc
 
 /**
  * The Interface GczPerfilGenericDAO.
