@@ -50,7 +50,6 @@ import org.apache.commons.codec.CharEncoding;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.elasticsearch.action.get.GetResponse;
 import org.sede.core.anotaciones.PathId;
 import org.sede.core.anotaciones.ResponseClass;
 import org.sede.core.entity.CalendarDay;
