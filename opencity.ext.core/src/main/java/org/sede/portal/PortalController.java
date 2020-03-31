@@ -19,23 +19,28 @@ public class PortalController {
 
 	private static final Logger logger = LoggerFactory.getLogger(PortalController.class);
 
-	@RequestMapping(value = "/", method = RequestMethod.GET, produces = {
+	@RequestMapping(value = "/", method = {RequestMethod.GET, RequestMethod.HEAD}, produces = {
 			MediaType.TEXT_HTML_VALUE})
 	public String home(Model model) {
 		logger.info("LLEGA a raiz de portal");
 		return "portal/index";
 	}
 	@Cache(Cache.DEFAULT_CACHE_NAME)
-	@RequestMapping(value = "/**/*", method = RequestMethod.GET)
+	@RequestMapping(value = "/**/*", method = {RequestMethod.GET, RequestMethod.HEAD})
 	public ModelAndView contenido(Model model, HttpServletRequest request) {
 		String path = request.getServletPath();
 		int indexServicio = path.indexOf("/servicio/");
-		
+		int indexRecurso = path.indexOf("/recurso/");
 		if (indexServicio > 0) {
 			if (path.indexOf("/portal/") >= 0) {
 				request.setAttribute(LayoutInterceptor.PLANTILLA_PORTAL, path.substring(0, indexServicio));
 			}
 			return new ModelAndView("forward:" + path.substring(indexServicio, path.length()));
+		} else if (indexRecurso > 0) {
+			if (path.indexOf("/portal/") >= 0) {
+				request.setAttribute(LayoutInterceptor.PLANTILLA_PORTAL, path.substring(0, indexRecurso));
+			}
+			return new ModelAndView("forward:" + path.substring(indexRecurso, path.length()));
 		} else {
 			
 			int indexEnlace = path.indexOf("/enlace/");

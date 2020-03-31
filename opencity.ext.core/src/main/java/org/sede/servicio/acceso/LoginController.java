@@ -91,11 +91,8 @@ public class LoginController {
 	@Autowired
 	private PadronGenericDAO daoPadron;
 	
-	/** requirements. */
 	@Autowired
 	private Map<String, RequirementsInterface> requirements;
-	
-	
 	
 	/**
 	 * Home.
@@ -679,44 +676,6 @@ public class LoginController {
 
 	}
 	
-	/**
-	 * Api crear ciudadano.
-	 *
-	 * @param ciudadano Ciudadano
-	 * @param servicioRegistro Servicio registro
-	 * @return response entity
-	 */
-	@Transactional(ConfigCiudadano.TM)
-	@ResponseClass(value = Ciudadano.class)
-	@Permisos(Permisos.NEW_USER)
-	@RequestMapping(value="/save-api", method = RequestMethod.POST, consumes = { MimeTypes.JSON, MimeTypes.XML },
-			produces = { MimeTypes.JSON, MimeTypes.XML })
-    public @ResponseBody ResponseEntity<?> apiCrearCiudadano(@RequestBody Ciudadano ciudadano,
-    		@RequestParam(value = "servicio", required = false) String servicioRegistro) {
-		Mensaje m = dao.crearUsuario(ciudadano, ciudadano.getPassword());
-		if (m.getStatus() == HttpStatus.OK.value()) {
-//			if ((servicioRegistro != null) && ZGZ16Controller.SERVICIO.equalsIgnoreCase(servicioRegistro)) {
-//		        String remitente = "Servicio de Juventud <juventud@zaragoza.es>";
-//		        String asunto = "Plataforma de Gobierno Abierto: Validación en el programa Z16";
-//				String mensaje = "<p>Te has registrado correctamente en el programa Z16, (a trav&eacute;s de la Plataforma de Gobierno Abierto).</p>" + 
-//						"<p>Una vez hayas activado tu cuenta a trav&eacute;s del otro correo que habr&aacute;s recibido, debes VALIDAR TU INSCRIPCI&Oacute;N EN Z16 siguiendo las instrucciones que te indicamos a continuaci&oacute;n:</p>" + 
-//						"<ol><li>En primer lugar, para un mejor aprovechamiento del programa, debes rellenar los datos de tu perfil, a los que puedes acceder desde el bot&oacute;n PERFIL en tu APP.</li>" + 
-//						"<li>A continuaci&oacute;n, deber&aacute;s dirigirte al CIPAJ (enlace Web) o a la CASA DE JUVENTUD de tu barrio (enlace Web al Mapa Joven), donde se VALIDAR&Aacute; TU INSCRIPCI&Oacute;N.<br/>" + 
-//						"Deber&aacute;s acudir con tu DNI o documento que acredite tu edad.</li></ol>" + 
-//						"<p>Si tienes alguna duda, puedes consultar el TUTORIAL DE INCRIPCI&Oacute;N (enlace Web), o plante&aacute;rsela a la persona que te atienda cuando vayas a validar tu inscripci&oacute;n.</p>" + 
-//						"<p>Tambi&eacute;n puedes contactar con el siguiente tel&eacute;fono: 888 888 888 888 (Horario 888 88 88 88 88 88).</p>";
-//				try {
-//					Funciones.sendMailCustomFrom(asunto, mensaje, remitente, ciudadano.getEmail(), "", "HTML");
-//				} catch (MessagingException e) {
-//					logger.error("Error al enviar correo instrucciones validación Z16 para el usuario: " + ciudadano.getEmail() + " - " + e.getMessage());
-//				}
-//			}
-			return ResponseEntity.ok(ciudadano);
-		}
-		else {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(m);
-		}
-	}
 	
 	/**
 	 * Activate.

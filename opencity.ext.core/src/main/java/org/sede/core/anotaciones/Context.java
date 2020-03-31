@@ -36,6 +36,7 @@ public class Context {
 	public static final String ESACCID = "esaccid";
 	public static final String ESEQUIP = "esequip";
 	public static final String ESNORM = "esnorm";
+	public static final String ELI = "eli";
 	
 	public static final String CRUZAR = "cruzar";
 	public static final String TURZAR = "turzar";
@@ -59,6 +60,8 @@ public class Context {
 	
 	public static final String EMP = "emp";
 	
+	public static final String ADMS = "adms";
+	
 	
 	public static final Map<String, Context> listado = new HashMap<String, Context>();
     static { 
@@ -73,6 +76,7 @@ public class Context {
         listado.put(ZAR, new Context("http://www.zaragoza.es/sede/portal/skos/vocab/", ZAR));        
         listado.put(XSD, new Context("http://www.w3.org/2001/XMLSchema#", XSD));
         listado.put(ORG, new Context("http://www.w3.org/ns/org#", ORG));
+        listado.put(ADMS, new Context("https://www.w3.org/TR/vocab-adms/#", ADMS));
         listado.put(MY, new Context("http://www.zaragoza.es/example/my#", MY));
         listado.put(GEOSPARQL, new Context("http://www.opengis.net/ont/geosparql#", GEOSPARQL));
         listado.put(GRAPH, new Context("http://www.zaragoza.es/graph/default/", GRAPH));
@@ -102,6 +106,7 @@ public class Context {
         listado.put(DCAT, new Context("http://www.w3.org/ns/dcat#",DCAT));
         listado.put(ESEQUIP, new Context("http://vocab.linkeddata.es/datosabiertos/def/urbanismo-infraestructuras/equipamiento#",ESEQUIP));
         listado.put(ESNORM, new Context("http://vocab.linkeddata.es/datosabiertos/def/sector-publico/normativa#",ESNORM));
+        listado.put(ELI, new Context("http://data.europa.eu/eli/ontology#",ELI));
         listado.put(OPEN311, new Context("http://ontology.eil.utoronto.ca/o311o#",OPEN311));
         listado.put(CPSV, new Context("http://purl.org/vocab/cpsv#",CPSV));
     }

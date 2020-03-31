@@ -168,6 +168,7 @@ public class Propiedades {
 	public static String getPasswordTarjetaCiudadana() {
 		return Propiedades.getString("tarjetaciudadana.password");
 	}
+	
 	// Firebase Cloud Messaging
 	public static String getFCMUrl() {
 		return Propiedades.getString("fcm.url");
@@ -185,6 +186,9 @@ public class Propiedades {
 	}
 	public static String getGeoNetworkURI() {
 		return Propiedades.getString("geonetwork.uri");
+	}
+	public static boolean containsKey(String key) {
+		return RESOURCE_BUNDLE.containsKey(key);
 	}
 	
 	public static String getHostElastic() {
@@ -228,8 +232,5 @@ public class Propiedades {
 		} else {
 			return "";
 		}
-	}
-	public static boolean containsKey(String key) {
-		return RESOURCE_BUNDLE.containsKey(key);
 	}
 }

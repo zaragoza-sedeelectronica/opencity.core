@@ -67,6 +67,16 @@ public class Utils {
 	public static boolean hasta(Date fecha) {
 		return (new Date().before(fecha));
 	}
+	
+	public static String getLinkLoginUsuario() throws UnsupportedEncodingException {
+		String q = "";
+		if (Funciones.getRequest().getQueryString() != null) {
+			q = "?" + Funciones.getRequest().getQueryString();
+		}
+		
+		return Funciones.getPathSecure(Funciones.getRequest()) + "/acceso?r=" + URLEncoder.encode(Funciones.getRequest().getRequestURI() + q, CharEncoding.UTF_8);
+	}
+	// TODO Eliminar tras actualizar thymeleaf
 	public static String getLinkLoginUsuario(HttpServletRequest request) throws UnsupportedEncodingException {
 		String q = "";
 		if (request.getQueryString() != null) {
@@ -75,6 +85,11 @@ public class Utils {
 		
 		return Funciones.getPathSecure(request) + "/acceso?r=" + URLEncoder.encode(request.getRequestURI() + q, CharEncoding.UTF_8);
 	}
+	
+	public static String getLinkCloseSession() throws UnsupportedEncodingException {
+		return Propiedades.getContexto() + "/acceso/salir?r=" + URLEncoder.encode(Funciones.getRequest().getRequestURI(), CharEncoding.UTF_8);
+	}
+	// TODO Eliminar tras actualizar thymeleaf	
 	public static String getLinkCloseSession(HttpServletRequest request) throws UnsupportedEncodingException {
 		return Propiedades.getContexto() + "/acceso/salir?r=" + URLEncoder.encode(request.getRequestURI(), CharEncoding.UTF_8);
 	}
@@ -329,15 +344,26 @@ public class Utils {
 						}
 					}
 				} else {
-					if (mismoMes(inicio,fin)) {
+					if (!mismoAnyo(inicio, fin)) {
+						xhtm.append(ConvertDate.date2String(inicio, ConvertDate.TEXTO_YEAR_SIN_DIA));
+						xhtm.append(" a ");
+						xhtm.append(ConvertDate.date2String(fin, ConvertDate.TEXTO_YEAR_SIN_DIA));
+						
+					} else if (mismoMes(inicio,fin)) {
 						xhtm.append(ConvertDate.date2String(inicio, ConvertDate.TEXTO_DIA_NUM));
 						xhtm.append(" al");
 						xhtm.append(ConvertDate.date2String(fin, ConvertDate.TEXTO_DIA_DE_MES));
+						if (!esteAnyo(inicio)) {
+							xhtm.append(" de " + ConvertDate.date2String(fin, "yyyy"));
+						}
 					} else {
 						String f = fechaEnTexto(fin);
 						String i = fechaEnTexto(inicio);
 						if (mismoMes(inicio,fin)) {
 							i = i.replace("de " + ConvertDate.date2String(inicio, ConvertDate.TEXTO_MES) + " ", "");
+						}
+						if (mismoAnyo(inicio,fin)) {
+							i = i.replace(" de " + ConvertDate.date2String(inicio, "yyyy"), "");
 						}
 						xhtm.append(i);
 						if (f.indexOf("este") >= 0) {
@@ -352,6 +378,13 @@ public class Utils {
 			return xhtm;
 		}
 	}
+	private static boolean esteAnyo(Date inicio) {
+		Calendar c = Calendar.getInstance();
+		c.setTime(inicio);
+		Calendar c1 = Calendar.getInstance();
+		return (c.get(Calendar.YEAR) == c1.get(Calendar.YEAR));
+	}
+
 	private static boolean mismoMes(Date inicio, Date fin) {
 		if (fin == null) {
 			return false;
@@ -363,7 +396,17 @@ public class Utils {
 		
 		return (c.get(Calendar.MONTH) == c1.get(Calendar.MONTH) && c.get(Calendar.YEAR) == c1.get(Calendar.YEAR));
 	}
-
+	private static boolean mismoAnyo(Date inicio, Date fin) {
+		if (fin == null) {
+			return false;
+		}
+		Calendar c = Calendar.getInstance();
+		c.setTime(inicio);
+		Calendar c1 = Calendar.getInstance();
+		c1.setTime(fin);
+		
+		return (c.get(Calendar.YEAR) == c1.get(Calendar.YEAR));
+	}
 	private static String fechaEnTexto(Date fin) {
 		if (esAnyoActual(fin)) {
 			if (esMesActual(fin)) {
@@ -668,6 +711,9 @@ public class Utils {
 		}
 		return retorno;
 	}
+	public static String fromUnicode(String str) {
+		return StringEscapeUtils.unescapeJava(str);
+	}
 	public static String toUnicode(String str) {
 		StringBuilder retStr = new StringBuilder();
 		for (int i = 0; i < str.length(); i++) {
@@ -735,6 +781,13 @@ public class Utils {
 		}
 	}
 	
+	public static String getRequestURI() {
+		return Funciones.getRequest().getRequestURI();
+	}
+	public static Boolean showRecaptcha() {
+		return !Propiedades.excludedFromRecaptcha(Funciones.getRequest());
+	}
+	// TODO Eliminar tras actualizar thymeleaf
 	public static Boolean showRecaptcha(HttpServletRequest request) {
 		return !Propiedades.excludedFromRecaptcha(request);
 	}
@@ -752,4 +805,14 @@ public class Utils {
 	public static String stripAccents(String input) {
 		return StringUtils.stripAccents(input);
 	}
+	public static String puntuar(String texto) {
+		String txt = texto.trim(); 
+		
+		if (!txt.endsWith(".")) {
+			txt = txt + ".";
+		}
+		
+		return txt;
+	}
+	
 }

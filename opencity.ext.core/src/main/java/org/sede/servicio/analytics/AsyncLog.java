@@ -58,9 +58,9 @@ public class AsyncLog {
 						postExterno(url, "", null, referer, userAgent);
 					}
 				} catch (Exception e) {
-					logger.error("ERROR code:" + Propiedades.getAnalyticsCode());
-					logger.error("ERROR uri:" + uri);
-					logger.error("ERROR ua:" + userAgent);
+					logger.error("ERROR code:{}", Propiedades.getAnalyticsCode());
+					logger.error("ERROR uri:{}", uri);
+					logger.error("ERROR ua:{}", userAgent);
 				}
 			}
 		});

@@ -448,7 +448,7 @@ public class GenericDAOImpl<T, ID extends Serializable> extends
     	//Restamos 1 a la pagina, porque la primera ahora es 1
     	page--;
     	List<Object> result = new ArrayList<Object>();
-		Session opennedSession = null;
+//		Session opennedSession = null;
 		
 		if (key==null || "".equals(key)) {
 			key = Util.extractKeyFromModelClass(type);
@@ -495,8 +495,7 @@ public class GenericDAOImpl<T, ID extends Serializable> extends
 					
 			} catch (Exception e1)
 			{
-				String msg="executeSelect(query) [Hibernate Exception]:" + e1.getMessage() + " [query Fail:"+query+"]";
-//				log.error(msg,e1);
+				logger.error("executeSelect(query) [Hibernate Exception]:" + e1.getMessage() + " [query Fail:"+query+"]");
 				throw new Exception("Wrong parameters in the petition");			
 			}
 //			catch (Exception e1)

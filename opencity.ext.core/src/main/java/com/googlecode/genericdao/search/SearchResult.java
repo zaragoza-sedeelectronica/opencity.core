@@ -134,6 +134,10 @@ public class SearchResult<T> implements Serializable {
 		}
 	}
 
+	public String eliminarQueryFilter() {
+		String fqPart = String.format("%s=%s", CheckeoParametros.PARAMFQ, getFQParamsOrEmpty(Funciones.getRequest()));
+		return "?" + fqPart;
+	}
 	public String eliminarQueryFilter(HttpServletRequest request) {
 		String fqPart = String.format("%s=%s", CheckeoParametros.PARAMFQ, getFQParamsOrEmpty(request));
 		return "?" + fqPart;
@@ -147,8 +151,15 @@ public class SearchResult<T> implements Serializable {
 		}
 	}
 
+	public String getEnlacesReutilizacion() {
+		return getEnlacesReutilizacion(Funciones.getRequest(), null);
+	}
+	
 	public String getEnlacesReutilizacion(HttpServletRequest request) {
 		return getEnlacesReutilizacion(request, null);
+	}
+	public String getEnlacesReutilizacion(String... formato) {
+		return getEnlacesReutilizacion(Funciones.getRequest(), formato);
 	}
 	public String getEnlacesReutilizacion(HttpServletRequest request, String... formato) {
 		StringBuilder retorno = new StringBuilder();
@@ -237,7 +248,9 @@ public class SearchResult<T> implements Serializable {
 			return "";
 		}
 	}
-
+	public String getPaginacion(String anchor) {
+		return getPaginacion(Funciones.getRequest(), anchor);
+	}
 	public String getPaginacion(HttpServletRequest request, String anchor) {
 		if ((anchor == null) || anchor.isEmpty()) {
 			return getPaginacion(request);
@@ -365,7 +378,7 @@ public class SearchResult<T> implements Serializable {
 	}
 
 	public Result<T> asResult() {
-		Result<T> respuesta = new Result<>();
+		Result<T> respuesta = new Result<T>();
 		
 		Map<String, String> pageMetadataCalculation = Util.pageMetadataCalculation(Funciones.getRequest(), this.getTotalCount(), this.getRows());
 		

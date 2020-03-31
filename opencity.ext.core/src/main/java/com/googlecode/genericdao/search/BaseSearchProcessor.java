@@ -28,6 +28,7 @@ import java.util.regex.Pattern;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.sede.core.anotaciones.PointColumnMapping;
 import org.sede.core.anotaciones.Rel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -397,8 +398,15 @@ public abstract class BaseSearchProcessor {
 				sb.append(", ");
 			}
 			if (sort.getProperty().indexOf(SORTDISTANCIA) >=0) {
+				String columnX = "X";
+				String columnY = "Y";
+				if (ctx.rootClass.isAnnotationPresent(PointColumnMapping.class)) {
+					columnX = ctx.rootClass.getAnnotation(PointColumnMapping.class).x();
+					columnY = ctx.rootClass.getAnnotation(PointColumnMapping.class).y();
+				}
+				
 				String[] coords = sort.getProperty().split("_"); 
-				sb.append("SQRT((X-" + coords[1] + ")*(X-" + coords[1] + ")+(Y-" + coords[2] + ")*(Y-" + coords[2] + "))");
+				sb.append("sqrt((" + columnX + "-" + coords[1] + ")*(" + columnX + "-" + coords[1] + ")+(" + columnY + "-" + coords[2] + ")*(" + columnY + "-" + coords[2] + "))");
 			} else {
 				if (sort.isIgnoreCase() && metadataUtil.get(ctx.rootClass, sort.getProperty()).isString()) {
 					sb.append("lower(");
@@ -492,7 +500,18 @@ public abstract class BaseSearchProcessor {
 //					+ "MDSYS.SDO_POINT_TYPE(" + valor[1] + "," + valor[2] + ",NULL),NULL,NULL),"
 //					+ "MDSYS.SDO_GEOMETRY(2001,NULL,MDSYS.SDO_POINT_TYPE(X,Y,NULL),NULL,NULL),0.005) "
 //					+ "< " + valor[0];
-			return "x is not null and SQRT((X-" + valor[1] + ")*(X-" + valor[1] + ")+(Y-" + valor[2] + ")*(Y-" + valor[2] + ")) "
+			
+			String columnX = "X";
+			String columnY = "Y";
+			if (ctx.rootClass.isAnnotationPresent(PointColumnMapping.class)) {
+				columnX = ctx.rootClass.getAnnotation(PointColumnMapping.class).x();
+				columnY = ctx.rootClass.getAnnotation(PointColumnMapping.class).y();
+			}
+			
+			
+			
+			return columnX + " is not null and SQRT((" + columnX + "-" + valor[1] + ")*(" + columnX + "-" + valor[1] + ")"
+				+ "+(" + columnY + "-" + valor[2] + ")*(" + columnY + "-" + valor[2] + ")) "
 					+ "< " + valor[0];
 		case Filter.OP_NOT_NULL:
 			return getPathRef(ctx, property) + " is not null";

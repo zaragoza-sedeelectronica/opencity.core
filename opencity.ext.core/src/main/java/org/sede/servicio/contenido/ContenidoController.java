@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Date;
+import java.util.Locale;
 
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -23,6 +24,8 @@ import org.sede.core.utils.Funciones;
 import org.sede.core.utils.Propiedades;
 import org.sede.core.validator.HTMLValidator;
 import org.sede.servicio.ModelAttr;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -38,6 +41,7 @@ import org.xml.sax.SAXException;
 @Controller
 @RequestMapping(value = "/" + ContenidoController.MAPPING, method = RequestMethod.GET)
 public class ContenidoController {
+	private static final Logger logger = LoggerFactory.getLogger(ContenidoController.class);
 	private static final String SERVICIO = "contenido";
 	public static final String MAPPING = "servicio/" + SERVICIO;
 	
@@ -163,7 +167,12 @@ public class ContenidoController {
 				registro.addField("text", Utils.removeHTMLEntity(text));
 				registro.addField("content_type", "HTML");
 				if (StringUtils.isNotEmpty(lastModified)) {
-					registro.addField(Faceta.FACET_FECHA_MODIFICADO, lastModified);
+					try {
+						registro.addField(Faceta.FACET_FECHA_MODIFICADO, ConvertDate.date2String(ConvertDate.string2Date(lastModified, "EEE MMM dd HH:mm:ss 'CET' yyyy", Locale.US), ConvertDate.ISO8601_FORMAT));
+					} catch (Exception e) {
+						registro.addField(Faceta.FACET_FECHA_MODIFICADO, lastModified);
+						logger.error("Error en last-modified:{}", uri);
+					}
 				} else {
 					registro.addField(Faceta.FACET_FECHA_MODIFICADO, ConvertDate.date2String(new Date(), ConvertDate.ISO8601_FORMAT));
 				}

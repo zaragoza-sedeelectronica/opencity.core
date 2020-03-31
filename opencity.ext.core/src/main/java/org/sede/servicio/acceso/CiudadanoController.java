@@ -39,8 +39,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.googlecode.genericdao.search.Filter;
-import com.googlecode.genericdao.search.Search;
 import com.googlecode.genericdao.search.SearchResult;
 
 /**
@@ -89,11 +87,7 @@ public class CiudadanoController {
 		
 		request.getSession().removeAttribute(CheckeoParametros.REQUIREMENTESATTR);
 		
-		Search busqueda = new Search().setMaxResults(150).setFirstResult(0);
 		Ciudadano ciudadano = Funciones.getUser(request);
-		if ("Si".equals(ciudadano.getEmpadronado())) {
-			busqueda.addFilter(Filter.equal("userId", dao.obtenerUsuario(ciudadano.getAccount_id()).getId()));
-		}
 		
 		model.addAttribute(ModelAttr.DATO, ciudadano);
 		return MAPPING_DETALLE;
