@@ -54,7 +54,7 @@ public class HomeController {
 //		model.addAttribute("ultimasNoticias", datos.getUltimasNoticias());
 //		model.addAttribute("ultimasOfertasEmpleo", datos.getUltimasOfertasEmpleo());
 //		model.addAttribute("ultimosContratos", datos.getUltimosContratos());
-		model.addAttribute("temperatura", datos.getTemperatura());
+//		model.addAttribute("temperatura", datos.getTemperatura());
 
 		Calendar c = Calendar.getInstance();
 		c.setTime(new Date());

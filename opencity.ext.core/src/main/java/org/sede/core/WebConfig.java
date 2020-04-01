@@ -5,8 +5,12 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import javax.inject.Inject;
+
+import org.sede.core.dao.AutowireHelper;
 import org.sede.core.dao.SearchFiql;
 import org.sede.core.filter.InterceptorPeticion;
+import org.sede.core.plantilla.AvoidRestrictedContextFactory;
 import org.sede.core.plantilla.LayoutInterceptor;
 import org.sede.core.rest.view.Transformador;
 import org.sede.core.tag.SedeDialect;
@@ -29,20 +33,21 @@ import org.springframework.mobile.device.DeviceResolverHandlerInterceptor;
 import org.springframework.mobile.device.DeviceWebArgumentResolver;
 import org.springframework.orm.jpa.support.OpenEntityManagerInViewInterceptor;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-import org.springframework.web.accept.ContentNegotiationManagerFactoryBean;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
+import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.i18n.CookieLocaleResolver;
 import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 import org.springframework.web.servlet.mvc.method.annotation.ServletWebArgumentResolverAdapter;
-import org.thymeleaf.spring4.SpringTemplateEngine;
-import org.thymeleaf.spring4.view.ThymeleafViewResolver;
+import org.thymeleaf.spring5.SpringTemplateEngine;
+import org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver;
+import org.thymeleaf.spring5.view.ThymeleafViewResolver;
+import org.thymeleaf.templateresolver.AbstractConfigurableTemplateResolver;
 import org.thymeleaf.templateresolver.FileTemplateResolver;
-import org.thymeleaf.templateresolver.TemplateResolver;
 import org.thymeleaf.templateresolver.UrlTemplateResolver;
 import org.thymeleaf.util.StringUtils;
 
@@ -51,8 +56,8 @@ import net.sf.ehcache.CacheManager;
 @Configuration
 @EnableTransactionManagement
 @EnableWebMvc
-@ComponentScan(basePackages = "org.sede")
-public class WebConfig  extends WebMvcConfigurerAdapter {
+@ComponentScan(basePackages = "org.sede", lazyInit = true)
+public class WebConfig implements WebMvcConfigurer {
 	
 	@Autowired
 	private ApplicationContext context;
@@ -62,11 +67,11 @@ public class WebConfig  extends WebMvcConfigurerAdapter {
 	 * Configuración thymeleaf
 	 */
 	
-	@Autowired
+	@Inject
     private ResourceLoader resourceLoader;
 	
 	@Bean
-	public TemplateResolver templateResolver()
+	public AbstractConfigurableTemplateResolver templateResolver()
 	{	
 		String pathVistas = Propiedades.getThymeleafView();
 		if (pathVistas.indexOf("http:") >= 0 || pathVistas.indexOf("https:") >= 0) {
@@ -86,24 +91,37 @@ public class WebConfig  extends WebMvcConfigurerAdapter {
 			templateResolver.setCacheable(false);
 			return templateResolver;
 		}
+		
 	}
-	
+
+	@Bean
+	public AutowireHelper autowireHelper(){
+	    return AutowireHelper.getInstance();
+	}
 	@Bean 
 	public SedeDialect sedeDialect() {
 		return new SedeDialect();
 	}
 	
 	@Bean
-	public SpringTemplateEngine templateEngine() {
+	public SpringTemplateEngine templateEngine()
+	{
 		SpringTemplateEngine templateEngine = new SpringTemplateEngine();
 		templateEngine.setTemplateResolver(templateResolver());
 		templateEngine.addDialect(sedeDialect());
+		if (!Propiedades.isThymeleafStrictMode()) {
+			logger.info("TODO Desactivar strictMode cuando migremos a Thymeleaf3");
+			templateEngine.setEngineContextFactory(new AvoidRestrictedContextFactory());
+//		<property name="engineContextFactory">
+//  		<bean class="org.sede.core.plantilla.AvoidRestrictedContextFactory" />
+//		</property>
+		}
 		return templateEngine;
 	}
 
 	@Bean
-	public ThymeleafViewResolver viewResolver() {
-		
+	public ThymeleafViewResolver viewResolver()
+	{
 		ThymeleafViewResolver viewResolver = new ThymeleafViewResolver();
 		viewResolver.setTemplateEngine(templateEngine());
 		viewResolver.setCharacterEncoding("UTF-8");
@@ -115,7 +133,8 @@ public class WebConfig  extends WebMvcConfigurerAdapter {
 	 * Configuración i18n
 	 */
 	@Bean
-	public ReloadableResourceBundleMessageSource messageSource() {
+	public ReloadableResourceBundleMessageSource messageSource()
+	{
 		ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
 		messageSource.setBasename("file:" + Propiedades.getPathi18n());
 		messageSource.setCacheSeconds(0);
@@ -123,7 +142,8 @@ public class WebConfig  extends WebMvcConfigurerAdapter {
 		return messageSource;
 	}
 	@Bean
-	public CookieLocaleResolver localeResolver() {
+	public CookieLocaleResolver localeResolver()
+	{
 		CookieLocaleResolver localeResolver = new CookieLocaleResolver();
 		localeResolver.setDefaultLocale(new Locale("es"));
 		localeResolver.setCookieName("org_sede_locale");
@@ -131,33 +151,33 @@ public class WebConfig  extends WebMvcConfigurerAdapter {
 		return localeResolver;
 	}
 
-	@Bean
-	public ContentNegotiationManagerFactoryBean contentNegotiationManager() {
-		ContentNegotiationManagerFactoryBean configurer = new ContentNegotiationManagerFactoryBean();
-	    configurer.setFavorPathExtension(true);
-	    configurer.setIgnoreAcceptHeader(false); 
-	    configurer.setDefaultContentType(new MediaType("text","html", Charset.forName("utf-8")));
-	    configurer.setUseJaf(false);
-	    configurer.setDefaultContentType(new MediaType("text","html", Charset.forName("utf-8")));
-	    configurer.addMediaType("json", new MediaType("application", "json", Charset.forName("utf-8")));
-	    configurer.addMediaType("jsonld", new MediaType("application", "ld+json", Charset.forName("utf-8")));
-	    configurer.addMediaType("xml", new MediaType("application", "xml", Charset.forName("utf-8")));
-	    configurer.addMediaType("geojson", new MediaType("application", "geo+json", Charset.forName("utf-8")));
-	    configurer.addMediaType("georss", new MediaType("text", "xml+georss", Charset.forName("utf-8")));
-	    configurer.addMediaType("rss", new MediaType("application", "rss+xml", Charset.forName("utf-8")));
-	    configurer.addMediaType("csv", new MediaType("text", "csv", Charset.forName("utf-8")));
-	    configurer.addMediaType("kml", new MediaType("application", "vnd.google-earth.kml+xml", Charset.forName("utf-8")));
-	    configurer.addMediaType("rdf", new MediaType("application", "rdf+xml", Charset.forName("utf-8")));
-	    configurer.addMediaType("ttl", new MediaType("application", "x-turtle", Charset.forName("utf-8")));
-	    configurer.addMediaType("n3", new MediaType("text", "rdf+n3", Charset.forName("utf-8")));
-	    configurer.addMediaType("sparqlxml", new MediaType("application", "sparql-results+xml", Charset.forName("utf-8")));
-	    configurer.addMediaType("sparqljson", new MediaType("application", "sparql-results+json", Charset.forName("utf-8")));
-	    configurer.addMediaType("solrjson", new MediaType("application", "solr-results+json", Charset.forName("utf-8")));
-	    configurer.addMediaType("solrxml", new MediaType("application", "solr-results+xml", Charset.forName("utf-8")));
-	    configurer.addMediaType("ics", new MediaType("text", "calendar", Charset.forName("utf-8")));
-	    return configurer;
+	 
+	@Override
+	public void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
+		configurer.favorPathExtension(true);
+		configurer.ignoreAcceptHeader(false);
+		configurer.defaultContentType(new MediaType("text", "html", Charset.forName("utf-8")));
+		configurer.useRegisteredExtensionsOnly(false);
+		configurer.defaultContentType(new MediaType("text", "html", Charset.forName("utf-8")));
+		configurer.mediaType("json", new MediaType("application", "json", Charset.forName("utf-8")));
+		configurer.mediaType("jsonld", new MediaType("application", "ld+json", Charset.forName("utf-8")));
+		configurer.mediaType("xml", new MediaType("application", "xml", Charset.forName("utf-8")));
+		configurer.mediaType("geojson", new MediaType("application", "geo+json", Charset.forName("utf-8")));
+		configurer.mediaType("georss", new MediaType("text", "xml+georss", Charset.forName("utf-8")));
+		configurer.mediaType("rss", new MediaType("application", "rss+xml", Charset.forName("utf-8")));
+		configurer.mediaType("csv", new MediaType("text", "csv", Charset.forName("utf-8")));
+		configurer.mediaType("kml", new MediaType("application", "vnd.google-earth.kml+xml", Charset.forName("utf-8")));
+		configurer.mediaType("rdf", new MediaType("application", "rdf+xml", Charset.forName("utf-8")));
+		configurer.mediaType("ttl", new MediaType("application", "x-turtle", Charset.forName("utf-8")));
+		configurer.mediaType("n3", new MediaType("text", "rdf+n3", Charset.forName("utf-8")));
+		configurer.mediaType("sparqlxml", new MediaType("application", "sparql-results+xml", Charset.forName("utf-8")));
+		configurer.mediaType("sparqljson", new MediaType("application", "sparql-results+json", Charset.forName("utf-8")));
+		configurer.mediaType("solrjson", new MediaType("application", "solr-results+json", Charset.forName("utf-8")));
+		configurer.mediaType("solrxml", new MediaType("application", "solr-results+xml", Charset.forName("utf-8")));
+		configurer.mediaType("ics", new MediaType("text", "calendar", Charset.forName("utf-8")));
+//		super.configureContentNegotiation(configurer);
 	}
-	
+
 	@Bean
 	public CacheManager cacheManager(){
 		return ehCacheCacheManager().getObject();
@@ -195,7 +215,7 @@ public class WebConfig  extends WebMvcConfigurerAdapter {
 	@Override
 	public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
 		converters.add(new Transformador());
-		super.configureMessageConverters(converters);
+//		super.configureMessageConverters(converters);
 	}
 	
 	@Bean
@@ -236,4 +256,6 @@ public class WebConfig  extends WebMvcConfigurerAdapter {
 			registry.addWebRequestInterceptor((OpenEntityManagerInViewInterceptor)context.getBean("os" + StringUtils.capitalize(esquema)));		
 		}
 	}
+	
+	
 }

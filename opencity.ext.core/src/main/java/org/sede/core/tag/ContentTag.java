@@ -1,157 +1,85 @@
 package org.sede.core.tag;
 
-import java.util.List;
+import java.util.HashMap;
 
 import org.sede.core.plantilla.LayoutInterceptor;
 import org.springframework.mobile.device.Device;
-import org.thymeleaf.Arguments;
-import org.thymeleaf.Configuration;
-import org.thymeleaf.Template;
-import org.thymeleaf.TemplateProcessingParameters;
-import org.thymeleaf.dom.Element;
-import org.thymeleaf.dom.Node;
-import org.thymeleaf.fragment.ElementAndAttributeNameFragmentSpec;
-import org.thymeleaf.fragment.IFragmentSpec;
-import org.thymeleaf.processor.AbstractProcessor;
-import org.thymeleaf.processor.ElementNameProcessorMatcher;
-import org.thymeleaf.processor.IProcessorMatcher;
-import org.thymeleaf.processor.ProcessorMatchingContext;
-import org.thymeleaf.processor.ProcessorResult;
-import org.thymeleaf.spring4.context.SpringWebContext;
+import org.thymeleaf.context.ITemplateContext;
+import org.thymeleaf.model.AttributeValueQuotes;
+import org.thymeleaf.model.IModel;
+import org.thymeleaf.model.IModelFactory;
+import org.thymeleaf.model.IOpenElementTag;
+import org.thymeleaf.model.ITemplateEvent;
+import org.thymeleaf.processor.element.AbstractElementModelProcessor;
+import org.thymeleaf.processor.element.IElementModelStructureHandler;
+import org.thymeleaf.standard.expression.Fragment;
+import org.thymeleaf.templatemode.TemplateMode;
 
-public class ContentTag extends AbstractProcessor {
-//	private static final Logger logger = LoggerFactory.getLogger(ContentTag.class);
-	@Override
-	public int getPrecedence() {
-		return 0;
-	}
 
-	public IProcessorMatcher<? extends Node> getMatcher() {
-		return new ElementNameProcessorMatcher("content");
-	}
+public class ContentTag extends AbstractElementModelProcessor {
+	
+	
+	private static final String TAG_NAME = "content";
+    private static final int PRECEDENCE = 0;
+
+    public ContentTag(final String dialectPrefix) {
+        super(TemplateMode.XML, dialectPrefix, TAG_NAME, true, null, false, PRECEDENCE); 
+    }
 
 	@Override
-	public ProcessorResult doProcess(Arguments arguments,
-			ProcessorMatchingContext context, Node node) {
-		String plantilla = (String)((SpringWebContext)arguments.getContext()).getVariables().get(LayoutInterceptor.PLANTILLA_ATTR);
-
-		final Configuration configuration = arguments.getConfiguration();
-
-		Template template = arguments.getTemplateRepository().getTemplate(new TemplateProcessingParameters(
-		        arguments.getConfiguration(), plantilla, arguments.getContext()));
-
-		final Device tipoDispositivo = (Device)((SpringWebContext)arguments.getContext()).getVariables().get("currentDevice");
-		final boolean contenedor = ((Element) node).getAttributeValue("container") == null;
-
-//		<th:block th:include="${plantilla} :: header" />
-//	    <div class="rscont container">
-//	 +       <div class="row row-offcanvas row-offcanvas-left">
-//	 +           <div class="col-md-12 bloque-contenido">
-//
-//	 +               <th:block th:include="${plantilla} :: menu" />
-//	 +               <th:block th:include="${plantilla} :: breadcrumb" />
-//
-//	 +               <main id="main">
-//	 +				<th:block th:include="fragmentos/readspeaker" />                    
-//	 +                   <div class="clearfix"></div>
-//	 +                   <div id="rscont">
+	protected void doProcess(ITemplateContext context, IModel model,
+			IElementModelStructureHandler structureHandler) {
+		String plantilla = (String)context.getVariable(LayoutInterceptor.PLANTILLA_ATTR);
+		final Device tipoDispositivo = (Device)context.getVariable("currentDevice");
+		final boolean contenedor = model.get(0).toString().indexOf("container=\"") < 0;//tag.getAttributeValue("container") == null;	
+		final IModelFactory modelFactory = context.getModelFactory();
+		String estilo = "";
+		boolean sidebar = false;
+		Fragment fragmento = SedeDialect.computeFragment(context, plantilla);
 		
-		Element general = new Element("div");
-		general.setAttribute("id", obtenerIdDeTemplate(template));
-		general.setProcessable(true);
-		loadFragmento(arguments, general, configuration, template, "header");
-		
-		
-		Element rsCont = new Element("div");
-		rsCont.setProcessable(true);
-		rsCont.setAttribute("id", "rscont");
-		if(contenedor) {
-			rsCont.setAttribute("class", "container-fluid");
+		IModel modeloFragmento = fragmento.getTemplateModel(); 
+		int n = modeloFragmento.size();
+		while (n-- != 0) {
+		    final ITemplateEvent event = modeloFragmento.get(n);		    
+		    if (event instanceof IOpenElementTag){
+		    	IOpenElementTag tag = (IOpenElementTag)event;
+		    	if (tag.hasAttribute("estilo")) {
+		    		estilo = tag.getAttributeValue("estilo");
+		    	} else if (tag.hasAttribute("sidebar-wrapper")) {
+		    		sidebar = true;
+		    	}
+		    }
 		}
-
-		//Copiamos el contenido de la pagina en rscont
-		for (Node contenido: ((Element)node).getChildren()) {
-			contenido.setProcessable(true);
-			rsCont.addChild(contenido);
-			
-		}
-		// FIXME recursivamente asocia todos los nodos como procesables...
-		addProcessable(rsCont);
 		
-		Element main = new Element("main");
-		main.setAttribute("id", "main");
-
-		main.addChild(rsCont);
-
-		Element wrapper = new Element("div");
-		wrapper.setAttribute("id", "wrapper");
+//      TODO revisar si se pueden obtener los fragmentos header, menu, footer del modeloFragmento 
+//		creo que ahora por cada petición a computeFragment se hace una petición a disco o http... 
 		
-		loadFragmentoMenu(tipoDispositivo, arguments, wrapper, configuration, template, "menu");
-		loadFragmento(arguments, wrapper, configuration, template, "breadcrumb");
-
-		wrapper.addChild(main);
-
-		general.addChild(wrapper);
-		node.getParent().insertBefore(node, general);
-		
-		loadFragmento(arguments, general, configuration, template, "footer");
-		
-		node.getParent().removeChild(node);
-		
-//		</div>
-//        </main>
-//        </div>
-//    </div>
-//</div>
-//<th:block th:include="${plantilla} :: footer" />
-		
-		return ProcessorResult.OK;
-	}
-	
-	private String obtenerIdDeTemplate(Template template) {
-		return ((Element)template.getDocument().getFirstChild()).getAttributeValue("estilo");
-	}
-
-	
-	private void loadFragmentoMenu(Device tipoDispositivo, Arguments arguments, Node node,
-			final Configuration configuration, Template template, String nombreFragmento) {
-		
-		
-		IFragmentSpec fragmentSpec = new ElementAndAttributeNameFragmentSpec(null, "th:fragment", nombreFragmento, true);
-		List<Node> fragmento = fragmentSpec.extractFragment(configuration, template.getDocument().getChildren());
-		
-		for (Node n: fragmento) {
-			if (n instanceof Element) {
-				// Si el dispositivo es distinto de móvil y existe menú lateral (#sidebar-wrapper), aparece abierto por defecto.
-				if (!tipoDispositivo.isMobile() && "sidebar-wrapper".equals(((Element)n).getAttributeValue("id"))) {
-					((Element)node).setAttribute("class","toggled");
-				}
-			}
-			((Element)node).addChild(n);	
-		}
-	}
-	
-	private void loadFragmento(Arguments arguments, Node node,
-			final Configuration configuration, Template template, String nombreFragmento) {
-		IFragmentSpec fragmentSpec = new ElementAndAttributeNameFragmentSpec(null, "th:fragment", nombreFragmento, true);
-		List<Node> fragmento = fragmentSpec.extractFragment(configuration, template.getDocument().getChildren());
-		for (Node n: fragmento) {
-			((Element)node).addChild(n);	
-		}
-	}
-	
-	private void addProcessable(final Element inputTag) {
-		final List<Node> children = inputTag.getChildren();
-		for (final Node child : children) {
-			if (child != null && child instanceof Element) {
-				final Element childTag = (Element) child;
-				final String childTagName = childTag.getNormalizedName();
-				childTag.setProcessable(true);
-				if(childTagName != null) {
-					addProcessable(childTag);
-				}
-			}
-		}
-	}
-	
+        model.replace(0, modelFactory.createOpenElementTag("div", "id", estilo));
+        HashMap<String, String> attrs = new HashMap<String, String>();
+        attrs.put("id", "wrapper");
+        if (!tipoDispositivo.isMobile() && sidebar) {
+        	attrs.put("class", "toggled");	
+        }
+        model.insert(1, modelFactory.createOpenElementTag("div", attrs, AttributeValueQuotes.DOUBLE, false));
+        model.insert(2, modelFactory.createOpenElementTag("main", "id", "main"));
+        attrs = new HashMap<String, String>();
+        attrs.put("id", "rscont");
+        if (contenedor) {
+        	attrs.put("class", "container-fluid");	
+        }
+        model.insert(3, modelFactory.createOpenElementTag("div", attrs, AttributeValueQuotes.DOUBLE, false));
+        model.insertModel(2, SedeDialect.computeFragment(context, plantilla + "::menu").getTemplateModel());
+        
+        
+        model.insert(model.size() - 4, modelFactory.createCloseElementTag("div"));
+        model.insert(model.size() - 3, modelFactory.createCloseElementTag("main"));
+        model.insert(model.size() - 2, modelFactory.createCloseElementTag("div"));
+        
+        model.insertModel(model.size() - 3, SedeDialect.computeFragment(context, plantilla + "::footer").getTemplateModel());
+        
+        model.replace(model.size() - 1, modelFactory.createCloseElementTag("div"));
+        
+        model.insertModel(1,SedeDialect.computeFragment(context, plantilla + "::header").getTemplateModel());
+           
+	}	
 }
