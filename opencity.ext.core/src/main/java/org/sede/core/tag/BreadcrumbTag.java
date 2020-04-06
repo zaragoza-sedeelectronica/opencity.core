@@ -20,7 +20,7 @@ public class BreadcrumbTag extends AbstractElementTagProcessor {
     private static final int PRECEDENCE = 0;
 
     public BreadcrumbTag(final String dialectPrefix) {
-        super(TemplateMode.XML, dialectPrefix, TAG_NAME, true, null, false, PRECEDENCE); 
+        super(TemplateMode.HTML, dialectPrefix, TAG_NAME, true, null, false, PRECEDENCE); 
     }
 
     @Override

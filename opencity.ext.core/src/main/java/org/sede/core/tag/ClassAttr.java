@@ -29,7 +29,7 @@ public class ClassAttr extends AbstractAttributeTagProcessor {
     
     public ClassAttr(final String dialectPrefix) {
         super(
-            TemplateMode.XML, // This processor will apply only to HTML mode
+        	TemplateMode.HTML, // This processor will apply only to HTML mode
             dialectPrefix,     // Prefix to be applied to name for matching
             null,              // No tag name: match any tag name
             false,             // No prefix to be applied to tag name

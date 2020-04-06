@@ -44,8 +44,8 @@ import org.springframework.web.servlet.i18n.CookieLocaleResolver;
 import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 import org.springframework.web.servlet.mvc.method.annotation.ServletWebArgumentResolverAdapter;
 import org.thymeleaf.spring5.SpringTemplateEngine;
-import org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver;
 import org.thymeleaf.spring5.view.ThymeleafViewResolver;
+import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.AbstractConfigurableTemplateResolver;
 import org.thymeleaf.templateresolver.FileTemplateResolver;
 import org.thymeleaf.templateresolver.UrlTemplateResolver;
@@ -75,19 +75,21 @@ public class WebConfig implements WebMvcConfigurer {
 	{	
 		String pathVistas = Propiedades.getThymeleafView();
 		if (pathVistas.indexOf("http:") >= 0 || pathVistas.indexOf("https:") >= 0) {
-			logger.info("UrlTemplateResolver: {}", pathVistas);
+			logger.info("UrlTemplateResolver: {} HTML", pathVistas);
 			UrlTemplateResolver templateResolver = new UrlTemplateResolver();
 			templateResolver.setPrefix(pathVistas);
 			templateResolver.setSuffix(".xml");
-			templateResolver.setTemplateMode("HTML5");
+			templateResolver.setForceTemplateMode(true);
+			templateResolver.setTemplateMode(TemplateMode.HTML);
 			templateResolver.setCacheable(false);
 			return templateResolver;
 		} else {
-			logger.info("FileTemplateResolver: {}", pathVistas);
+			logger.info("FileTemplateResolver: {} HTML", pathVistas);
 			FileTemplateResolver templateResolver = new FileTemplateResolver();
 			templateResolver.setPrefix(pathVistas);
 			templateResolver.setSuffix(".xml");
-			templateResolver.setTemplateMode("HTML5");
+			templateResolver.setForceTemplateMode(true);
+			templateResolver.setTemplateMode(TemplateMode.HTML);
 			templateResolver.setCacheable(false);
 			return templateResolver;
 		}
@@ -98,6 +100,7 @@ public class WebConfig implements WebMvcConfigurer {
 	public AutowireHelper autowireHelper(){
 	    return AutowireHelper.getInstance();
 	}
+	
 	@Bean 
 	public SedeDialect sedeDialect() {
 		return new SedeDialect();
@@ -110,11 +113,7 @@ public class WebConfig implements WebMvcConfigurer {
 		templateEngine.setTemplateResolver(templateResolver());
 		templateEngine.addDialect(sedeDialect());
 		if (!Propiedades.isThymeleafStrictMode()) {
-			logger.info("TODO Desactivar strictMode cuando migremos a Thymeleaf3");
 			templateEngine.setEngineContextFactory(new AvoidRestrictedContextFactory());
-//		<property name="engineContextFactory">
-//  		<bean class="org.sede.core.plantilla.AvoidRestrictedContextFactory" />
-//		</property>
 		}
 		return templateEngine;
 	}
@@ -256,6 +255,5 @@ public class WebConfig implements WebMvcConfigurer {
 			registry.addWebRequestInterceptor((OpenEntityManagerInViewInterceptor)context.getBean("os" + StringUtils.capitalize(esquema)));		
 		}
 	}
-	
 	
 }

@@ -6,6 +6,8 @@ import java.util.Map;
 import java.util.Set;
 
 import org.sede.servicio.acceso.userrequirements.RequirementsInterface;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -34,7 +36,7 @@ import org.thymeleaf.templatemode.TemplateMode;
 //import org.thymeleaf.processor.IProcessor;
 //@Component
 public class SedeDialect extends AbstractProcessorDialect implements IExpressionObjectDialect {
-	
+	private static final Logger logger = LoggerFactory.getLogger(SedeDialect.class);
 	private static final String DIALECT_NAME = "Sede Dialect";
 
 	@Autowired
@@ -56,11 +58,12 @@ public class SedeDialect extends AbstractProcessorDialect implements IExpression
         processors.add(new BreadcrumbTag(dialectPrefix));
         processors.add(new SolrTag());
         processors.add(new RedirectTag());
-        processors.add(new StandardXmlNsTagProcessor(TemplateMode.XML, dialectPrefix));
+        processors.add(new StandardXmlNsTagProcessor(TemplateMode.HTML, dialectPrefix));
     	
         String[] clases = applicationContext.getBeanNamesForType(AbstractElementTagProcessor.class);
         
     	for (String s: clases) {
+    		logger.info("Tag added: {}", s);
     		processors.add((IProcessor) applicationContext.getBean(s));
     	}
 

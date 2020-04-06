@@ -23,7 +23,7 @@ public class ContentTag extends AbstractElementModelProcessor {
     private static final int PRECEDENCE = 0;
 
     public ContentTag(final String dialectPrefix) {
-        super(TemplateMode.XML, dialectPrefix, TAG_NAME, true, null, false, PRECEDENCE); 
+        super(TemplateMode.HTML, dialectPrefix, TAG_NAME, true, null, false, PRECEDENCE); 
     }
 
 	@Override

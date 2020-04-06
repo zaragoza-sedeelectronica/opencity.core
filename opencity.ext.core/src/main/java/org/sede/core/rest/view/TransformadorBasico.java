@@ -187,8 +187,9 @@ public class TransformadorBasico {
 				primerCampo = false;
 			}
 			String pref = prefijo;
-			if (!field.getName().equals(CheckeoParametros.PARAMRESULT)) {
+			if (!field.getName().equals(CheckeoParametros.PARAMRESULT) && !field.getName().equals("records")) {
 				pref = prefijo + field.getName() + ".";
+				respuesta.append(transformador.getInicioCampo(field.getName()));
 			}
 			respuesta.append(transformador.getInicioArray(field.getName()));
 			boolean primerInterno = true;

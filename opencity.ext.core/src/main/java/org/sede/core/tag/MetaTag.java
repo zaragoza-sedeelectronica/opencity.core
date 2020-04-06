@@ -22,7 +22,7 @@ public class MetaTag extends AbstractElementTagProcessor {
     private static final int PRECEDENCE = 0;
 
     public MetaTag(final String dialectPrefix) {
-        super(TemplateMode.XML, dialectPrefix, TAG_NAME, true, null, false, PRECEDENCE); 
+        super(TemplateMode.HTML, dialectPrefix, TAG_NAME, true, null, false, PRECEDENCE); 
     }
 
     @Override

@@ -47,7 +47,7 @@ public class DataSourcesBeanFactory implements BeanDefinitionRegistryPostProcess
 		    	if (obj instanceof PropertyFileInterface) {
 		    		final PropertyFileInterface pfi = (PropertyFileInterface) obj;
 		    		DataSourceConfiguration dsc;
-		    		logger.info(pfi.getClass().getCanonicalName() + ":" + pfi.getSchema());
+//		    		logger.info(pfi.getClass().getCanonicalName() + ":" + pfi.getSchema());
 		    		if (esquemas.containsKey(pfi.getSchema())) {
 		    			dsc = esquemas.get(pfi.getSchema());
 		    		} else {

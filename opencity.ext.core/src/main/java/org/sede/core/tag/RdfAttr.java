@@ -12,12 +12,6 @@ import org.thymeleaf.model.IOpenElementTag;
 import org.thymeleaf.model.IProcessableElementTag;
 import org.thymeleaf.processor.element.AbstractAttributeModelProcessor;
 import org.thymeleaf.processor.element.IElementModelStructureHandler;
-import org.thymeleaf.standard.StandardDialect;
-//import org.thymeleaf.Arguments;
-//import org.thymeleaf.Configuration;
-//import org.thymeleaf.dom.Element;
-//import org.thymeleaf.dom.Macro;
-//import org.thymeleaf.processor.attr.AbstractAttributeModifierAttrProcessor;
 import org.thymeleaf.standard.expression.IStandardExpression;
 import org.thymeleaf.standard.expression.IStandardExpressionParser;
 import org.thymeleaf.standard.expression.StandardExpressions;
@@ -31,7 +25,7 @@ public class RdfAttr extends AbstractAttributeModelProcessor  {
 
     public RdfAttr(final String dialectPrefix) {
         super(
-            TemplateMode.XML, // This processor will apply only to HTML mode
+            TemplateMode.HTML, // This processor will apply only to HTML mode
             dialectPrefix,     // Prefix to be applied to name for matching
             null,              // No tag name: match any tag name
             false,             // No prefix to be applied to tag name
