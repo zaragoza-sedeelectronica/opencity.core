@@ -29,7 +29,7 @@ public @interface Esquema {
 	public static final String TMPERFILCONTRATANTE = "transactionManagerPerfilcontratante";
 	
 	public static final String TMOFERTA = "transactionManagerOferta";
-	public static final String TMREGLIC = "transactionManagerRegLic";
+	public static final String TMREGLIC = "transactionManagerReglic";
 	public static final String TMSIU = "transactionManagerSiu";
 	
 	
