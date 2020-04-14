@@ -1,6 +1,7 @@
 package org.sede.servicio.acceso;
 
 import org.sede.core.PropertyFileInterface;
+import org.sede.core.anotaciones.Esquema;
 import org.springframework.context.annotation.Configuration;
 
 // TODO: Auto-generated Javadoc
@@ -14,10 +15,10 @@ import org.springframework.context.annotation.Configuration;
 public class ConfigAcceso implements PropertyFileInterface {
 	
 	/** Constant ESQUEMA. */
-	public static final String ESQUEMA = "GENERAL";
+	public static final String ESQUEMA = Esquema.MOVIL;
 	
 	/** Constant TM. */
-	public static final String TM = "transactionManagerGeneral";
+	public static final String TM = Esquema.TMMOVIL;
 	
 	/**
 	 * Gets the schema.
@@ -25,7 +26,7 @@ public class ConfigAcceso implements PropertyFileInterface {
 	 * @return the schema
 	 */
 	public String getSchema() {
-		return "general";
+		return "movil";
 	}
 	
 	/**
@@ -34,7 +35,7 @@ public class ConfigAcceso implements PropertyFileInterface {
 	 * @return the jndi
 	 */
 	public String getJndi() {
-		return "WebGeneralDS";
+		return "WebMovilDS";
 	}
 
 	/**

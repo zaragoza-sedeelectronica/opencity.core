@@ -26,7 +26,7 @@ public @interface Esquema {
 	public static final String TMMOVIL = "transactionManagerMovil";
 	public static final String TMTURISMO = "transactionManagerTurismo";
 	public static final String TMTICKETING = "transactionManagerTicketing";
-	public static final String TMPERFILCONTRATANTE = "transactionManagerPerfilContratante";
+	public static final String TMPERFILCONTRATANTE = "transactionManagerPerfilcontratante";
 	
 	public static final String TMOFERTA = "transactionManagerOferta";
 	public static final String TMREGLIC = "transactionManagerRegLic";

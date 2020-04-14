@@ -1,9 +1,9 @@
 package org.sede.servicio.acceso;
 
 import org.sede.core.PropertyFileInterface;
+import org.sede.core.anotaciones.Esquema;
 import org.springframework.context.annotation.Configuration;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class ConfigCiudadano.
  * 
@@ -14,10 +14,10 @@ import org.springframework.context.annotation.Configuration;
 public class ConfigCiudadano implements PropertyFileInterface {
 	
 	/** Constant ESQUEMA. */
-	public static final String ESQUEMA = "GENERAL";
+	public static final String ESQUEMA = Esquema.NOTICIAS;
 	
 	/** Constant TM. */
-	public static final String TM = "transactionManagerGeneral";
+	public static final String TM = Esquema.TMNOTICIAS;
 	
 	/**
 	 * Gets the schema.
@@ -25,7 +25,7 @@ public class ConfigCiudadano implements PropertyFileInterface {
 	 * @return the schema
 	 */
 	public String getSchema() {
-		return "general";
+		return "noticias";
 	}
 	
 	/**
@@ -34,7 +34,7 @@ public class ConfigCiudadano implements PropertyFileInterface {
 	 * @return the jndi
 	 */
 	public String getJndi() {
-		return "WebGeneralDS";
+		return "WebNoticiasDS";
 	}
 
 	/**

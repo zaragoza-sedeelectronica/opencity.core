@@ -1,32 +1,19 @@
 package org.sede.servicio.acceso;
 
 import org.sede.core.PropertyFileInterface;
+import org.sede.core.anotaciones.Esquema;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration(value = "credencialesComunidadActividades")
 public class ConfigComunidadActividades implements PropertyFileInterface {
-	/** Constant ESQUEMA. */
-	public static final String ESQUEMA = "GENERAL";
+	public static final String ESQUEMA = Esquema.MOVIL;
+	public static final String TM = Esquema.TMMOVIL;
 	
-	/** Constant TM. */
-	public static final String TM = "transactionManagerGeneral";
-	
-	/**
-	 * Gets the schema.
-	 *
-	 * @return the schema
-	 */
 	public String getSchema() {
-		return "general";
+		return ESQUEMA.toLowerCase();
 	}
-	
-	/**
-	 * Gets the jndi.
-	 *
-	 * @return the jndi
-	 */
 	public String getJndi() {
-		return "WebGeneralDS";
+		return "WebMovilDS";
 	}
 
 	public String getEntity() {

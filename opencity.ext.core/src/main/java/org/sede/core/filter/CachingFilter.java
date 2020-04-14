@@ -20,6 +20,7 @@ import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Collection;
@@ -251,8 +252,12 @@ public abstract class CachingFilter extends Filter {
 	            	logger.error("despues de escritura");
 	            }
 	        } else {
-	        	OutputStream out = new BufferedOutputStream(response.getOutputStream());
-	            out.write(getPaginaError(request, response).getBytes());
+
+//	        	OutputStream out = new BufferedOutputStream(response.getOutputStream());
+//	            out.write(getPaginaError(request, response).getBytes());
+//	            out.flush();
+	        	PrintWriter out = response.getWriter();
+	        	out.println(getPaginaError(request, response));
 	            out.flush();
 	        }
         }

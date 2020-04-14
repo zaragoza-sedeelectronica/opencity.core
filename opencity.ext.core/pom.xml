@@ -1,7 +1,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>org.zaragoza</groupId>
-  <artifactId>opencity.ext.core</artifactId>
+  <groupId>org.opencity</groupId>
+  <artifactId>ext.core</artifactId>
   <version>0.0.1</version>
   <name>core</name>
   <url>http://maven.apache.org</url>
@@ -20,7 +20,6 @@
 		<org.apache.solr-version>3.2.0</org.apache.solr-version>
 		<commons-httpclient-version>3.0</commons-httpclient-version>
 		<org.springframework.mobile-version>1.1.5.RELEASE</org.springframework.mobile-version>
-		<com.fasterxml.jackson.core-version>2.9.4</com.fasterxml.jackson.core-version>
 		<log4j-version>1.2.15</log4j-version>
 		<javax.servlet-version>3.1.0</javax.servlet-version>
 		<junit-version>4.12</junit-version>

@@ -60,7 +60,6 @@ public class DataSourceRule extends SpringJUnit4ClassRunner {
 				// Create initial context
 				System.setProperty(Context.INITIAL_CONTEXT_FACTORY, "org.apache.naming.java.javaURLContextFactory");
 				System.setProperty(Context.URL_PKG_PREFIXES, "org.apache.naming");
-				System.out.println(PropiedadesTest.getString("conexion.jdbc"));
 				
 				for (Map.Entry<String, DataSourceConfiguration> entry : esquemas.entrySet()) {
 					String esquema = entry.getValue().getEschema();
