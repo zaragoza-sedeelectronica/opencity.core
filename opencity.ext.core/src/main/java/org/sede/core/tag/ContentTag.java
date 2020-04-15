@@ -71,13 +71,13 @@ public class ContentTag extends AbstractElementModelProcessor {
         model.insertModel(2, SedeDialect.computeFragment(context, plantilla + "::menu").getTemplateModel());
         
         
-        model.insert(model.size() - 4, modelFactory.createCloseElementTag("div"));
-        model.insert(model.size() - 3, modelFactory.createCloseElementTag("main"));
         model.insert(model.size() - 2, modelFactory.createCloseElementTag("div"));
+        model.insert(model.size() - 1, modelFactory.createCloseElementTag("main"));
+        model.insert(model.size() - 0, modelFactory.createCloseElementTag("div"));
         
-        model.insertModel(model.size() - 3, SedeDialect.computeFragment(context, plantilla + "::footer").getTemplateModel());
+        model.insertModel(model.size() - 2, SedeDialect.computeFragment(context, plantilla + "::footer").getTemplateModel());
         
-        model.replace(model.size() - 1, modelFactory.createCloseElementTag("div"));
+        model.replace(model.size() - 2, modelFactory.createCloseElementTag("div"));
         
         model.insertModel(1,SedeDialect.computeFragment(context, plantilla + "::header").getTemplateModel());
            

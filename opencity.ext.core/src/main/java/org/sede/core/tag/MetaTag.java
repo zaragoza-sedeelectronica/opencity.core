@@ -211,7 +211,7 @@ public class MetaTag extends AbstractElementTagProcessor {
 	        model.add(modelFactory.createStandaloneElementTag("meta", metaAttributes, AttributeValueQuotes.DOUBLE, false, true));
 	        String plantilla = (String)context.getVariable(LayoutInterceptor.PLANTILLA_ATTR);
 	        model.addModel(SedeDialect.computeFragment(context, plantilla + "::cssjs").getTemplateModel());
-	        structureHandler.replaceWith(model, false);
+	        structureHandler.replaceWith(model, true);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
