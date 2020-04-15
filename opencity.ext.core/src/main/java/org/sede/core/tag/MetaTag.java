@@ -3,6 +3,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
+import org.sede.core.plantilla.LayoutInterceptor;
 import org.sede.core.utils.Funciones;
 import org.thymeleaf.IEngineConfiguration;
 import org.thymeleaf.context.ITemplateContext;
@@ -101,7 +102,7 @@ public class MetaTag extends AbstractElementTagProcessor {
 			} else {
 				
 				metaAttributes = new HashMap<String, String>();
-				metaAttributes.put("property", "twitter:card");
+				metaAttributes.put("name", "twitter:card");
 				metaAttributes.put("content", "summary");
 		        model.add(modelFactory.createStandaloneElementTag("meta", metaAttributes, AttributeValueQuotes.DOUBLE, false, true));
 				
@@ -208,7 +209,8 @@ public class MetaTag extends AbstractElementTagProcessor {
 			metaAttributes.put("name", "author");
 			metaAttributes.put("content", StringUtils.isEmpty(tag.getAttributeValue("author")) ? "Oficina de Participación, Transparencia y Gobierno Abierto" :  tag.getAttributeValue("author"));
 	        model.add(modelFactory.createStandaloneElementTag("meta", metaAttributes, AttributeValueQuotes.DOUBLE, false, true));
-	        model.addModel(SedeDialect.computeFragment(context, "fragmentos/cssjs").getTemplateModel());
+	        String plantilla = (String)context.getVariable(LayoutInterceptor.PLANTILLA_ATTR);
+	        model.addModel(SedeDialect.computeFragment(context, plantilla + "::cssjs").getTemplateModel());
 	        structureHandler.replaceWith(model, false);
 		} catch (Exception e) {
 			e.printStackTrace();
