@@ -27,7 +27,7 @@ public class DifferentSQLforDatabases {
 //		if (Util.getDatabaseTypeFromDriver(driver).equals(Constants.ORACLE)) {
 
 			
-			ArrayList<Pair<String, String>> changesFullDate = regularExpressions.extractChangesFullDate(where);
+			ArrayList<Pair<String, String>> changesFullDate = RegularExpressions.extractChangesFullDate(where);
 			
 			String whereWithoutPreSubstitution=where;
 			
@@ -38,7 +38,7 @@ public class DifferentSQLforDatabases {
 			}
 					
 			
-			ArrayList<Pair<String, String>> changesDate = regularExpressions.extractChangesDate(whereWithoutPreSubstitution);
+			ArrayList<Pair<String, String>> changesDate = RegularExpressions.extractChangesDate(whereWithoutPreSubstitution);
 						
 			
 			if (changesFullDate.size()>0 || (changesDate.size()>0))
