@@ -417,39 +417,6 @@
 			<artifactId>apns</artifactId>
 			<version>1.0.0.Beta6</version>
 	    </dependency>
-	    
-		<!-- Test -->
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>${junit-version}</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-test</artifactId>
-			<version>${org.springframework-version}</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-		    <groupId>org.mockito</groupId>
-		    <artifactId>mockito-core</artifactId>
-		    <version>1.9.5</version>
-		    <exclusions>
-		        <exclusion>
-		            <groupId>org.hamcrest</groupId>
-		            <artifactId>hamcrest-core</artifactId>
-		        </exclusion>
-		    </exclusions>
-		    <scope>test</scope>
-		</dependency>
-		
-		<dependency>
-			<groupId>org.apache.tomcat</groupId>
-		    <artifactId>catalina</artifactId>
-		    <version>6.0.43</version>
-		    <scope>test</scope>
-		</dependency>
 	</dependencies>
   
   <repositories>
