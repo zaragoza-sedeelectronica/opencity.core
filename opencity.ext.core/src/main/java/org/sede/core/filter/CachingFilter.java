@@ -351,49 +351,52 @@ public abstract class CachingFilter extends Filter {
                 }
             }
             Element element = null;
-            
-            for (Map.Entry<String, BlockingCache> entry : blockingCache.entrySet()) {
-            	if (entry.getValue().isKeyInCache(key)) {
-                    element = entry.getValue().getQuiet(key);
-            	}
-            }
-            if (element == null || element.getObjectValue() == null || request.getParameter(CheckeoParametros.REFRESHPARAMETER) != null) {
-                try {
-                	// Page is not cached - build the response, cache it, and
-                    // send to client
-                    pageInfo = buildPage(request, response, chain);
-                    String actualCache = request.getAttribute(CheckeoParametros.ACTUAL_CACHE) == null ? Cache.DEFAULT_CACHE_NAME : (String)request.getAttribute(CheckeoParametros.ACTUAL_CACHE);
-                    if (pageInfo.isOk()) {
-                        if (request.getParameter(CheckeoParametros.DEBUG) != null) {
-                            logger.debug("PageInfo ok. Adding to cache {} with key {}",blockingCache.get(actualCache).getName(), key);
-                        }
-                        if ("GET".equalsIgnoreCase(request.getMethod()) 
-                        		&& !peticionClientId(request) 
-                        		&& (request.getAttribute(CheckeoParametros.NOCACHE) != null 
-                        		&& ((Boolean)request.getAttribute(CheckeoParametros.NOCACHE)).booleanValue() == true)) {
-                        	blockingCache.get(actualCache).put(new Element(key, pageInfo));
-                        } else {
-                        	logger.info("Contenido no cacheado al no estar incluida la anotación @Cache o requerir permiso para su ejecucion");
-                        	blockingCache.get(actualCache).remove(key);
-                        }
-                    } else {
-                        if (request.getParameter(CheckeoParametros.DEBUG) != null) {
-                            logger.debug("PageInfo was not ok(200). Putting null into cache {} with key {}", blockingCache.get(actualCache).getName(), key);
-                        }
-                        blockingCache.get(actualCache).remove(key);
-                    }
-                } catch (final Throwable throwable) {
-                    // Must unlock the cache if the above fails. Will be logged
-                    // at Filter
-                	for (Map.Entry<String, BlockingCache> entry : blockingCache.entrySet()) {
-                		blockingCache.get(entry.getKey()).remove(key);
-                    }
-                	
-                    return null;
-                    
-                }
+            if (blockingCache != null) {
+	            for (Map.Entry<String, BlockingCache> entry : blockingCache.entrySet()) {
+	            	if (entry.getValue().isKeyInCache(key)) {
+	                    element = entry.getValue().getQuiet(key);
+	            	}
+	            }
+	            if (element == null || element.getObjectValue() == null || request.getParameter(CheckeoParametros.REFRESHPARAMETER) != null) {
+	                try {
+	                	// Page is not cached - build the response, cache it, and
+	                    // send to client
+	                    pageInfo = buildPage(request, response, chain);
+	                    String actualCache = request.getAttribute(CheckeoParametros.ACTUAL_CACHE) == null ? Cache.DEFAULT_CACHE_NAME : (String)request.getAttribute(CheckeoParametros.ACTUAL_CACHE);
+	                    if (pageInfo.isOk()) {
+	                        if (request.getParameter(CheckeoParametros.DEBUG) != null) {
+	                            logger.debug("PageInfo ok. Adding to cache {} with key {}",blockingCache.get(actualCache).getName(), key);
+	                        }
+	                        if ("GET".equalsIgnoreCase(request.getMethod()) 
+	                        		&& !peticionClientId(request) 
+	                        		&& (request.getAttribute(CheckeoParametros.NOCACHE) != null 
+	                        		&& ((Boolean)request.getAttribute(CheckeoParametros.NOCACHE)).booleanValue() == true)) {
+	                        	blockingCache.get(actualCache).put(new Element(key, pageInfo));
+	                        } else {
+	                        	logger.info("Contenido no cacheado al no estar incluida la anotación @Cache o requerir permiso para su ejecucion");
+	                        	blockingCache.get(actualCache).remove(key);
+	                        }
+	                    } else {
+	                        if (request.getParameter(CheckeoParametros.DEBUG) != null) {
+	                            logger.debug("PageInfo was not ok(200). Putting null into cache {} with key {}", blockingCache.get(actualCache).getName(), key);
+	                        }
+	                        blockingCache.get(actualCache).remove(key);
+	                    }
+	                } catch (final Throwable throwable) {
+	                    // Must unlock the cache if the above fails. Will be logged
+	                    // at Filter
+	                	for (Map.Entry<String, BlockingCache> entry : blockingCache.entrySet()) {
+	                		blockingCache.get(entry.getKey()).remove(key);
+	                    }
+	                	
+	                    return null;
+	                    
+	                }
+	            } else {
+	                pageInfo = (PageInfo) element.getObjectValue();
+	            }
             } else {
-                pageInfo = (PageInfo) element.getObjectValue();
+            	pageInfo = buildPage(request, response, chain);
             }
         } catch (LockTimeoutException e) {
             // do not release the lock, because you never acquired it
@@ -444,8 +447,11 @@ public abstract class CachingFilter extends Filter {
         
         wrapper.flush();
         String actualCache = request.getAttribute(CheckeoParametros.ACTUAL_CACHE) == null ? Cache.DEFAULT_CACHE_NAME : (String)request.getAttribute(CheckeoParametros.ACTUAL_CACHE);
-        long timeToLiveSeconds = blockingCache.get(actualCache).getCacheConfiguration()
-                .getTimeToLiveSeconds();
+        long timeToLiveSeconds = 3600;
+        if (blockingCache != null) {
+	        timeToLiveSeconds = blockingCache.get(actualCache).getCacheConfiguration()
+	                .getTimeToLiveSeconds();
+        } 
 
         // Return the page info
         return new PageInfo(wrapper.getStatus(), wrapper.getContentType(),

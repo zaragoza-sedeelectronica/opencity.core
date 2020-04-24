@@ -111,7 +111,7 @@ public class WebConfig implements WebMvcConfigurer {
 	public SpringTemplateEngine templateEngine()
 	{
 		SpringTemplateEngine templateEngine = new SpringTemplateEngine();
-		templateEngine.setTemplateResolver(templateResolver());
+		templateEngine.addTemplateResolver(templateResolver());
 		templateEngine.addDialect(sedeDialect());
 		if (!Propiedades.isThymeleafStrictMode()) {
 			templateEngine.setEngineContextFactory(new AvoidRestrictedContextFactory());
@@ -152,7 +152,7 @@ public class WebConfig implements WebMvcConfigurer {
 	}
 
 	 
-//	@Override
+	@Override
 	public void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
 		configurer.favorPathExtension(true);
 		configurer.ignoreAcceptHeader(false);
@@ -207,12 +207,12 @@ public class WebConfig implements WebMvcConfigurer {
 	    return new SearchFiql();
 	}
 	
-//	@Override
+	@Override
 	public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
 		argumentResolvers.add(new ServletWebArgumentResolverAdapter(new DeviceWebArgumentResolver()));
 	}
 	
-//	@Override
+	@Override
 	public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
 		converters.add(new Transformador());
 //		super.configureMessageConverters(converters);
@@ -244,7 +244,7 @@ public class WebConfig implements WebMvcConfigurer {
 	@Autowired
     private Map<String, PropertyFileInterface> propiedades;
 	
-//	@Override
+	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
 		registry.addInterceptor(localeChangeInterceptor());
 		registry.addInterceptor(interceptorPeticion());

@@ -7,6 +7,7 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
+import org.sede.core.PropertyFileInterface;
 import org.sede.core.dao.AutowireHelper;
 import org.sede.core.dao.SearchFiql;
 import org.sede.core.filter.InterceptorPeticion;
@@ -75,7 +76,7 @@ public class WebConfig implements WebMvcConfigurer {
 	{	
 		String pathVistas = Propiedades.getThymeleafView();
 		if (pathVistas.indexOf("http:") >= 0 || pathVistas.indexOf("https:") >= 0) {
-			logger.info("UrlTemplateResolver: {} HTML", pathVistas);
+			logger.info("Test UrlTemplateResolver: {}", pathVistas);
 			UrlTemplateResolver templateResolver = new UrlTemplateResolver();
 			templateResolver.setPrefix(pathVistas);
 			templateResolver.setSuffix(".xml");
@@ -84,7 +85,7 @@ public class WebConfig implements WebMvcConfigurer {
 			templateResolver.setCacheable(false);
 			return templateResolver;
 		} else {
-			logger.info("FileTemplateResolver: {} HTML", pathVistas);
+			logger.info("Test FileTemplateResolver: {}", pathVistas);
 			FileTemplateResolver templateResolver = new FileTemplateResolver();
 			templateResolver.setPrefix(pathVistas);
 			templateResolver.setSuffix(".xml");
@@ -110,7 +111,7 @@ public class WebConfig implements WebMvcConfigurer {
 	public SpringTemplateEngine templateEngine()
 	{
 		SpringTemplateEngine templateEngine = new SpringTemplateEngine();
-		templateEngine.setTemplateResolver(templateResolver());
+		templateEngine.addTemplateResolver(templateResolver());
 		templateEngine.addDialect(sedeDialect());
 		if (!Propiedades.isThymeleafStrictMode()) {
 			templateEngine.setEngineContextFactory(new AvoidRestrictedContextFactory());
@@ -153,6 +154,9 @@ public class WebConfig implements WebMvcConfigurer {
 	 
 	@Override
 	public void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
+		
+		logger.info("configurando negociacion de contenido");
+		
 		configurer.favorPathExtension(true);
 		configurer.ignoreAcceptHeader(false);
 		configurer.defaultContentType(new MediaType("text", "html", Charset.forName("utf-8")));
@@ -213,6 +217,7 @@ public class WebConfig implements WebMvcConfigurer {
 	
 	@Override
 	public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
+		logger.info("configurando message converters");
 		converters.add(new Transformador());
 //		super.configureMessageConverters(converters);
 	}
@@ -255,5 +260,6 @@ public class WebConfig implements WebMvcConfigurer {
 			registry.addWebRequestInterceptor((OpenEntityManagerInViewInterceptor)context.getBean("os" + StringUtils.capitalize(esquema)));		
 		}
 	}
+	
 	
 }
