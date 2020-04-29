@@ -774,6 +774,12 @@ public class Funciones {
 	public static Integer calculateRandomNumber() {
 		return 100000 + new Random().nextInt(900000);
 	}
+	
+	public static Integer calculateRandomNumber(int i) {
+		Random rnd = new Random();
+		return 100000 + rnd.nextInt(900000);
+	}
+	
 	public static final String getStackTrace(Throwable t) {	
 		java.io.StringWriter s = new java.io.StringWriter();
 		t.printStackTrace(new java.io.PrintWriter(s));

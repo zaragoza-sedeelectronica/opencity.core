@@ -14,10 +14,10 @@ import org.springframework.context.annotation.Configuration;
 public class ConfigCiudadano implements PropertyFileInterface {
 	
 	/** Constant ESQUEMA. */
-	public static final String ESQUEMA = Esquema.NOTICIAS;
+	public static final String ESQUEMA = "GENERAL";
 	
 	/** Constant TM. */
-	public static final String TM = Esquema.TMNOTICIAS;
+	public static final String TM = "transactionManagerGeneral";
 	
 	/**
 	 * Gets the schema.
@@ -25,7 +25,7 @@ public class ConfigCiudadano implements PropertyFileInterface {
 	 * @return the schema
 	 */
 	public String getSchema() {
-		return "noticias";
+		return ESQUEMA.toLowerCase();
 	}
 	
 	/**
@@ -34,7 +34,7 @@ public class ConfigCiudadano implements PropertyFileInterface {
 	 * @return the jndi
 	 */
 	public String getJndi() {
-		return "WebNoticiasDS";
+		return "WebGeneralDS";
 	}
 
 	/**

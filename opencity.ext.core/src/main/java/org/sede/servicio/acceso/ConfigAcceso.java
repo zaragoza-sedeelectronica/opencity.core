@@ -15,10 +15,10 @@ import org.springframework.context.annotation.Configuration;
 public class ConfigAcceso implements PropertyFileInterface {
 	
 	/** Constant ESQUEMA. */
-	public static final String ESQUEMA = Esquema.MOVIL;
+	public static final String ESQUEMA = "GENERAL";
 	
 	/** Constant TM. */
-	public static final String TM = Esquema.TMMOVIL;
+	public static final String TM = "transactionManagerGeneral";
 	
 	/**
 	 * Gets the schema.
@@ -26,7 +26,7 @@ public class ConfigAcceso implements PropertyFileInterface {
 	 * @return the schema
 	 */
 	public String getSchema() {
-		return "movil";
+		return ESQUEMA.toLowerCase();
 	}
 	
 	/**
@@ -35,7 +35,7 @@ public class ConfigAcceso implements PropertyFileInterface {
 	 * @return the jndi
 	 */
 	public String getJndi() {
-		return "WebMovilDS";
+		return "WebGeneralDS";
 	}
 
 	/**

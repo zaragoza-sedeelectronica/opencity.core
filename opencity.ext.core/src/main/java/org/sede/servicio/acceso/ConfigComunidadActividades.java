@@ -6,14 +6,14 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration(value = "credencialesComunidadActividades")
 public class ConfigComunidadActividades implements PropertyFileInterface {
-	public static final String ESQUEMA = Esquema.MOVIL;
-	public static final String TM = Esquema.TMMOVIL;
+	public static final String ESQUEMA = "GENERAL";
+	public static final String TM = "transactionManagerGeneral";
 	
 	public String getSchema() {
 		return ESQUEMA.toLowerCase();
 	}
 	public String getJndi() {
-		return "WebMovilDS";
+		return "WebGeneralDS";
 	}
 
 	public String getEntity() {
