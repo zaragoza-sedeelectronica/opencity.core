@@ -41,8 +41,6 @@ public class RdfAttr extends AbstractAttributeModelProcessor  {
             final AttributeName attributeName, final String attributeValue,
             final IElementModelStructureHandler structureHandler) {
 
-    	System.out.println("en rdfattr");
-    	
     	final IEngineConfiguration configuration = context.getConfiguration();
 
         final IStandardExpressionParser parser =
