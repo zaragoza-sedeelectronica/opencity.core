@@ -113,21 +113,8 @@
 			<artifactId>solr-solrj</artifactId>
 			<version>${org.apache.solr-version}</version>
 		</dependency>
-		<!-- se tiene que descargar manualmente -->
-		<dependency>
-			<groupId>virtuoso.jena.driver</groupId>
-			<artifactId>virtjdbc</artifactId>
-			<version>3</version>
-		</dependency>
-		<!-- se tiene que descargar manualmente -->
-		<dependency>
-			<groupId>virtuoso.jena</groupId>
-			<artifactId>virt_jena</artifactId>
-			<version>3</version>
-		</dependency>
 		
 		<!-- se tienen que descargar manualmente -->
-		
 		<dependency>
 			<groupId>idezar</groupId>
 			<artifactId>geoapi</artifactId>

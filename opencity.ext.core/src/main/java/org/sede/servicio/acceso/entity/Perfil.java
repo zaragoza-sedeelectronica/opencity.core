@@ -38,7 +38,6 @@ import org.sede.core.anotaciones.InList;
 import org.sede.core.anotaciones.PathId;
 import org.sede.core.dao.EntidadBase;
 import org.sede.servicio.acceso.ConfigCiudadano;
-import org.sede.servicio.acceso.ConfigComunidad;
 import org.springframework.format.annotation.DateTimeFormat;
 
 /**
@@ -68,7 +67,7 @@ public class Perfil extends EntidadBase {
     //Definición preferencias en relación a actividades
     //  - tipología de actividades que son de su interés
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "USERS_TEMA", schema = ConfigComunidad.ESQUEMA,
+    @JoinTable(name = "USERS_TEMA", schema = ConfigCiudadano.ESQUEMA,
     		joinColumns = { @JoinColumn(name = "ID_USUARIO_ADENTRA", nullable = false, updatable = false) },
             inverseJoinColumns = { @JoinColumn(name = "COD_TEMA", nullable = false, updatable = false) })
     @Access(AccessType.FIELD)
@@ -79,7 +78,7 @@ public class Perfil extends EntidadBase {
     
     //  - valores que promueven las actividades),
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(schema = ConfigComunidad.ESQUEMA, name = "USERS_VALOR",
+    @JoinTable(schema = ConfigCiudadano.ESQUEMA, name = "USERS_VALOR",
     		joinColumns = { @JoinColumn(name = "ID_USUARIO_ADENTRA", nullable = false, updatable = false) },
             inverseJoinColumns = { @JoinColumn(name = "COD_VALOR", nullable = false, updatable = false) })
     @Access(AccessType.FIELD)
