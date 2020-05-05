@@ -459,7 +459,7 @@ public class Peticion {
 		this.tipoEtiquetado = tipoEtiquetado;
 	}
 	public String getSourceSrs() {
-		if (this.getClaseRetorno().isAnnotationPresent(SourceSRS.class)) {
+		if (this.getClaseRetorno() != null && this.getClaseRetorno().isAnnotationPresent(SourceSRS.class)) {
 			return this.getClaseRetorno().getAnnotation(SourceSRS.class).value();
 		} else {
 			return CheckeoParametros.SRSUTM30N;
