@@ -31,6 +31,8 @@ public class PortalController {
 		String path = request.getServletPath();
 		int indexServicio = path.indexOf("/servicio/");
 		int indexRecurso = path.indexOf("/recurso/");
+
+		request.setAttribute(LayoutInterceptor.COMPLETE_URI, request.getRequestURI());
 		if (indexServicio > 0) {
 			if (path.indexOf("/portal/") >= 0) {
 				request.setAttribute(LayoutInterceptor.PLANTILLA_PORTAL, path.substring(0, indexServicio));

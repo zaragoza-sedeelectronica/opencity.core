@@ -17,6 +17,7 @@ public class LayoutInterceptor extends HandlerInterceptorAdapter {
 	private static final Logger logger = LoggerFactory
 			.getLogger(LayoutInterceptor.class);
 	public static final String VIEW_ATTR = "view";
+	public static final String COMPLETE_URI = "completeUri";
 	public static final String PLANTILLA_ATTR = "plantilla";
 	public static final String PLANTILLA_PORTAL = "plantillaPortal";
 	public static final String PLANTILLA_SALIDA = "plantillaSalida";
@@ -72,7 +73,6 @@ public class LayoutInterceptor extends HandlerInterceptorAdapter {
         
         modelAndView.addObject(LayoutInterceptor.PLANTILLA_ATTR, plantilla);
         modelAndView.addObject(LayoutInterceptor.VIEW_ATTR, originalViewName);
-        super.postHandle(request, response, handler, modelAndView);
     }
 	
 		

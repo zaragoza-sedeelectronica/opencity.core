@@ -11,6 +11,7 @@ import org.apache.solr.client.solrj.response.FacetField.Count;
 import org.ciudadesabiertas.utils.Result;
 import org.ciudadesabiertas.utils.Util;
 import org.sede.core.dao.SearchFiql;
+import org.sede.core.plantilla.LayoutInterceptor;
 import org.sede.core.rest.CheckeoParametros;
 import org.sede.core.rest.solr.Faceta;
 import org.sede.core.rest.solr.ValorFaceta;
@@ -198,7 +199,10 @@ public class SearchResult<T> implements Serializable {
 
 				xhtm.append("<nav class=\"pull-right\"><ul class=\"pagination\">");
 				long paginas = this.totalCount / this.rows;
-				String pageLink = request.getRequestURI() + "?";
+				String pageLink = (request.getAttribute(LayoutInterceptor.COMPLETE_URI) == null 
+						?  request.getRequestURI()
+						: request.getAttribute(LayoutInterceptor.COMPLETE_URI)
+								) + "?";
 				Map map = request.getParameterMap();
 				for (Object key : map.keySet()) {
 					String keyStr = (String) key;
@@ -260,7 +264,10 @@ public class SearchResult<T> implements Serializable {
 			if (this.totalCount > this.rows) {
 				xhtm.append("<nav class=\"pull-right\"><ul class=\"pagination\">");
 				long paginas = this.totalCount / this.rows;
-				String pageLink = request.getRequestURI() + "?";
+				String pageLink = (request.getAttribute(LayoutInterceptor.COMPLETE_URI) == null 
+						?  request.getRequestURI()
+						: request.getAttribute(LayoutInterceptor.COMPLETE_URI)
+								) + "?";
 				@SuppressWarnings("unchecked")
 				Map<String, String[]> map = request.getParameterMap();
 				for (Object key: map.keySet())
@@ -318,7 +325,10 @@ public class SearchResult<T> implements Serializable {
 			StringBuilder xhtm = new StringBuilder();
 			if (this.totalCount > this.rows) {
 
-				String pageLink = request.getRequestURI() + "?";
+				String pageLink = (request.getAttribute(LayoutInterceptor.COMPLETE_URI) == null 
+						?  request.getRequestURI()
+						: request.getAttribute(LayoutInterceptor.COMPLETE_URI)
+								) + "?";
 				Map map = request.getParameterMap();
 				for (Object key : map.keySet()) {
 					String keyStr = (String) key;
