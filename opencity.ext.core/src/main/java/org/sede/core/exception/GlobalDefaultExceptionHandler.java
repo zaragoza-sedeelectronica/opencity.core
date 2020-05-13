@@ -25,7 +25,7 @@ class GlobalDefaultExceptionHandler {
     @ExceptionHandler(value = Exception.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public String defaultErrorHandler(HttpServletRequest request, HttpServletResponse response, Exception e, Model model) throws Exception {
-    	if (Funciones.getPeticion().isDebug()) {
+    	if (Funciones.getPeticion() != null && Funciones.getPeticion().isDebug()) {
     		logger.error(Funciones.getStackTrace(e));
     	} else {
     		logger.error("{}:{}", request.getRequestURI(), e.getMessage());
