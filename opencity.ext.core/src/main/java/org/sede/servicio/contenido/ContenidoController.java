@@ -37,20 +37,45 @@ import org.springframework.web.multipart.MultipartFile;
 import org.xml.sax.SAXException;
 
 
+
+/**
+ * The Class ContenidoController.
+ *
+ * @author Ayuntamiento Zaragoza
+ */
 @Gcz(servicio="CONTENIDOS",seccion="PAGINAS")
 @Controller
 @RequestMapping(value = "/" + ContenidoController.MAPPING, method = RequestMethod.GET)
 public class ContenidoController {
+	
+	/** Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(ContenidoController.class);
+	
+	/** Constant SERVICIO. */
 	private static final String SERVICIO = "contenido";
+	
+	/** Constant MAPPING. */
 	public static final String MAPPING = "servicio/" + SERVICIO;
 	
+	/**
+	 * Redirect.
+	 *
+	 * @return string
+	 */
 	@RequestMapping(method = RequestMethod.GET, produces = {
 			MediaType.TEXT_HTML_VALUE, "*/*" })
 	public String redirect() {
 		return "redirect:" + SERVICIO + "/";
 	}
 	
+	/**
+	 * Nuevo.
+	 *
+	 * @param model Model
+	 * @param path Path
+	 * @return string
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	@NoCache
 	@RequestMapping(value = "/", method = RequestMethod.GET, produces = {
 			MediaType.TEXT_HTML_VALUE, "*/*" })
@@ -77,6 +102,14 @@ public class ContenidoController {
 		return MAPPING + "/edit";
 	}
 	
+	/**
+	 * Guardar.
+	 *
+	 * @param path Path
+	 * @param content Content
+	 * @param model Model
+	 * @return string
+	 */
 	@Permisos(Permisos.MOD)
 	@RequestMapping(value = "/save", method = RequestMethod.POST, produces = {
 			MediaType.TEXT_HTML_VALUE, "*/*" })
@@ -98,6 +131,14 @@ public class ContenidoController {
 		return "fragmentos/error";
 	}
 
+	/**
+	 * Imagen.
+	 *
+	 * @param path Path
+	 * @param file File
+	 * @param model Model
+	 * @return string
+	 */
 	@Permisos(Permisos.MOD)
 	@RequestMapping(value = "/img", method = RequestMethod.POST, produces = {MediaType.TEXT_HTML_VALUE, "*/*" })
 	public String imagen(@RequestParam(value="path", required=false) String path,
@@ -113,6 +154,26 @@ public class ContenidoController {
 		return "fragmentos/error";
 	}
 	
+	/**
+	 * Indizar.
+	 *
+	 * @param uri Uri
+	 * @param title Title
+	 * @param description Description
+	 * @param category Category
+	 * @param author Author
+	 * @param subject Subject
+	 * @param lastModified Last modified
+	 * @param language Language
+	 * @param keywords Keywords
+	 * @param audience Audience
+	 * @param text Text
+	 * @param priority Priority
+	 * @param robots Robots
+	 * @param links Links
+	 * @param model Model
+	 * @return string
+	 */
 	@Permisos(Permisos.MOD)
 	@RequestMapping(value = "/index-solr", method = RequestMethod.POST, produces = {
 			MediaType.TEXT_HTML_VALUE, "*/*" })
@@ -149,17 +210,7 @@ public class ContenidoController {
 				if (StringUtils.isNotEmpty(author)) {
 					registro.addField("author",  author);
 				}
-	//			if (StringUtils.isNotEmpty(coverage)) {
-	//				registro.addField("coverage",  coverage);
-	//			}
-	//			if (handler.getX() != null && !"".equals(handler.getX())) {
-	//				
-	//				registro.addField("x_coordinate", Double.parseDouble(handler.getX()));
-	//				registro.addField("y_coordinate", Double.parseDouble(handler.getY()));
-	//				Punto p = conversor.getWgs84(Double.parseDouble(handler.getX()), Double.parseDouble(handler.getY()));
-	//				registro.addField("coordenadas_p", p.getLat() + "," + p.getLon());
-	//				
-	//			}
+
 				registro.addField("language", language);
 				registro.addField("keywords_smultiple", keywords);
 				registro.addField("description", Utils.removeHTMLEntity(description));
@@ -214,6 +265,13 @@ public class ContenidoController {
 		return "fragmentos/error";
 	}
 	
+	/**
+	 * Removes the.
+	 *
+	 * @param path Path
+	 * @param model Model
+	 * @return string
+	 */
 	@Permisos(Permisos.DEL)
 	@RequestMapping(value = "/remove", method = RequestMethod.GET, produces = {MediaType.TEXT_HTML_VALUE, "*/*" })
 	public String remove(@RequestParam(value="path") String path, Model model) {
