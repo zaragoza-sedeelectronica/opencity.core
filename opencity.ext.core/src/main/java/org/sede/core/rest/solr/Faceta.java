@@ -268,7 +268,7 @@ public class Faceta {
 	}
 
 	private String facetaSeleccionadaBlock(HttpServletRequest request, String liClass, ValorFaceta valor) {
-		return "<li class=\"" + liClass + "\">" + valor.getNameParsed() + " <span class=\"badge\">" + valor.getCount() + "</span><a href=\"" + this.enlaceEliminarFaceta(valor.getName(), request) + "\" class=\"unstyled\"><img src=\"//www.zaragoza.es/cont/gcz/img/dessselecionado_NP.gif\" alt=\"Eliminar valor\"/></a></li>";
+		return "<li class=\"" + liClass + "\">" + valor.getNameParsed() + " <span class=\"badge\">" + valor.getCount() + "</span><a rel=\"nofollow\" href=\"" + this.enlaceEliminarFaceta(valor.getName(), request) + "\" class=\"unstyled\"><img src=\"//www.zaragoza.es/cont/gcz/img/dessselecionado_NP.gif\" alt=\"Eliminar valor\"/></a></li>";
 	}
 
 	private StringBuilder valoresFacetaBlock(HttpServletRequest request, List<ValorFaceta> facetas, String prefijoEnlace, boolean esBooleana) {
@@ -285,7 +285,7 @@ public class Faceta {
 	}
 
 	private String facetaNoSeleccionadaBlock(HttpServletRequest request, String prefijoEnlace, ValorFaceta v, String liClass) {
-		return "<li class=\"" + liClass + "\"><a href=\"" + trataEnlace(v, request, prefijoEnlace) + "\">" + v.getNameParsed() + " <span class=\"badge\">" + v.getCount() + "</span></a></li>";
+		return "<li class=\"" + liClass + "\"><a rel=\"nofollow\" href=\"" + trataEnlace(v, request, prefijoEnlace) + "\">" + v.getNameParsed() + " <span class=\"badge\">" + v.getCount() + "</span></a></li>";
 	}
 	public String enlaceEliminarFaceta(String valorFaceta) {
 		return enlaceEliminarFaceta(valorFaceta, Funciones.getRequest());

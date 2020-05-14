@@ -177,12 +177,12 @@ public class SearchResult<T> implements Serializable {
 			querystring = "?" + request.getQueryString();
 		}
 		if (formato == null) {
-			retorno.append("<li class=\"hidden-xs\"> | <a href=\"" + uri + ".solrjson" + querystring + "\">JSON</a></li>");
-			retorno.append("<li class=\"hidden-xs\"> | <a href=\"" + uri + ".solrxml" + querystring + "\">XML</a></li>");
-			retorno.append("<li class=\"hidden-xs\"> | <a href=\"" + uri + ".csv" + querystring + "\">CSV</a></li>");
+			retorno.append("<li class=\"hidden-xs\"> | <a rel=\"nofollow\" href=\"" + uri + ".solrjson" + querystring + "\">JSON</a></li>");
+			retorno.append("<li class=\"hidden-xs\"> | <a rel=\"nofollow\" href=\"" + uri + ".solrxml" + querystring + "\">XML</a></li>");
+			retorno.append("<li class=\"hidden-xs\"> | <a rel=\"nofollow\" href=\"" + uri + ".csv" + querystring + "\">CSV</a></li>");
 		} else {
 			for (String f : formato) {
-				retorno.append("<li class=\"hidden-xs\"> | <a href=\"" + uri + "." + f + querystring + "\">" + f.toUpperCase() + "</a></li>");	
+				retorno.append("<li class=\"hidden-xs\"> | <a rel=\"nofollow\" href=\"" + uri + "." + f + querystring + "\">" + f.toUpperCase() + "</a></li>");	
 			}
 		}
 		return retorno.toString();
@@ -216,7 +216,7 @@ public class SearchResult<T> implements Serializable {
 
 
 				if (this.start - this.rows >= 0) {
-					xhtm.append("<li><a class=\"btn btn-primary btn-mini\" href=\"" + pageLink + "&amp;start=" + (this.start - this.rows) + "\"><span aria-hidden=\"true\">&laquo;</span></a></li>");
+					xhtm.append("<li><a rel=\"nofollow\" class=\"btn btn-primary btn-mini\" href=\"" + pageLink + "&amp;start=" + (this.start - this.rows) + "\"><span aria-hidden=\"true\">&laquo;</span></a></li>");
 				}
 
 				int paginaActual = this.start / this.rows;
@@ -233,15 +233,15 @@ public class SearchResult<T> implements Serializable {
 				while (pos < sum && pos <= paginas) {
 					long siguiente = (this.rows * pos);
 					if (pos == paginaActual) {
-						xhtm.append("<li class=\"active\"><a href=\"#\">" + (pos + 1) + "</a></li>");
+						xhtm.append("<li class=\"active\"><a rel=\"nofollow\" href=\"#\">" + (pos + 1) + "</a></li>");
 					} else {
-						xhtm.append("<li><a class=\"btn btn-primary btn-mini\" href=\"" + pageLink + "&amp;start=" + siguiente + "\">" + (pos + 1) + "</a></li>");
+						xhtm.append("<li><a rel=\"nofollow\" class=\"btn btn-primary btn-mini\" href=\"" + pageLink + "&amp;start=" + siguiente + "\">" + (pos + 1) + "</a></li>");
 					}
 					pos++;
 				}
 
 				if (this.start + this.rows <= this.totalCount) {
-					xhtm.append("<li><a class=\"btn btn-primary btn-mini\" href=\"" + pageLink + "&amp;start=" + (this.start + this.rows) + "\"><span aria-hidden=\"true\">&raquo;</span></a></li>");
+					xhtm.append("<li><a rel=\"nofollow\" class=\"btn btn-primary btn-mini\" href=\"" + pageLink + "&amp;start=" + (this.start + this.rows) + "\"><span aria-hidden=\"true\">&raquo;</span></a></li>");
 				}
 				xhtm.append("</ul></nav>");
 			}
@@ -282,7 +282,7 @@ public class SearchResult<T> implements Serializable {
 				}
 
 				if (this.start - this.rows >= 0) {
-					xhtm.append("<li><a class=\"btn btn-primary btn-mini\" href=\"" + pageLink + "&amp;start=" + (this.start - this.rows) + "#" + anchor + "\"><span aria-hidden=\"true\">&laquo;</span></a></li>");
+					xhtm.append("<li><a rel=\"nofollow\" class=\"btn btn-primary btn-mini\" href=\"" + pageLink + "&amp;start=" + (this.start - this.rows) + "#" + anchor + "\"><span aria-hidden=\"true\">&laquo;</span></a></li>");
 				}
 
 				int paginaActual = this.start / this.rows;
@@ -299,15 +299,15 @@ public class SearchResult<T> implements Serializable {
 				while (pos < sum && pos <= paginas) {
 					long siguiente = (this.rows * pos);
 					if (pos == paginaActual) {
-						xhtm.append("<li class=\"active\"><a href=\"#" + anchor + "\">" + (pos + 1) + "</a></li>");
+						xhtm.append("<li class=\"active\"><a rel=\"nofollow\" href=\"#" + anchor + "\">" + (pos + 1) + "</a></li>");
 					} else {
-						xhtm.append("<li><a class=\"btn btn-primary btn-mini\" href=\"" + pageLink + "&amp;start=" + siguiente + "#" + anchor + "\">" + (pos + 1) + "</a></li>");
+						xhtm.append("<li><a rel=\"nofollow\" class=\"btn btn-primary btn-mini\" href=\"" + pageLink + "&amp;start=" + siguiente + "#" + anchor + "\">" + (pos + 1) + "</a></li>");
 					}
 					pos++;
 				}
 
 				if (this.start + this.rows <= this.totalCount) {
-					xhtm.append("<li><a class=\"btn btn-primary btn-mini\" href=\"" + pageLink + "&amp;start=" + (this.start + this.rows) + "#" + anchor + "\"><span aria-hidden=\"true\">&raquo;</span></a></li>");
+					xhtm.append("<li><a rel=\"nofollow\" class=\"btn btn-primary btn-mini\" href=\"" + pageLink + "&amp;start=" + (this.start + this.rows) + "#" + anchor + "\"><span aria-hidden=\"true\">&raquo;</span></a></li>");
 				}
 				xhtm.append("</ul></nav>");
 			}
