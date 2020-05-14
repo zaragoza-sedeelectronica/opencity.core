@@ -50,6 +50,20 @@ public class TestPeticion {
 		}
 		
 	}
+	public ResultActions get(String uri, MockHttpSession session) {
+		try {
+			ResultActions result = this.mockMvc.perform(MockMvcRequestBuilders.get(uri)
+					.headers(setHeaders(uri, null, RequestMethod.GET))
+					//.accept(accept)
+					.session(session)
+					);
+			return result;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+		
+	}
 	public ResultActions options(String uri) {
 		try {
 			ResultActions result = this.mockMvc.perform(MockMvcRequestBuilders.get(uri)
