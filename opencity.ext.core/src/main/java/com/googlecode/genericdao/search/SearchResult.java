@@ -241,7 +241,7 @@ public class SearchResult<T> implements Serializable {
 				}
 
 				if (this.start + this.rows <= this.totalCount) {
-					xhtm.append("<li><a rel=\"nofollow\" class=\"btn btn-primary btn-mini\" href=\"" + pageLink + "&amp;start=" + (this.start + this.rows) + "\"><span aria-hidden=\"true\">&raquo;</span></a></li>");
+					xhtm.append("<li><a class=\"btn btn-primary btn-mini\" href=\"" + pageLink + "&amp;start=" + (this.start + this.rows) + "\"><span aria-hidden=\"true\">&raquo;</span></a></li>");
 				}
 				xhtm.append("</ul></nav>");
 			}
@@ -307,7 +307,7 @@ public class SearchResult<T> implements Serializable {
 				}
 
 				if (this.start + this.rows <= this.totalCount) {
-					xhtm.append("<li><a rel=\"nofollow\" class=\"btn btn-primary btn-mini\" href=\"" + pageLink + "&amp;start=" + (this.start + this.rows) + "#" + anchor + "\"><span aria-hidden=\"true\">&raquo;</span></a></li>");
+					xhtm.append("<li><a class=\"btn btn-primary btn-mini\" href=\"" + pageLink + "&amp;start=" + (this.start + this.rows) + "#" + anchor + "\"><span aria-hidden=\"true\">&raquo;</span></a></li>");
 				}
 				xhtm.append("</ul></nav>");
 			}
