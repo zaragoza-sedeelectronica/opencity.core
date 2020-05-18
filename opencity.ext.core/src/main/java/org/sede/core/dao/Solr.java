@@ -459,7 +459,10 @@ public class Solr {
 			return resultado;
 
 		} catch (SolrServerException e) {
-			logger.error("ERROR query solr: {}:{} " + Funciones.getRequest().getHeader("User-Agent"), solrQuery, e.getMessage());
+			if (Funciones.getRequest().getHeader("User-Agent") == null || !Funciones.getRequest().getHeader("User-Agent").contains("AspiegelBot")) {
+				// parecen errores de navegador, por lo que no los almacenamos 
+				logger.error("ERROR query solr: {}:{} " + Funciones.getRequest().getHeader("User-Agent"), solrQuery, e.getMessage());
+			}
 			return null;
 		}
 
