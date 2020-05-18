@@ -39,7 +39,7 @@ public class Html2MarkDown {
 			return retorno.toString();
 		} catch (Exception e) {
 			if (xml.length() > 100) {
-			 logger.error(e.getMessage() + " texto: " + xml.substring(0,100));
+			 logger.error(Funciones.getFullUri() +  ":" + e.getMessage() + " texto: " + xml.substring(0,100));
 			} else {
 				
 			}

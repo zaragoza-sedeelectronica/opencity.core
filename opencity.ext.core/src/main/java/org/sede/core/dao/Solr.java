@@ -459,7 +459,7 @@ public class Solr {
 			return resultado;
 
 		} catch (SolrServerException e) {
-			logger.error("ERROR query solr: {}:{}", solrQuery, e.getMessage());
+			logger.error("ERROR query solr: {}:{} " + Funciones.getRequest().getHeader("User-Agent"), solrQuery, e.getMessage());
 			return null;
 		}
 
