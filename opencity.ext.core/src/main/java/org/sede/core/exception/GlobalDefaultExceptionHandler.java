@@ -28,7 +28,11 @@ class GlobalDefaultExceptionHandler {
     	if (Funciones.getPeticion() != null && Funciones.getPeticion().isDebug()) {
     		logger.error(Funciones.getStackTrace(e));
     	} else {
-    		logger.error("{}:{}", request.getRequestURI(), e.getMessage());
+    		String query = request.getRequestURI();
+    		if (request.getQueryString() != null && !request.getQueryString().isEmpty()) {
+    			query = query + "?" + request.getQueryString();
+    		}
+    		logger.error("{}:{}",  query, e.getMessage());
     	}
     	
     	if (peticionJson(request)) {
