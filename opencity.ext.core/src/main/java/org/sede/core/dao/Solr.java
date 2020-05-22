@@ -459,8 +459,9 @@ public class Solr {
 			return resultado;
 
 		} catch (SolrServerException e) {
-			if (Funciones.getRequest().getHeader("User-Agent") == null || !Funciones.getRequest().getHeader("User-Agent").contains("AspiegelBot")) {
-				// FIXME parecen errores de navegador, por lo que no los almacenamos 
+//			if (Funciones.getRequest().getHeader("User-Agent") == null || !Funciones.getRequest().getHeader("User-Agent").contains("AspiegelBot")) {
+				//FIXME aparecen errores de navegacion por bots, por lo que no los almacenamos
+			if (Funciones.getPeticion().isDebug()) {
 				logger.error("ERROR query solr: {}:{} " + Funciones.getRequest().getHeader("User-Agent"), solrQuery, e.getMessage());
 			}
 			return null;
