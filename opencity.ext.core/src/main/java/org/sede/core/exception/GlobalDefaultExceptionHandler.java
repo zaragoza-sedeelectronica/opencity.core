@@ -28,7 +28,8 @@ class GlobalDefaultExceptionHandler {
     	if (Funciones.getPeticion() != null && Funciones.getPeticion().isDebug()) {
     		logger.error(Funciones.getStackTrace(e));
     	} else {
-    		String query = request.getRequestURI();
+    		String query = "ORIGEN:" + request.getHeader("REFERER") + " PETICION:" + request.getRequestURI();
+    		
     		if (request.getQueryString() != null && !request.getQueryString().isEmpty()) {
     			query = query + "?" + request.getQueryString();
     		}
