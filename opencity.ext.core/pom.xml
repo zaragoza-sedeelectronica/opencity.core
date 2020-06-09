@@ -112,6 +112,12 @@
 			<groupId>org.apache.solr</groupId>
 			<artifactId>solr-solrj</artifactId>
 			<version>${org.apache.solr-version}</version>
+			<exclusions>
+				<exclusion>
+		            <groupId>org.apache.lucene</groupId>
+		            <artifactId>lucene-core</artifactId>
+		        </exclusion>
+		    </exclusions>
 		</dependency>
 		
 		<!-- se tienen que descargar manualmente -->
