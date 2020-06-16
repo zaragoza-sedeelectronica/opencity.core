@@ -329,7 +329,7 @@ public class Funciones {
 					message.saveChanges();
 				}
 				
-				final Transport transport = ses.getTransport("smtp");				
+				final Transport transport = ses.getTransport("smtp");
 				transport.connect(Propiedades.getMailServer(), usuario, password);
 				transport.sendMessage(message, message.getAllRecipients());
 				transport.close();

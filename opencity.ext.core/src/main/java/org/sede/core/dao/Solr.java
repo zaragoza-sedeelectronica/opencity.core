@@ -88,12 +88,12 @@ public class Solr {
 				server = new CommonsHttpSolrServer("http://" + USERPROP + ":" + USERPASS + "@" + servidorUrl + ":" + puerto + "/buscador");
 				Credentials defaultcreds = new UsernamePasswordCredentials(USERPROP, USERPASS);
 				server.getHttpClient().getState().setCredentials(new AuthScope(servidorUrl, puerto), defaultcreds);
+				server.getHttpClient().getParams().setSoTimeout(3000);
 				server.getHttpClient().getParams().setAuthenticationPreemptive(true);
-				server.getHttpClient().getParams().setSoTimeout(1000);
 				logger.info("Servidor SOLR definido con credenciales: " + servidorUrl);
 			} else {
 				server = new CommonsHttpSolrServer("http://" + servidorUrl + ":" + puerto + "/buscador");
-				server.getHttpClient().getParams().setSoTimeout(1000);
+				server.getHttpClient().getParams().setSoTimeout(3000);
 				logger.error("No se ha definido credenciales para SOLR: " + servidorUrl);
 			}
 

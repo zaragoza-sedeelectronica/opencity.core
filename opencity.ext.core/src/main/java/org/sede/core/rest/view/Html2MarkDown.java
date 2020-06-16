@@ -38,8 +38,9 @@ public class Html2MarkDown {
 			}
 			return retorno.toString();
 		} catch (Exception e) {
+//			FIXME eliminamos la traza
 //			if (xml.length() > 100) {
-//			 logger.error(Funciones.getFullUri() +  ":" + e.getMessage() + " texto: " + xml.substring(0,100));
+//				logger.error(Funciones.getFullUri() +  ":" + e.getMessage() + " texto: " + xml.substring(0,100));
 //			} else {
 //				
 //			}
