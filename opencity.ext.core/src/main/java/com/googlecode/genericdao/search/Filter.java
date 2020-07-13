@@ -232,7 +232,20 @@ public class Filter implements Serializable {
 	public static Filter isNotEmpty(String property) {
 		return new Filter(property, true, OP_NOT_EMPTY);
 	}
-
+	public static Filter contains(String property, String valor) {
+		final String[] listaValores = valor.split(" ");
+		int ite = 0;
+		List<Filter> filtros = new ArrayList<Filter>();
+		while (ite < listaValores.length && ite < 9) {
+			if (listaValores[ite] != null) {
+				filtros.add(Filter.ilike(property, "%"
+					+ listaValores[ite] + "%"));
+			}
+			ite++;
+		
+		}
+		return Filter.and(filtros.toArray(new Filter[filtros.size()]));
+	}
 	/**
 	 * Create a new Filter using the AND operator.
 	 * 
