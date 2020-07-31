@@ -255,39 +255,6 @@ public class Utils {
 		return msg;
 	}
 
-//	public static StringBuilder tratarHorarios(Set<ActoLugarHorario> horarios) {
-//		StringBuilder xhtm = new StringBuilder();
-//		List<ActoLugarHorario> horariosSortList = new ArrayList<ActoLugarHorario>(horarios);
-//		Collections.sort(horariosSortList, new Comparator<ActoLugarHorario>() {
-//			private final Ordering<String> diasOrdenados = Ordering.explicit("Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo");
-//			@Override
-//			public int compare(final ActoLugarHorario object1, final ActoLugarHorario object2) {
-//				int compare = diasOrdenados.compare(object1.getDayOfWeek(), object2.getDayOfWeek());
-//				if(compare != 0){
-//					return compare;
-//				}
-//				return object1.getStartTime().compareTo(object2.getStartTime());
-//			}
-//		});
-//		LinkedHashMap<String,String> map = new LinkedHashMap<String, String>();
-//		for (ActoLugarHorario h : horariosSortList){
-//			String startTime = h.getStartTime() != null ? "<span property=\"startTime\">" + h.getStartTime() + "</span>" : null;
-//			String endTime = h.getEndTime() != null ? "<span property=\"endTime\">" + h.getEndTime() + "</span>" : null;
-//			if(map.containsKey(h.getDayOfWeek())){
-//				String value = map.get(h.getDayOfWeek()) + (h.getEndTime() != null ? " y de " + startTime + " a " + endTime + " h." : " y a las " + startTime);
-//				map.put(h.getDayOfWeek(), value);
-//			} else {
-//				map.put(h.getDayOfWeek(), (h.getEndTime() != null ? " de " + startTime + " a " + endTime + " h." : " a las " + startTime + " h."));
-//			}
-//		}
-//		if(!map.isEmpty()) { xhtm.append("<ul>"); }
-//		for (Map.Entry<String, String> entry : map.entrySet()) {
-//			xhtm.append("<li>" + entry.getKey() + entry.getValue() + "</li>");
-//		}
-//		if(!map.isEmpty()) { xhtm.append("</ul>"); }
-//		return xhtm;
-//	}
-
 	public static StringBuilder tratarFechas(Date inicio, Date fin) {
 		if (inicio == null && fin == null) {
 			return null;
@@ -577,16 +544,16 @@ public class Utils {
 			xhtm.append("<div class=\"editor-tool hidden-print\" style=\"background:#000;z-index:1010;position:fixed;right:0;left:0;margin-right:auto;margin-left:auto;min-height:3.5em;width:20em;text-align:center;border-radius:0px 0px 6px 6px;\">"
 			+ "<div class=\"h3 nomargin fa-inverse\">Editor de página</div>");
 			if (permisosPaginas.contains(Permisos.NEW)) {
-				xhtm.append("<a data-toggle=\"modal\" data-target=\"#edicion\" href=\"/opencityext/servicio/contenido/\" title=\"Crear Página\" class=\"btn btn-xs\"><i class=\"fa fa-2x fa-inverse fa-plus-circle\" aria-hidden=\"true\"></i></a> ");
+				xhtm.append("<a data-toggle=\"modal\" data-target=\"#edicion\" href=\"" + Propiedades.getContexto() + "/servicio/contenido/\" title=\"Crear Página\" class=\"btn btn-xs\"><i class=\"fa fa-2x fa-inverse fa-plus-circle\" aria-hidden=\"true\"></i></a> ");
 			}
 			if (permisosPaginas.contains(Permisos.MOD)) {
-				xhtm.append("<a data-toggle=\"modal\" data-target=\"#edicion\" href=\"/opencityext/servicio/contenido/?path=" + pagina + "\" title=\"Modificar Página\" class=\"btn btn-xs\"><i class=\"far fa-2x fa-inverse fa-edit\" aria-hidden=\"true\"></i></a> ");
+				xhtm.append("<a data-toggle=\"modal\" data-target=\"#edicion\" href=\"" + Propiedades.getContexto() + "/servicio/contenido/?path=" + pagina + "\" title=\"Modificar Página\" class=\"btn btn-xs\"><i class=\"far fa-2x fa-inverse fa-edit\" aria-hidden=\"true\"></i></a> ");
 			}
 			if (permisosPaginas.contains(Permisos.DEL)) {
-				xhtm.append("<a onclick=\"return confirm('¿Confirma que desea eliminar " + pagina + "?')\" href=\"/opencityext/servicio/contenido/remove/?path=" + pagina + "\" title=\"Eliminar Página\" class=\"btn btn-xs\"><i class=\"fa fa-2x fa-inverse fa-trash\" aria-hidden=\"true\"></i></a> ");
+				xhtm.append("<a onclick=\"return confirm('¿Confirma que desea eliminar " + pagina + "?')\" href=\"" + Propiedades.getContexto() + "/servicio/contenido/remove/?path=" + pagina + "\" title=\"Eliminar Página\" class=\"btn btn-xs\"><i class=\"fa fa-2x fa-inverse fa-trash\" aria-hidden=\"true\"></i></a> ");
 			}
 			if (permisosPlantilla.contains(Permisos.MOD)) {
-				xhtm.append("<a data-toggle=\"modal\" data-target=\"#edicion\" href=\"/opencityext/servicio/contenido/?path=" + plantilla + "\" title=\"Editar Plantilla\" class=\"btn btn-xs\"><i class=\"fas fa-2x fa-inverse fa-file-alt\" aria-hidden=\"true\"></i></a>");
+				xhtm.append("<a data-toggle=\"modal\" data-target=\"#edicion\" href=\"" + Propiedades.getContexto() + "/servicio/contenido/?path=" + plantilla + "\" title=\"Editar Plantilla\" class=\"btn btn-xs\"><i class=\"fas fa-2x fa-inverse fa-file-alt\" aria-hidden=\"true\"></i></a>");
 			}
 			if (permisosPlantilla.contains(Permisos.PUB)) {
 				xhtm.append("<a data-toggle=\"modal\" data-target=\"#indizar\" title=\"Indizar\" class=\"btn btn-xs\" onclick=\"procesarPagina()\"><i class=\"fas fa-2x fa-inverse fa-cloud-upload-alt\" aria-hidden=\"true\"></i></a>");
