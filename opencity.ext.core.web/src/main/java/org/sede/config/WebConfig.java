@@ -80,6 +80,7 @@ public class WebConfig implements WebMvcConfigurer {
 			UrlTemplateResolver templateResolver = new UrlTemplateResolver();
 			templateResolver.setPrefix(pathVistas);
 			templateResolver.setSuffix(".xml");
+			templateResolver.setCharacterEncoding("UTF-8");
 			templateResolver.setForceTemplateMode(true);
 			templateResolver.setTemplateMode(TemplateMode.HTML);
 			templateResolver.setCacheable(false);
@@ -89,6 +90,7 @@ public class WebConfig implements WebMvcConfigurer {
 			FileTemplateResolver templateResolver = new FileTemplateResolver();
 			templateResolver.setPrefix(pathVistas);
 			templateResolver.setSuffix(".xml");
+			templateResolver.setCharacterEncoding("UTF-8");
 			templateResolver.setForceTemplateMode(true);
 			templateResolver.setTemplateMode(TemplateMode.HTML);
 			templateResolver.setCacheable(false);
@@ -126,6 +128,8 @@ public class WebConfig implements WebMvcConfigurer {
 		viewResolver.setTemplateEngine(templateEngine());
 		viewResolver.setCharacterEncoding("UTF-8");
 		viewResolver.setContentType("text/html");
+		viewResolver.setRedirectContextRelative(true);
+		viewResolver.setRedirectHttp10Compatible(false);
 		return viewResolver;
 	}
 	
