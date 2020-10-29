@@ -233,11 +233,15 @@ public class SearchFiql {
 			StringBuilder consulta = new StringBuilder();
 			String[] values = paramValue.split(",");
 			paramName = paramName.replace("InList", "");
-			for (int i = 0; i < values.length; i++) {
-				if (i > 0) {
-					consulta.append(",");
+			if (values.length > 0) {
+				consulta.append("(");
+				for (int i = 0; i < values.length; i++) {
+					if (i > 0) {
+						consulta.append(",");
+					}
+					consulta.append(paramName + operador + values[i].trim());
 				}
-				consulta.append(paramName + operador + values[i].trim());
+				consulta.append(")");
 			}
 			retorno = consulta.toString();
 		}
