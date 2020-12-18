@@ -103,9 +103,9 @@
         </dependency>
 		<!-- se tiene que descargar manualmente -->
 		<dependency>
-			<groupId>com.oracle</groupId>
-			<artifactId>ojdbc5</artifactId>
-			<version>11.2.0</version>
+			<groupId>com.oracle.jdbc</groupId>
+			<artifactId>ojdbc6</artifactId>
+			<version>11.2.0.4</version>
 		</dependency>
 		<!-- se tiene que descargar manualmente -->
 		<dependency>
