@@ -11,6 +11,7 @@ import org.sede.servicio.acceso.entity.Ciudadano;
 import org.sede.servicio.acceso.entity.Credenciales;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.mobile.device.Device;
 import org.springframework.mobile.device.DeviceResolver;
 import org.springframework.mobile.device.LiteDeviceResolver;
@@ -57,7 +58,7 @@ public class GZipFilter extends CachingFilter {
 		if (httpRequest.getSession().getAttribute(CheckeoParametros.SESSIONCIUDADANO) != null) {
 			ciudadano = ((Ciudadano)httpRequest.getSession().getAttribute(CheckeoParametros.SESSIONCIUDADANO)).getAccount_id(); 
 		}
-
+		String locale = LocaleContextHolder.getLocale().toString();
 		StringBuilder queryString = new StringBuilder();
 		@SuppressWarnings("unchecked")
 		Enumeration<String> parameterNames = httpRequest.getParameterNames();
@@ -76,7 +77,7 @@ public class GZipFilter extends CachingFilter {
 			}
 		}
 		
-        stringbuilder.append(clientId).append(ciudadano).append(httpRequest.getMethod()).append(tipo).append(formato).append(httpRequest.getRequestURI()).append(queryString);
+        stringbuilder.append(clientId).append(ciudadano).append(httpRequest.getMethod()).append(tipo).append(formato).append(locale).append(httpRequest.getRequestURI()).append(queryString);
         
         return stringbuilder.toString();
 	}
