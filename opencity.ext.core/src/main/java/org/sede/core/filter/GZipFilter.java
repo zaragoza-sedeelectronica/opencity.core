@@ -2,6 +2,7 @@ package org.sede.core.filter;
 
 import java.util.Enumeration;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
 import net.sf.ehcache.CacheManager;
@@ -11,7 +12,6 @@ import org.sede.servicio.acceso.entity.Ciudadano;
 import org.sede.servicio.acceso.entity.Credenciales;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.mobile.device.Device;
 import org.springframework.mobile.device.DeviceResolver;
 import org.springframework.mobile.device.LiteDeviceResolver;
@@ -58,7 +58,16 @@ public class GZipFilter extends CachingFilter {
 		if (httpRequest.getSession().getAttribute(CheckeoParametros.SESSIONCIUDADANO) != null) {
 			ciudadano = ((Ciudadano)httpRequest.getSession().getAttribute(CheckeoParametros.SESSIONCIUDADANO)).getAccount_id(); 
 		}
-		String locale = LocaleContextHolder.getLocale().toString();
+		String locale = "es";
+		Cookie[] cookies = httpRequest.getCookies();
+		if(cookies != null) {
+			for (int i = 0; i < cookies.length; i++) {
+				if ("ayto_zgz_locale".equals(cookies[i].getName())) {
+					locale = cookies[i].getValue();
+				}
+			}
+		}
+		logger.info("LOCALE: " + locale);
 		StringBuilder queryString = new StringBuilder();
 		@SuppressWarnings("unchecked")
 		Enumeration<String> parameterNames = httpRequest.getParameterNames();
