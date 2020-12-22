@@ -77,6 +77,7 @@ public class Funciones {
 	private Funciones () {
 		super();
 	}
+	public static final String COOKIENAME = "org_sede_locale";
 	private static final Logger logger = LoggerFactory.getLogger(Funciones.class);
 	
 	public static String escape(String s) {

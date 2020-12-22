@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import net.sf.ehcache.CacheManager;
 
 import org.sede.core.rest.CheckeoParametros;
+import org.sede.core.utils.Funciones;
 import org.sede.servicio.acceso.entity.Ciudadano;
 import org.sede.servicio.acceso.entity.Credenciales;
 import org.slf4j.Logger;
@@ -62,7 +63,7 @@ public class GZipFilter extends CachingFilter {
 		Cookie[] cookies = httpRequest.getCookies();
 		if(cookies != null) {
 			for (int i = 0; i < cookies.length; i++) {
-				if ("ayto_zgz_locale".equals(cookies[i].getName())) {
+				if (Funciones.COOKIENAME.equals(cookies[i].getName())) {
 					locale = cookies[i].getValue();
 				}
 			}

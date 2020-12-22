@@ -15,6 +15,7 @@ import org.sede.core.plantilla.AvoidRestrictedContextFactory;
 import org.sede.core.plantilla.LayoutInterceptor;
 import org.sede.core.rest.view.Transformador;
 import org.sede.core.tag.SedeDialect;
+import org.sede.core.utils.Funciones;
 import org.sede.core.utils.Propiedades;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -64,6 +65,7 @@ public class WebConfig implements WebMvcConfigurer {
 	private ApplicationContext context;
 	
 	private static final Logger logger = LoggerFactory.getLogger(WebConfig.class);
+
 	/**
 	 * Configuración thymeleaf
 	 */
@@ -150,7 +152,7 @@ public class WebConfig implements WebMvcConfigurer {
 	{
 		CookieLocaleResolver localeResolver = new CookieLocaleResolver();
 		localeResolver.setDefaultLocale(new Locale("es"));
-		localeResolver.setCookieName("org_sede_locale");
+		localeResolver.setCookieName(Funciones.COOKIENAME);
 		localeResolver.setCookieMaxAge(3600);
 		return localeResolver;
 	}
