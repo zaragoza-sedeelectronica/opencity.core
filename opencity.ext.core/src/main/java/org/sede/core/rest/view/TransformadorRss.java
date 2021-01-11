@@ -3,14 +3,12 @@ package org.sede.core.rest.view;
 
 import java.lang.reflect.Method;
 import java.util.Date;
-import java.util.Locale;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.ConstraintViolation;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import org.sede.core.anotaciones.GeoJson;
 import org.sede.core.anotaciones.Rss;
 import org.sede.core.exception.FormatoNoSoportadoException;
 import org.sede.core.exception.InvalidImplementationException;
@@ -41,10 +39,7 @@ public class TransformadorRss implements TransformadorGenerico {
 			throws InvalidImplementationException {
 		Class<?> clase = Funciones.descubrirClase(retorno);
 		StringBuilder ical = new StringBuilder();
-		// TODO obtener información del feed a través de la entidad
-		// TODO revisar cómo generar el html para FB
 		
-		logger.error("rss 1");
 		if (retorno instanceof SearchResult) {
 			
 			for (Object obj : ((SearchResult<?>) retorno).getResult()) {
@@ -77,7 +72,6 @@ public class TransformadorRss implements TransformadorGenerico {
 //				      + "<webMaster>webmaster@example.com</webMaster>"
 					);
 		respuesta.append(ical.toString());
-		logger.error("rss fin");
 	}
 
 	private void transformarEntidad(StringBuilder respuesta, Object obj) {
