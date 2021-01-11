@@ -3,12 +3,15 @@ package org.sede.core.rest.view;
 
 import java.lang.reflect.Method;
 import java.util.Date;
+import java.util.Locale;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.ConstraintViolation;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.sede.core.anotaciones.GeoJson;
+import org.sede.core.anotaciones.Rss;
 import org.sede.core.exception.FormatoNoSoportadoException;
 import org.sede.core.exception.InvalidImplementationException;
 import org.sede.core.geo.Geometria;
@@ -36,31 +39,11 @@ public class TransformadorRss implements TransformadorGenerico {
 	public void transformarObjeto(StringBuilder respuesta, Object retorno,
 			Peticion peticion, boolean primero, String prefijo)
 			throws InvalidImplementationException {
-		logger.error("inicio rss");
+		Class<?> clase = Funciones.descubrirClase(retorno);
 		StringBuilder ical = new StringBuilder();
 		// TODO obtener información del feed a través de la entidad
 		// TODO revisar cómo generar el html para FB
-		ical.append("<?xml version=\"1.0\"?>"
-				+ "<rss version=\"2.0\" "
-					+ "xmlns:content=\"http://purl.org/rss/1.0/modules/content/\" "
-					+ "xmlns:wfw=\"http://wellformedweb.org/CommentAPI/\" "
-					+ "xmlns:dc=\"http://purl.org/dc/elements/1.1/\" "
-					+ "xmlns:atom=\"http://www.w3.org/2005/Atom\" "
-					+ "xmlns:sy=\"http://purl.org/rss/1.0/modules/syndication/\" "
-					+ "xmlns:slash=\"http://purl.org/rss/1.0/modules/slash/\" "
-				+ ">"
-				   + "<channel>"
-				      + "<title>Ayuntamiento de Zaragoza</title>"
-				      + "<link>https://www.zaragoza.es/sede/servicio/noticia/</link>"
-				      + "<description>Noticias</description>"
-				      + "<language>es-us</language>"
-				      + "<pubDate>Tue, 10 Jun 2003 04:00:00 GMT</pubDate>"
-				      + "<lastBuildDate>Tue, 10 Jun 2003 09:41:01 GMT</lastBuildDate>"
-//				      + "<docs>http://blogs.law.harvard.edu/tech/rss</docs>"
-//				      + "<generator>Weblog Editor 2.0</generator>"
-//				      + "<managingEditor>editor@example.com</managingEditor>"
-//				      + "<webMaster>webmaster@example.com</webMaster>"
-					);
+		
 		logger.error("rss 1");
 		if (retorno instanceof SearchResult) {
 			
@@ -72,6 +55,27 @@ public class TransformadorRss implements TransformadorGenerico {
 			transformarEntidad(ical, retorno);
 		}
 		ical.append("</channel></rss>");
+		respuesta.append("<?xml version=\"1.0\"?>"
+				+ "<rss version=\"2.0\" "
+					+ "xmlns:content=\"http://purl.org/rss/1.0/modules/content/\" "
+					+ "xmlns:wfw=\"http://wellformedweb.org/CommentAPI/\" "
+					+ "xmlns:dc=\"http://purl.org/dc/elements/1.1/\" "
+					+ "xmlns:atom=\"http://www.w3.org/2005/Atom\" "
+					+ "xmlns:sy=\"http://purl.org/rss/1.0/modules/syndication/\" "
+					+ "xmlns:slash=\"http://purl.org/rss/1.0/modules/slash/\" "
+				+ ">"
+				   + "<channel>"
+				      + "<title>" + clase.getAnnotation(Rss.class).title() + "</title>"
+				      + "<link>" + clase.getAnnotation(Rss.class).link() + "</link>"
+				      + "<description>" + clase.getAnnotation(Rss.class).description() + "</description>"
+				      + "<language>es-us</language>"
+				      + "<pubDate>" + clase.getAnnotation(Rss.class).pubDate() + "</pubDate>"
+				      + "<lastBuildDate>" + ConvertDate.date2StringGmt(Funciones.getPeticion().getLastModified()) + "</lastBuildDate>"
+//				      + "<docs>http://blogs.law.harvard.edu/tech/rss</docs>"
+//				      + "<generator>Weblog Editor 2.0</generator>"
+//				      + "<managingEditor>editor@example.com</managingEditor>"
+//				      + "<webMaster>webmaster@example.com</webMaster>"
+					);
 		respuesta.append(ical.toString());
 		logger.error("rss fin");
 	}
@@ -90,10 +94,10 @@ public class TransformadorRss implements TransformadorGenerico {
 			String description = (String)Funciones.retrieveObjectValue(obj, "description");
 			String summary = (String)Funciones.retrieveObjectValue(obj, "summary");
 			
-			String dateCreated = ConvertDate.date2String((Date)Funciones.retrieveObjectValue(obj, "dateCreated"), ConvertDate.ISO8601_FORMAT);
-			String created = ConvertDate.date2String((Date)Funciones.retrieveObjectValue(obj, "creationDate"), ConvertDate.ISO8601_FORMAT);
-			String lastUpdated = ConvertDate.date2String((Date)Funciones.retrieveObjectValue(obj, "lastUpdated"), ConvertDate.ISO8601_FORMAT);
-			String pubDate = ConvertDate.date2String((Date)Funciones.retrieveObjectValue(obj, "pubDate"), ConvertDate.ISO8601_FORMAT);
+			String dateCreated = ConvertDate.date2StringGmt((Date)Funciones.retrieveObjectValue(obj, "dateCreated"));
+			String created = ConvertDate.date2StringGmt((Date)Funciones.retrieveObjectValue(obj, "creationDate"));
+			String lastUpdated = ConvertDate.date2StringGmt((Date)Funciones.retrieveObjectValue(obj, "lastUpdated"));
+			String pubDate = ConvertDate.date2StringGmt((Date)Funciones.retrieveObjectValue(obj, "pubDate"));
 			
 			if ("".equals(lastUpdated)) {
 				lastUpdated = created;
@@ -112,10 +116,10 @@ public class TransformadorRss implements TransformadorGenerico {
 				         + "<title>" + title + "</title>"
 				         + "<link>" + uri + "</link>"
 				         + "<description><![CDATA[" + (summary == null ? "" : summary) + "]]></description>"
-				         + "<pubDate>" + dateCreated + "</pubDate>"
-				         + "<op-published>" + pubDate  + "</op-published>"
-				         + "<op-modified>" + lastUpdated + "</op-modified>"
-	//			         + "<guid>http://liftoff.msfc.nasa.gov/2003/06/03.html#item573</guid>"
+				         + "<pubDate>" + pubDate + "</pubDate>"
+//				         + "<op-published>" + pubDate  + "</op-published>"
+//				         + "<op-modified>" + lastUpdated + "</op-modified>"
+				         + "<guid>" + uri + "</guid>"
 				         + "<content:encoded><![CDATA[" + description + "]]></content:encoded>"
 				      + "</item>");
 			}

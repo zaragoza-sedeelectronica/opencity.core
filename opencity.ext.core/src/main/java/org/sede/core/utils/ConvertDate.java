@@ -10,6 +10,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
 
+import org.apache.http.impl.cookie.DateUtils;
+
 public class ConvertDate {
 	 
     public static final String PATTERN_RFC1123 = "EEE, dd MMM yyyy HH:mm:ss zzz";
@@ -118,7 +120,15 @@ public class ConvertDate {
     		return "";
     	}
     }
-
+    public static String date2StringGmt(Date date) {
+    	if (date != null) {
+    		return DateUtils.formatDate(date);
+    	} else {
+    		return "";
+    	}
+    	
+    }
+    
     /**
      * Convierte una cadena a una fecha.
      *
