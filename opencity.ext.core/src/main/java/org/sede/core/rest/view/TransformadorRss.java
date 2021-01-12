@@ -60,6 +60,7 @@ public class TransformadorRss implements TransformadorGenerico {
 					+ "xmlns:slash=\"http://purl.org/rss/1.0/modules/slash/\" "
 				+ ">"
 				   + "<channel>"
+					  +"<atom:link href=\""+clase.getAnnotation(Rss.class).link()+"\"  rel=\"self\"  type=\"application/rss+xml\" />"
 				      + "<title>" + clase.getAnnotation(Rss.class).title() + "</title>"
 				      + "<link>" + clase.getAnnotation(Rss.class).link() + "</link>"
 				      + "<description>" + clase.getAnnotation(Rss.class).description() + "</description>"
