@@ -114,7 +114,7 @@ public class TransformadorRss implements TransformadorGenerico {
 //				         + "<op-published>" + pubDate  + "</op-published>"
 //				         + "<op-modified>" + lastUpdated + "</op-modified>"
 				         + "<guid>" + uri + "</guid>"
-				         + "<content:encoded><![CDATA[" + description + "]]></content:encoded>"
+				         + "<content:encoded><![CDATA[" + description == null  ? "" : description + "]]></content:encoded>"
 				      + "</item>");
 			}
 		}
