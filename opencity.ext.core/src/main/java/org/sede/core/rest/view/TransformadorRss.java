@@ -60,7 +60,6 @@ public class TransformadorRss implements TransformadorGenerico {
 					+ "xmlns:slash=\"http://purl.org/rss/1.0/modules/slash/\" "
 				+ ">"
 				   + "<channel>"
-					  +"<atom:link href=\""+clase.getAnnotation(Rss.class).link()+"\"  rel=\"self\"  type=\"application/rss+xml\" />"
 				      + "<title>" + clase.getAnnotation(Rss.class).title() + "</title>"
 				      + "<link>" + clase.getAnnotation(Rss.class).link() + "</link>"
 				      + "<description>" + clase.getAnnotation(Rss.class).description() + "</description>"
@@ -85,7 +84,7 @@ public class TransformadorRss implements TransformadorGenerico {
 			logger.error(e.getMessage());
 			String id = Funciones.retrieveObjectValue(obj, "id").toString();
 			String uri = Funciones.obtenerPath(obj.getClass()) + id;
-			String title = (String)Funciones.retrieveObjectValue(obj, "title");
+			String title = Funciones.removeHTMLEntity((String)Funciones.retrieveObjectValue(obj, "title"));
 			String description = (String)Funciones.retrieveObjectValue(obj, "description");
 			String summary = (String)Funciones.retrieveObjectValue(obj, "summary");
 			
