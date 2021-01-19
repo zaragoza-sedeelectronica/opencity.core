@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
+import org.springframework.web.servlet.view.RedirectView;
 
 public class LayoutInterceptor extends HandlerInterceptorAdapter {
 	private static final Logger logger = LoggerFactory
@@ -31,7 +32,8 @@ public class LayoutInterceptor extends HandlerInterceptorAdapter {
             return;
         }
         String originalViewName = modelAndView.getViewName();
-        if (isRedirectOrForward(originalViewName)) {
+        if (modelAndView.getView() instanceof RedirectView 
+        		|| isRedirectOrForward(originalViewName)) {
         	logger.info("Es una redirreccion: {}", originalViewName);
             return;
         }
