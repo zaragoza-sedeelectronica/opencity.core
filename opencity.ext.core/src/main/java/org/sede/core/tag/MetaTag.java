@@ -159,6 +159,8 @@ public class MetaTag extends AbstractElementTagProcessor {
 		
 			}
 			if (!StringUtils.isEmpty(tag.getAttributeValue("last-modified"))) {
+				// Añadimos el atributo para poder ser utilizado en visualizacion
+				structureHandler.setAttribute("metaTaglastModified", tag.getAttributeValue("last-modified"));
 				
 				metaAttributes = new HashMap<String, String>();
 				metaAttributes.put("name", "last-modified");

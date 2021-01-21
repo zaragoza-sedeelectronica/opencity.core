@@ -41,7 +41,14 @@ public class BreadcrumbTag extends AbstractElementTagProcessor {
     			migasJson = true;
     			titleH1 = obtenerTituloSegunDispositivo(tag, tipoDispositivo);
     			
-    			model.add(modelFactory.createOpenElementTag("h1"));
+    			
+    			String etiqueta = "h1";
+    			
+    			if (!context.getTemplateData().getTemplate().endsWith("index")) {
+    				etiqueta = tag.getAttributeValue("tag") == null ? "h1" : tag.getAttributeValue("tag");
+    			}
+
+    			model.add(modelFactory.createOpenElementTag(etiqueta, "class", "h1"));
     			
     			if (tag.hasAttribute("link")) {
     				enlaceH1 = tag.getAttributeValue("link");
@@ -54,7 +61,7 @@ public class BreadcrumbTag extends AbstractElementTagProcessor {
     				model.add(modelFactory.createText(titleH1));
     			}
     			
-    			model.add(modelFactory.createCloseElementTag("h1"));
+    			model.add(modelFactory.createCloseElementTag(etiqueta));
     			
     			
     		}
