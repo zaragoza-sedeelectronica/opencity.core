@@ -22,6 +22,7 @@ public class CheckeoParametros {
 	public static final String PARAMQUERYSOLR = "query";
 	public static final String PARAMFQ = "fq";
 	public static final String ROWS = "50";
+	public static final Integer MAXROWS_RETURNED = 500;
 	public static final String START = "0";
 	
 	

@@ -131,6 +131,9 @@ public class SearchFiql {
 					this.showAll = true;
 				} else if (CheckeoParametros.PARAMROWS.equals(paramName)) {
 					this.rows = Integer.parseInt(req.getParameter(paramName));
+					if (this.rows > CheckeoParametros.MAXROWS_RETURNED) {
+						this.rows = CheckeoParametros.MAXROWS_RETURNED;
+					}
 				} else if (CheckeoParametros.PARAMPUNTOQUERYSOLR.equals(paramName)) {
 					this.point = req.getParameter(paramName);
 				} else if (CheckeoParametros.PARAMFILTROCAMPOS.equals(paramName)) {
@@ -576,4 +579,9 @@ public class SearchFiql {
 	public void setExcludeFields(String... campo) {
 		this.excludedFields = campo;
 	}
+
+	public void setShowAll(boolean showAll) {
+		this.showAll = showAll;
+	}
+	
 }

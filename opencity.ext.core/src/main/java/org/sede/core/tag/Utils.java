@@ -134,7 +134,8 @@ public class Utils {
 				return true;
 			} else if (inicio == null && fin.after(ahora)) {
 				return true;
-			} else if (inicio != null && fin != null && fin.after(ahora) && inicio.before(ahora)) {
+			} else if (inicio != null && fin != null && !ahora.after(fin) && !ahora.before(inicio)) {
+				//Este if hace que la fecha de inicio y fin esten incluidas en el plazo
 				return true;
 			}
 		}
@@ -254,6 +255,7 @@ public class Utils {
 		
 		return msg;
 	}
+
 
 	public static StringBuilder tratarFechas(Date inicio, Date fin) {
 		if (inicio == null && fin == null) {

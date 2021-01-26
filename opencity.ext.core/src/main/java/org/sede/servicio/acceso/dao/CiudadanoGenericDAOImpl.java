@@ -2,7 +2,9 @@ package org.sede.servicio.acceso.dao;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
+import java.net.URLEncoder;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -21,6 +23,7 @@ import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
+import org.apache.commons.codec.CharEncoding;
 import org.apache.commons.lang3.StringUtils;
 import org.sede.core.rest.Mensaje;
 import org.sede.core.utils.AESSec;
@@ -789,7 +792,7 @@ public class CiudadanoGenericDAOImpl extends GenericDAOImpl <Ciudadano, Integer>
 	 * @throws BadPaddingException the bad padding exception
 	 */
 	@Override
-	public void sendActivationMail(Ciudadano ciudadano) throws MessagingException, InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException {
+	public void sendActivationMail(Ciudadano ciudadano) throws MessagingException, InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, UnsupportedEncodingException, IllegalBlockSizeException, BadPaddingException {
 		String url = Propiedades.getActivationUrl()+"/acceso/activate?email=" + ciudadano.getEmail() + "&amp;token=" + AESSec.encrypt(ciudadano.getId() + "#" + ciudadano.getAccount_id());
 		String txtMensaje = "<p>Se ha creado una nueva cuenta de usuario con su direcci&oacute;n de correo electr&oacute;nico en la " +
 				"Plataforma de Gobierno Abierto del Ayuntamiento de Zaragoza. <br/> Para confirmar dicha " +
@@ -798,7 +801,6 @@ public class CiudadanoGenericDAOImpl extends GenericDAOImpl <Ciudadano, Integer>
 		Funciones.sendMail("Plataforma de Gobierno Abierto: Confirmación de Usuario", txtMensaje, ciudadano.getEmail(), "", "HTML");
 	}
 
-	
 	/**
 	 * Enviar token recuperacion.
 	 *

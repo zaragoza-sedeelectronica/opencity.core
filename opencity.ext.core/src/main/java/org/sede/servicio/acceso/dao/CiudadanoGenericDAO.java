@@ -1,5 +1,6 @@
 package org.sede.servicio.acceso.dao;
 
+import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -222,7 +223,7 @@ public interface CiudadanoGenericDAO extends GenericDAO<Ciudadano, Integer> {
 	 * @throws IllegalBlockSizeException the illegal block size exception
 	 * @throws BadPaddingException the bad padding exception
 	 */
-	public void sendActivationMail(Ciudadano ciudadano) throws MessagingException, InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException;
+	public void sendActivationMail(Ciudadano ciudadano) throws MessagingException, InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, UnsupportedEncodingException, IllegalBlockSizeException, BadPaddingException;
 	
 	/**
 	 * Enviar token recuperacion.
