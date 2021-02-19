@@ -205,6 +205,12 @@ public class TransformadorBasico {
 						respuesta.append(",");
 					}
 					respuesta.append("\"" + Funciones.escape(object.toString()) + "\"");
+				} else if (object == null) {
+					if (i > 0) {
+						respuesta.append(",");
+					}
+					respuesta.append("null");
+				
 				} else {
 					transformarObjeto(respuesta, object, peticion, primerInterno, pref);
 				}
