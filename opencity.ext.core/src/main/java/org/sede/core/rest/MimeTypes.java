@@ -63,6 +63,7 @@ public class MimeTypes {
 	public static final String ICS = "text/calendar";
 	public static final MediaType ICS_MEDIA = new MediaType("text", "calendar");
 	
+	public static final String ZIP = "application/zip";
 	
 	public static final String PNG = "image/png";
 	public static final String JPEG = "image/jpeg";

@@ -109,4 +109,16 @@ public class Utils {
 		IBANCheckDigit c = new IBANCheckDigit();
 		return c.isValid(iban);
 	}
+	public static boolean isNumeroEntero(String numero) {
+		try {
+			if((Integer.parseInt(numero)%1!=0)){
+				return false;
+			}else {
+				return true;
+			}
+		}catch(Exception e) {
+			return false;
+		}
+		
+	}
 }

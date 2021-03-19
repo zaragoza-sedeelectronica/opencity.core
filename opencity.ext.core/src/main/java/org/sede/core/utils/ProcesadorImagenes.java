@@ -144,7 +144,7 @@ public class ProcesadorImagenes {
 			return "";
 		}
 	}
-	public static String rename(String name, String dir) throws Exception {
+	public static String rename(String name, String dir) {
 		String tmp = "";
 		String type	=	name.substring(name.lastIndexOf('.') + 1, name.length());
 		String nom	=	name.substring(0, name.lastIndexOf('.'));
@@ -168,7 +168,7 @@ public class ProcesadorImagenes {
 		} else {
 			tmp = nom.substring(0, i) + j + "." + type;
 		}
-		File dest = new File(dir + tmp);
+		File dest = new File(dir + "/" + tmp);
 		if (dest.exists()) {
 			return rename(tmp, dir);
 		}

@@ -1,11 +1,13 @@
 package org.sede.servicio.contenido;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Date;
 import java.util.Locale;
 
+import javax.imageio.ImageIO;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.commons.codec.CharEncoding;
@@ -21,6 +23,7 @@ import org.sede.core.rest.solr.Faceta;
 import org.sede.core.tag.Utils;
 import org.sede.core.utils.ConvertDate;
 import org.sede.core.utils.Funciones;
+import org.sede.core.utils.ProcesadorImagenes;
 import org.sede.core.utils.Propiedades;
 import org.sede.core.validator.HTMLValidator;
 import org.sede.servicio.ModelAttr;
@@ -30,6 +33,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -282,6 +286,47 @@ public class ContenidoController {
 			model.addAttribute(ModelAttr.MENSAJE, new Mensaje(HttpStatus.BAD_REQUEST.value(), "Fichero en path " + path + " NO se ha eliminado"));
 		}
 		return "fragmentos/error";
+	}
+	
+	
+	@Permisos(Permisos.DET)
+	@RequestMapping(value = "/list", method = RequestMethod.GET, produces = {MediaType.TEXT_HTML_VALUE, "*/*" })
+	public String list(@RequestParam(value="path", required = false, defaultValue="") String path,
+			Model model) {
+		String carpeta = Propiedades.getPathVistas() + "portal/" + Funciones.getPeticion().getCredenciales().getUsuario().getPropiedades().get("carpeta") + path + "/";
+		logger.info(carpeta);
+		File folder = new File(carpeta);
+		model.addAttribute("resultado", folder.listFiles());
+		
+		return MAPPING + "/list";
+	}
+	
+	
+	@Permisos(Permisos.DET)
+	@RequestMapping(value = "/upload", method = RequestMethod.POST, produces = {MediaType.TEXT_HTML_VALUE, "*/*" })
+	public String upload(@RequestParam(value="image", required = false) String image,
+			@RequestParam("upload") MultipartFile upload,
+			Model model) throws IOException {		
+		try {
+			
+	        String filename =  Funciones.normalizar(upload.getOriginalFilename());
+	        	        
+			if (image == null) {
+				filename = Funciones.saveFileGetFileName((Propiedades.getPathContDisk() + "vistas/portal/" + Funciones.getPeticion().getCredenciales().getUsuario().getPropiedades().get("carpeta") + "/doc/").replace("///", "/"), filename, upload.getInputStream());
+				model.addAttribute("linkFile", ("/cont/vistas/portal/" + Funciones.getPeticion().getCredenciales().getUsuario().getPropiedades().get("carpeta") + "/doc/").replace("///", "/") + filename);
+			} else {
+				ProcesadorImagenes pi = new ProcesadorImagenes();
+				BufferedImage in = ImageIO.read(upload.getInputStream());
+				BufferedImage anexoMiniatura = pi.escalarATamanyo(in, 800, 800);
+				filename = pi.salvarImagen(anexoMiniatura, (Propiedades.getPathContDisk() + "vistas/portal/" + Funciones.getPeticion().getCredenciales().getUsuario().getPropiedades().get("carpeta") + "/img").replace("///", "/"), filename, "jpg", false);
+				model.addAttribute("linkFile", ("/cont/vistas/portal/" + Funciones.getPeticion().getCredenciales().getUsuario().getPropiedades().get("carpeta") + "/img/").replace("///", "/") + filename);
+			}
+			
+			return MAPPING + "/upload";
+		} catch (Exception e) {
+			logger.error(Funciones.getStackTrace(e));
+			return null;
+		}
 	}
 	
 }

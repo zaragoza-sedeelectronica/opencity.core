@@ -508,7 +508,7 @@ public class Funciones {
 	public static String normalizar(String text) {
 		String temp = Normalizer.normalize(text, Normalizer.Form.NFD);
 		Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
-	    return pattern.matcher(temp).replaceAll("").replaceAll("&", "_").replaceAll(" ", "_").replaceAll("º", "_").replaceAll("ª", "_");
+	    return pattern.matcher(temp).replaceAll("").replaceAll("&", "_").replaceAll(" ", "_").replaceAll("º", "_").replaceAll("ª", "_").replace("(", "_").replace(")", "_");
 	}
 	
 	public static List<?> asList(JSONArray jsonArray) {
@@ -584,6 +584,9 @@ public class Funciones {
 			System.setProperty("http.proxyPort", Propiedades.getProxyPort());
 			System.setProperty("https.proxyHost", Propiedades.getProxyHost());
 			System.setProperty("https.proxyPort", Propiedades.getProxyPort());
+			if (Propiedades.containsKey("proxy.exclude")) {
+				System.setProperty("http.nonProxyHosts", Propiedades.getString("proxy.exclude"));
+			}
 		}
 	}
 	
@@ -630,7 +633,28 @@ public class Funciones {
 		}
 		
 	}
-
+	public static String saveFileGetFileName(final String rutaFichero, final String nombre, InputStream is) throws Exception {
+		String strFileName = nombre;
+		try {
+			// Comprobacion de parametros
+			if (is != null && rutaFichero != null) {
+				File dest = new File(rutaFichero, nombre);
+				if (dest.exists()) {
+					//Renombrar
+					strFileName = ProcesadorImagenes.rename(nombre, rutaFichero);
+				}
+				saveFileOverWrite(rutaFichero, strFileName, is);
+				return strFileName;
+				
+			} else {
+				// Fallo en los parametros 
+				return "";
+			}
+		} catch (Exception e) {
+			logger.error(Funciones.getStackTrace(e));
+			return "";
+		}
+	}
 	public static String calculateNextFileName(String name) {
 		String[] valores = name.split("\\.");
 		String fileName = "";

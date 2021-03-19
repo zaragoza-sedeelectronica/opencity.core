@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import com.google.common.collect.Ordering;
 
 import org.apache.commons.codec.CharEncoding;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
@@ -411,7 +412,9 @@ public class Utils {
 				if (!fieldName.equals(paramName) && !MONTH_PARAM.equals(paramName)) {
 					String[] paramValues = request.getParameterValues(paramName);
 					for (int i = 0; i < paramValues.length; i++) {
-						queryString.append("&" + paramName + "=" + paramValues[i]);
+						if (!"refresh".equals(paramName) && !"debug".equals(paramName)) {
+							queryString.append("&" + paramName + "=" + paramValues[i]);
+						}
 					}
 				}
 			}
@@ -782,6 +785,10 @@ public class Utils {
 		}
 		
 		return txt;
+	}
+	
+	public static String byteCountToDisplaySize(long input) {
+		return FileUtils.byteCountToDisplaySize(input);
 	}
 	
 }
