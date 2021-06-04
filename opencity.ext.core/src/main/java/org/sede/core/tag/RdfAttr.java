@@ -52,11 +52,20 @@ public class RdfAttr extends AbstractAttributeTagProcessor  {
         	String valor = valores.get("text"); 
         	if (valor != null && !valor.trim().isEmpty()) {
                 iElementTagStructureHandler.setBody(modelFactory.createText(modelFactory.createText(valor)), false);
-        	} 
-            valores.remove("text");
-        }
-    	for (Map.Entry<String, String> entry : valores.entrySet()) {
-            iElementTagStructureHandler.setAttribute(entry.getKey(), entry.getValue());
+                valores.remove("text");
+                
+                for (Map.Entry<String, String> entry : valores.entrySet()) {
+    	            iElementTagStructureHandler.setAttribute(entry.getKey(), entry.getValue());
+    	        }
+        	} else {
+        		iElementTagStructureHandler.removeElement();
+        	}
+            
+            
+        } else {
+	    	for (Map.Entry<String, String> entry : valores.entrySet()) {
+	            iElementTagStructureHandler.setAttribute(entry.getKey(), entry.getValue());
+	        }
         }
     }
 

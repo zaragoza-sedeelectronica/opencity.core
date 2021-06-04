@@ -4,6 +4,7 @@ package org.sede.core.rest.view;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -13,13 +14,14 @@ import javax.validation.ConstraintViolation;
 import javax.validation.ValidationException;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.sede.core.anotaciones.Context;
 import org.sede.core.anotaciones.HtmlContent;
 import org.sede.core.anotaciones.Rdf;
 import org.sede.core.exception.FormatoNoSoportadoException;
 import org.sede.core.exception.InvalidImplementationException;
 import org.sede.core.geo.Geometria;
 import org.sede.core.rest.CheckeoParametros;
-import org.sede.core.anotaciones.Context;
+import org.sede.core.rest.Mensaje;
 import org.sede.core.rest.Peticion;
 import org.sede.core.utils.ConvertDate;
 import org.sede.core.utils.Funciones;
@@ -115,20 +117,45 @@ public class TransformadorCsv implements TransformadorGenerico {
 		
 		Class<?> clase = descubrirClase(retorno);
 		int contador = 0;
-		for (Field field : clase.getDeclaredFields()) {
-			if (TransformadorBasico.transformarCampoCSV(retorno, peticion, prefijo, field)) {
+		if (clase.equals(HashMap.class) && retorno instanceof SearchResult) {
+			HashMap s = (HashMap)((SearchResult<?>)retorno).getResult().get(0);
+			for (Object key : s.keySet()) {
 				if (contador > 0) {
 					respuesta.append(";");
 				}
-				respuesta.append(field.getName());
+				respuesta.append((String)key);
 				contador++;
+			}
+			
+			
+		} else {
+			for (Field field : clase.getDeclaredFields()) {
+				if (TransformadorBasico.transformarCampoCSV(retorno, peticion, prefijo, field)) {
+					if (contador > 0) {
+						respuesta.append(";");
+					}
+					respuesta.append(field.getName());
+					contador++;
+				}
 			}
 		}
 		respuesta.append(System.getProperty("line.separator"));
 		StringBuilder objetos = new StringBuilder();
 		if (retorno instanceof SearchResult) {
 			for (int i = 0; i < ((SearchResult<?>)retorno).getResult().size(); i++) {
-				anyadirObjeto(objetos, ((SearchResult<?>)retorno).getResult().get(i), peticion, primero, prefijo);
+				Object dato = ((SearchResult<?>)retorno).getResult().get(i);
+				if (dato instanceof HashMap) {
+					try {
+						Field f = new Mensaje(200,"ok").getClass().getDeclaredField("code");
+						objetos.append(this.getInicioObjeto(f.getName()));
+						TransformadorBasico.transformarMap(objetos, peticion, this, true, f, dato);
+						objetos.append(this.getFinObjeto(f.getName()));
+					} catch (NoSuchFieldException e) {
+						;
+					}
+				} else {
+					anyadirObjeto(objetos, ((SearchResult<?>)retorno).getResult().get(i), peticion, primero, prefijo);
+				}
 				objetos.append(System.getProperty("line.separator"));
 			}
 		} else {
@@ -248,12 +275,12 @@ public class TransformadorCsv implements TransformadorGenerico {
 								Object object = listado[i];
 								peticion.establecerLastModified(object);
 								if (i > 0) {
-									respuesta.append(";");
+									respuesta.append(",");
 								}
 								if (object instanceof Double) {
 									respuesta.append(object.toString());
 								} else if (object instanceof String) {
-									respuesta.append("\"" + object.toString() + "\"");
+									respuesta.append(object.toString());
 								} else {
 									anyadirIdObjeto(respuesta, object);
 								}
@@ -365,4 +392,5 @@ public class TransformadorCsv implements TransformadorGenerico {
 	public String getFinArray(String nombreCampo) {
 		return getFinCampoObjeto(nombreCampo);
 	}
+	
 }

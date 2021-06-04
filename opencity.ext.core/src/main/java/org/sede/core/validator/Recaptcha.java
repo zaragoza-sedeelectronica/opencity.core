@@ -8,6 +8,7 @@ import org.apache.commons.httpclient.NameValuePair;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.sede.core.rest.CheckeoParametros;
 import org.sede.core.rest.json.JSONObject;
+import org.sede.core.utils.Funciones;
 import org.sede.core.utils.Propiedades;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,13 +27,7 @@ public class Recaptcha {
 		if (Propiedades.isLocal() || Propiedades.excludedFromRecaptcha(request)) {
 			return true;
 		} else {
-			String proxy = Propiedades.getProxyHost();
-			if (proxy.length() > 0) {
-				System.setProperty("http.proxyHost", Propiedades.getProxyHost());
-				System.setProperty("http.proxyPort", Propiedades.getProxyPort());
-				System.setProperty("https.proxyHost", Propiedades.getProxyHost());
-				System.setProperty("https.proxyPort", Propiedades.getProxyPort());
-			}
+			Funciones.setProxy();
 			if (gRecaptchaResponse == null || "".equals(gRecaptchaResponse)) {
 				return false;
 			}

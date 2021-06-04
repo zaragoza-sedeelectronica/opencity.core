@@ -900,6 +900,14 @@ public class Funciones {
 		return ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes())
 				.getRequest();
 	}
-	
+
+	public static String calcularHashCode(String url) {
+		if (url.indexOf("/ciudad/") > 0) {
+			url = url.replace("https://", "http://");
+		} else if (url.indexOf("/sede/") > 0) {
+			url = url.replace("http://", "https://");
+		}
+		return String.valueOf(url.hashCode());
+	}
 }
 

@@ -60,6 +60,45 @@ class GlobalDefaultExceptionHandler {
 	        return DEFAULT_ERROR_VIEW;
     	}
     }
+    
+    @ExceptionHandler(value = NoVisibleException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public String noVisibleErrorHandler(HttpServletRequest request, HttpServletResponse response, Exception e, Model model) throws Exception {
+    	if (Funciones.getPeticion() != null && Funciones.getPeticion().isDebug()) {
+    		logger.error(Funciones.getStackTrace(e));
+    	} else {
+    		String query = "ORIGEN:" + request.getHeader("REFERER") + " PETICION:" + request.getRequestURI();
+    		
+    		if (request.getQueryString() != null && !request.getQueryString().isEmpty()) {
+    			query = query + "?" + request.getQueryString();
+    		}
+    		logger.error("{}:{}",  query, e.getMessage());
+    	}
+    	
+    	if (peticionJson(request)) {
+    		response.setContentType(MimeTypes.JSON);
+    		response.setHeader("Allow", Rest.METHODS);
+    		response.setHeader("Access-Control-Allow-Origin", "*");
+			response.setHeader("Access-Control-Allow-Methods", Rest.METHODS);
+			response.setHeader("Access-Control-Allow-Headers", CheckeoParametros.CONTENT_TYPE + "," + CheckeoParametros.ACCEPTHEADER +  "," +CheckeoParametros.HEADERPASSWORD + "," + CheckeoParametros.HEADERCLIENTID + "," + CheckeoParametros.HEADERHMAC);
+    		response.getOutputStream().print("{\"status\":" + HttpStatus.BAD_REQUEST.value() 
+    				+ ", \"mensaje\":\"Registro no encontrado\""
+    					+ "}");
+    		return null;
+    	} else if (peticionXml(request)) {
+    		response.setContentType(MimeTypes.XML);
+    		response.setHeader("Allow", Rest.METHODS);
+    		response.setHeader("Access-Control-Allow-Origin", "*");
+			response.setHeader("Access-Control-Allow-Methods", Rest.METHODS);
+			response.setHeader("Access-Control-Allow-Headers", CheckeoParametros.CONTENT_TYPE + "," + CheckeoParametros.ACCEPTHEADER +  "," +CheckeoParametros.HEADERPASSWORD + "," + CheckeoParametros.HEADERCLIENTID + "," + CheckeoParametros.HEADERHMAC);
+    		response.getOutputStream().print("<error><status>" + HttpStatus.BAD_REQUEST.value() 
+    				+ "</status><mensaje>Registro no encontrado</mensaje></error>");
+    		return null;
+    	} else {
+	        model.addAttribute("exception", e);
+	        return DEFAULT_ERROR_VIEW;
+    	}
+    }
 
 	private boolean peticionJson(HttpServletRequest request) {
 		return (request.getRequestURL().indexOf("." + MimeTypes.JSON_EXTENSION) > 0 

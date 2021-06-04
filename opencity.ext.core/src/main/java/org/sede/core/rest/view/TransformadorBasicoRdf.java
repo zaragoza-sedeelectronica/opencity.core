@@ -8,6 +8,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -37,6 +38,7 @@ import org.sede.core.rest.MimeTypes;
 import org.apache.commons.codec.CharEncoding;
 import org.sede.core.anotaciones.Context;
 import org.sede.core.rest.Peticion;
+import org.sede.core.utils.ConvertDate;
 import org.sede.core.utils.Funciones;
 import org.sede.core.utils.Propiedades;
 import org.slf4j.Logger;
@@ -263,8 +265,13 @@ public class TransformadorBasicoRdf {
 							Property entityProp = model.createProperty(anot);
 							if (field.isAnnotationPresent(IsUri.class))
 								model.add(initRes, entityProp, model.createResource(valor.toString()));
-							else
-								model.add(initRes, entityProp, valor.toString());
+							else {
+								if (valor instanceof Date) {
+									model.add(initRes, entityProp, model.createTypedLiteral(ConvertDate.date2String((Date)valor, ConvertDate.ISO8601_FORMAT_SIN_ZONA), XSDDatatype.XSDdateTime));
+								} else {
+									model.add(initRes, entityProp, valor.toString());
+								}
+							}	
 
 						} else if (field.isAnnotationPresent(RdfMultiple.class) && !field.isAnnotationPresent(Interno.class)) {
 							Rdf[] valores = field.getAnnotation(RdfMultiple.class).value();
@@ -651,7 +658,7 @@ public class TransformadorBasicoRdf {
 			Property entityProp = model.createProperty(anot);
 			
 			model.add(parentRes, entityProp, newRes);
-			//A�ADIMOS EL TIPO DEL RECURSO
+			//ANYADIMOS EL TIPO DEL RECURSO
 			addResourceType(newRes, object);
 
 		} else if (field.isAnnotationPresent(RdfMultiple.class)){
@@ -661,7 +668,7 @@ public class TransformadorBasicoRdf {
 				Property entityProp = model.createProperty(anot);
 				model.add(parentRes, entityProp, newRes);
 								
-				//A�ADIMOS EL TIPO DEL RECURSO
+				//ANYADIMOS EL TIPO DEL RECURSO
 				addResourceType(newRes, object);
 
 			}
@@ -817,7 +824,6 @@ public class TransformadorBasicoRdf {
 
 	public static boolean transformarCampo(Object retorno, Peticion peticion,
 			String prefijo, Field field) {
-
 		return peticion.puedeVerCampoEnSeccion(field, peticion
 				.getPermisosEnSeccion(), peticion.getMetodo())
 				&& peticion.quiereVerCampo(prefijo, field.getName(), peticion

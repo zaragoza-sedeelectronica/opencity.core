@@ -4,7 +4,9 @@ package org.sede.core.rest.view;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -20,11 +22,14 @@ import org.sede.core.anotaciones.PublicName;
 import org.sede.core.exception.FormatoNoSoportadoException;
 import org.sede.core.exception.InvalidImplementationException;
 import org.sede.core.geo.Geometria;
+import org.sede.core.geo.Punto;
 import org.sede.core.rest.CheckeoParametros;
+import org.sede.core.rest.Mensaje;
 import org.sede.core.rest.Peticion;
 import org.sede.core.utils.ConvertDate;
 import org.sede.core.utils.Funciones;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.googlecode.genericdao.search.SearchResult;
 
 
@@ -130,11 +135,23 @@ public class TransformadorGeoJson implements TransformadorGenerico{
 			throws InvalidImplementationException {
 		
 		Class<?> clase = Funciones.descubrirClase(retorno);
-		if (clase.isAnnotationPresent(GeoJson.class)) {
-			String title = clase.getAnnotation(GeoJson.class).title();
-			String icon = clase.getAnnotation(GeoJson.class).icon();
-			String link = clase.getAnnotation(GeoJson.class).link();
-			String description = clase.getAnnotation(GeoJson.class).description();
+		if (clase.isAnnotationPresent(GeoJson.class) || Funciones.getRequest().getAttribute(CheckeoParametros.GEORSS_TITLE) != null) {
+			String title;
+			String icon;
+			String link;
+			String description;
+			
+			if (clase.isAnnotationPresent(GeoJson.class)) {
+				title = clase.getAnnotation(GeoJson.class).title();
+				icon = clase.getAnnotation(GeoJson.class).icon();
+				link = clase.getAnnotation(GeoJson.class).link();
+				description = clase.getAnnotation(GeoJson.class).description();
+			} else {
+				title = (String)Funciones.getRequest().getAttribute(CheckeoParametros.GEORSS_TITLE);
+				icon = (String)Funciones.getRequest().getAttribute(CheckeoParametros.GEORSS_ICON);
+				link = (String)Funciones.getRequest().getAttribute(CheckeoParametros.GEORSS_LINK);
+				description = (String)Funciones.getRequest().getAttribute(CheckeoParametros.GEORSS_DESCRIPTION);
+			}
 			if ("".equals(title) && retorno instanceof SearchResult) {
 				SearchResult<?> c = (SearchResult<?>) retorno;
 				title = (String)c.getPropiedades().get("title");
@@ -172,10 +189,12 @@ public class TransformadorGeoJson implements TransformadorGenerico{
 			}
 			respuesta.append("\"features\":");
 			boolean primerElem = true;
+			final ObjectMapper mapper = new ObjectMapper();
 			if (retorno instanceof SearchResult) {
 				respuesta.append("[");
 				for (int i = 0; i < ((SearchResult<?>)retorno).getResult().size(); i++) {
-					Geometria geometria = (Geometria) Funciones.retrieveObjectValue(((SearchResult<?>)retorno).getResult().get(i), "geometry");
+					
+					Geometria geometria = obtenerFromObject(Funciones.retrieveObjectValue(((SearchResult<?>)retorno).getResult().get(i), "geometry"), mapper);
 					if (geometria != null) {
 						if (!primerElem) {
 							respuesta.append(",");
@@ -184,14 +203,27 @@ public class TransformadorGeoJson implements TransformadorGenerico{
 						respuesta.append("{\"type\":\"Feature\","
 								+ "\"geometry\":" + geometria.asJson(peticion.getSourceSrs(), peticion.getSrsName()) + ","
 								+ "\"properties\":");
-						anyadirObjeto(respuesta, ((SearchResult<?>)retorno).getResult().get(i), peticion, primero, prefijo);
+
+						Object dato = ((SearchResult<?>)retorno).getResult().get(i);
+						if (dato instanceof HashMap) {
+							try {
+								Field f = new Mensaje(200,"ok").getClass().getDeclaredField("code");
+								respuesta.append(this.getInicioObjeto(f.getName()));
+								TransformadorBasico.transformarMap(respuesta, peticion, this, true, f, dato);
+								respuesta.append(this.getFinObjeto(f.getName()));
+							} catch (NoSuchFieldException e) {
+								;
+							}
+						} else {
+							anyadirObjeto(respuesta, dato, peticion, primero, prefijo);
+						}
 						respuesta.append("}");
 					}
 				}
 				respuesta.append("]");
 			} else {
 				respuesta.append("[");
-				Geometria geometria = (Geometria) Funciones.retrieveObjectValue(retorno, "geometry");
+				Geometria geometria = obtenerFromObject(Funciones.retrieveObjectValue(retorno, "geometry"), mapper);
 				respuesta.append("{\"type\":\"Feature\","
 						+ "\"geometry\":" + geometria.asJson(peticion.getSourceSrs(), peticion.getSrsName()) + ","
 						+ "\"properties\":");
@@ -343,6 +375,23 @@ public class TransformadorGeoJson implements TransformadorGenerico{
 			return field.getName();
 		}
 	}
+	
+	private Geometria obtenerFromObject(Object dato, ObjectMapper mapper) {
+		Geometria geometria = null;
+		if (dato instanceof Geometria) {
+			geometria = (Geometria) dato;
+		} else if (dato instanceof HashMap){
+			if ("Point".equals(((HashMap)dato).get("type"))) {
+				geometria = mapper.convertValue(dato, Punto.class);
+			} else {
+				//TODO
+				System.out.println("Pendiente anyadir las distintas clases de geometrias, por ahora solo estaa Punto");
+				geometria = null;
+			}
+		}
+		return geometria;
+	}
+	
 	public String getIDPrefijo() {
 		return "";
 	}

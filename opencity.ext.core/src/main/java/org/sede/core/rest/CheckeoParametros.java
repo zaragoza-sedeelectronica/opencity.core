@@ -53,7 +53,11 @@ public class CheckeoParametros {
 	public static final String TEST = "test";
 	public static final String LOCALE = "locale";
 	
+	public static final String GEORSS_TITLE = "georss_title";
+	public static final String GEORSS_DESCRIPTION = "georss_description";
+	public static final String GEORSS_LINK = "georss_link";
 	public static final String GEORSS_ICON = "georss_icon";
+	
 
 	public static final String PARAMPUNTOQUERYSOLR = "point";
 	

@@ -419,8 +419,11 @@ public class Utils {
 				}
 			}
 			// queryParams adicionales a la petición y al campo fecha de filtro
-			if(queryParams != null){
+			if (queryParams != null){
 				queryString.append(!StringUtils.isEmpty(queryString) ? "&" + queryParams : queryParams);
+			}
+			if (queryString.indexOf("&") < 0) {
+				queryString.insert(0, "&");
 			}
 			int anyAnterior;
 			int mesAnterior;
@@ -790,5 +793,19 @@ public class Utils {
 	public static String byteCountToDisplaySize(long input) {
 		return FileUtils.byteCountToDisplaySize(input);
 	}
-	
+	public String getLinkSort(String field) {
+		StringBuffer queryString = new StringBuffer();
+		Enumeration<String> parameterNames = Funciones.getRequest().getParameterNames();
+		queryString.append("?sort=" + field);
+		while (parameterNames.hasMoreElements()) {
+			String paramName = parameterNames.nextElement();
+			if (!"sort".equals(paramName) && !"refresh".equals(paramName) && !"debug".equals(paramName)) {
+				String[] paramValues = Funciones.getRequest().getParameterValues(paramName);
+				for (int i = 0; i < paramValues.length; i++) {
+					queryString.append("&" + paramName + "=" + paramValues[i]);
+				}
+			}
+		}
+		return queryString.toString();
+	}
 }

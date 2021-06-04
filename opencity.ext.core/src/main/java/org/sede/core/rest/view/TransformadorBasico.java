@@ -186,8 +186,13 @@ public class TransformadorBasico {
 			} else {
 				primerCampo = false;
 			}
+			
 			String pref = prefijo;
-			if (!field.getName().equals(CheckeoParametros.PARAMRESULT) && !field.getName().equals("records")) {
+			if (!field.getName().equals(CheckeoParametros.PARAMRESULT) 
+					&& !field.getName().equals("records")
+					&& (transformador instanceof TransformadorJson 
+							|| transformador instanceof TransformadorGeoJson
+							|| transformador instanceof TransformadorJsonLd)) {
 				pref = prefijo + field.getName() + ".";
 				respuesta.append(transformador.getInicioCampo(field.getName()));
 			}

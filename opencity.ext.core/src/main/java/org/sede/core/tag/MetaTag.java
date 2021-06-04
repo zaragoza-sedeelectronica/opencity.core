@@ -67,6 +67,9 @@ public class MetaTag extends AbstractElementTagProcessor {
 	        model.add(modelFactory.createText(title));
 	        model.add(modelFactory.createCloseElementTag("title"));
 			
+	        
+	        title = title.replaceAll("\"", "'");
+	        
 			String image = "";
 			if (!StringUtils.isEmpty(tag.getAttributeValue("summary_large_image"))) {
 				image = tag.getAttributeValue("summary_large_image");
@@ -122,11 +125,24 @@ public class MetaTag extends AbstractElementTagProcessor {
 			metaAttributes.put("content", title);
 	        model.add(modelFactory.createStandaloneElementTag("meta", metaAttributes, AttributeValueQuotes.DOUBLE, false, true));
 	        
+	        String uri = Funciones.getFullUri();
+	        
 	        metaAttributes = new HashMap<String, String>();
 			metaAttributes.put("name", "og:url");
 			metaAttributes.put("content", Funciones.getFullUri());
 	        model.add(modelFactory.createStandaloneElementTag("meta", metaAttributes, AttributeValueQuotes.DOUBLE, false, true));
 	        
+	        if (uri.contains("/enlace/")) {
+				try {
+					String canonical = this.getCanonical(uri);
+					metaAttributes = new HashMap<String, String>();
+					metaAttributes.put("rel", "canonical");
+					metaAttributes.put("href", canonical);
+					model.add(modelFactory.createStandaloneElementTag("link", metaAttributes, AttributeValueQuotes.DOUBLE, false, true));
+				} catch (Exception e) {
+					;
+				}
+			}
 	        			
 			if (!StringUtils.isEmpty(description)) {
 				description = Funciones.removeHTMLEntity(description).trim();
@@ -220,7 +236,10 @@ public class MetaTag extends AbstractElementTagProcessor {
     }
     
     
-    
+    private String getCanonical(String uri) {
+		String pathEnlace = "/enlace/";
+		return "https://www.zaragoza.es/sede/portal/" + uri.substring(uri.indexOf(pathEnlace) + pathEnlace.length(), uri.length());
+	}
     
     
 }

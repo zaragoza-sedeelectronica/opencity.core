@@ -249,7 +249,7 @@ public class Faceta {
 					xhtm.append("<li class=\"panel-collapse collapse\" id=\"" + collapsedId + "\" aria-expanded=\"false\" style=\"height: 0px;\">");
 					xhtm.append("<ul class=\"list-group\">");
 					xhtm.append(valoresFacetaBlock(request, allFacetas.subList(toShow, allFacetas.size()), prefijoEnlace, esBooleana));
-					xhtm.append("</ul");
+					xhtm.append("</ul>");
 					xhtm.append("</li>");
 				}
 			}

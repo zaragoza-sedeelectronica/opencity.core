@@ -141,7 +141,20 @@ public class Punto extends Geometria {
 		double[] coord = (double[])Geometria.transform(getCoordinates()[0], getCoordinates()[1], CheckeoParametros.SRSUTM30N, CheckeoParametros.SRSWGS84);	
 		return new Double[]{coord[0], coord[1]};
 	}
-	
+	public String getMeta() {
+		// FIXME revisar si @SourceSRS es distinto de SRSUTM30B 
+		if (!formatoWgs84()) {
+			double[] coord;
+			if (CheckeoParametros.SRSETRS89.equals(this.getType())) {
+				coord = (double[])Geometria.transform(getCoordinates()[0], getCoordinates()[1], CheckeoParametros.SRSETRS89, CheckeoParametros.SRSWGS84);
+			} else {
+				coord = (double[])Geometria.transform(getCoordinates()[0], getCoordinates()[1], CheckeoParametros.SRSUTM30N, CheckeoParametros.SRSWGS84);	
+			}
+			
+			this.setCoordinates(new Double[]{coord[0], coord[1]});
+		}
+		return "<meta property=\"geo.position\" content=\"" + getCoordinates()[1] + ";" + getCoordinates()[0] + "\"/>";
+	}
 	public String getRdf(String property) {
 		// FIXME revisar si @SourceSRS es distinto de SRSUTM30B 
 		

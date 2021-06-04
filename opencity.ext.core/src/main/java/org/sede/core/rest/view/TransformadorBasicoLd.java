@@ -498,7 +498,7 @@ public class TransformadorBasicoLd {
 			
 		}
 
-//		SOLO A�ADIMOS EL CAMPO CONTEXTO SI CONTIENE ELEMENTOS
+//		SOLO ANYADIMOS EL CAMPO CONTEXTO SI CONTIENE ELEMENTOS
 		if (!respuesta.toString().equals("\"@context\":{},")){
 
 			if (respuesta.toString().contains("lon"))
@@ -547,9 +547,9 @@ public class TransformadorBasicoLd {
 									primero = false;
 								}
 								StringBuilder uri = new StringBuilder();
-//								ASUMIMOS QUE LA ANOTACI�N MULTIPLE ESTAR� COMPUESTA SOLO DE DOS ELEMENTOS
-//								   - EL PRIMERO SER� EL TYPE
-//								   - EL SEGUNDO SER� EL ID
+//								ASUMIMOS QUE LA ANOTACION MULTIPLE ESTARA COMPUESTA SOLO DE DOS ELEMENTOS
+//								   - EL PRIMERO SERA EL TYPE
+//								   - EL SEGUNDO SERA EL ID
 								if (aux.isAnnotationPresent(RdfMultiple.class)) {
 									Rdf[] valores = aux.getAnnotation(RdfMultiple.class).value();
 									for (int i=0;i<valores.length;i++){
@@ -596,9 +596,9 @@ public class TransformadorBasicoLd {
 								} else {
 									primero = false;
 								}
-//								ASUMIMOS QUE LA ANOTACI�N MULTIPLE ESTAR� COMPUESTA SOLO DE DOS ELEMENTOS
-//								   - EL PRIMERO SER� EL TYPE
-//								   - EL SEGUNDO SER� EL ID
+//								ASUMIMOS QUE LA ANOTACION MULTIPLE ESTARA COMPUESTA SOLO DE DOS ELEMENTOS
+//								   - EL PRIMERO SERA EL TYPE
+//								   - EL SEGUNDO SERA EL ID
 								if (aux.isAnnotationPresent(RdfMultiple.class)) {
 									Rdf[] valores = aux.getAnnotation(RdfMultiple.class).value();
 									for (int i=0;i<valores.length;i++){
@@ -645,9 +645,9 @@ public class TransformadorBasicoLd {
 						} else {
 							primero = false;
 						}
-//							ASUMIMOS QUE LA ANOTACI�N MULTIPLE ESTAR� COMPUESTA SOLO DE DOS ELEMENTOS
-//							   - EL PRIMERO SER� EL TYPE
-//							   - EL SEGUNDO SER� EL ID
+//							ASUMIMOS QUE LA ANOTACION MULTIPLE ESTARA COMPUESTA SOLO DE DOS ELEMENTOS
+//							   - EL PRIMERO SERA EL TYPE
+//							   - EL SEGUNDO SERA EL ID
 						if (aux.isAnnotationPresent(RdfMultiple.class)) {
 							Rdf[] valores = aux.getAnnotation(RdfMultiple.class).value();
 							for (int i=0;i<valores.length;i++){
@@ -691,9 +691,9 @@ public class TransformadorBasicoLd {
 					} else {
 						primero = false;
 					}
-//					ASUMIMOS QUE LA ANOTACI�N MULTIPLE ESTAR� COMPUESTA SOLO DE DOS ELEMENTOS
-//					   - EL PRIMERO SER� EL TYPE
-//					   - EL SEGUNDO SER� EL ID
+//					ASUMIMOS QUE LA ANOTACION MULTIPLE ESTARA COMPUESTA SOLO DE DOS ELEMENTOS
+//					   - EL PRIMERO SERA EL TYPE
+//					   - EL SEGUNDO SERA EL ID
 					if (aux.isAnnotationPresent(RdfMultiple.class)) {
 						Rdf[] valores = aux.getAnnotation(RdfMultiple.class).value();
 						for (int i=0;i<valores.length;i++){

@@ -84,6 +84,11 @@ public class LayoutInterceptor extends HandlerInterceptorAdapter {
     	if (ex != null) {
     		request.setAttribute(CheckeoParametros.TM_ERROR, ex.getMessage());
     		request.setAttribute(CheckeoParametros.TM_ERROR_STACK, Funciones.getStackTrace(ex));
+    		String query = "ORIGEN:" + request.getHeader("REFERER") + " PETICION:" + request.getRequestURI();    		
+    		if (request.getQueryString() != null && !request.getQueryString().isEmpty()) {
+    			query = query + "?" + request.getQueryString();
+    		}
+    		logger.error("{}:{}",  query, ex.getMessage());
     	}    	
     }
     private boolean isRedirectOrForward(String viewName) {

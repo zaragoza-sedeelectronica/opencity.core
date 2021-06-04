@@ -15,6 +15,7 @@ import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.StringRequestEntity;
 import org.sede.core.rest.CheckeoParametros;
 import org.sede.core.rest.MimeTypes;
+import org.sede.core.utils.Funciones;
 import org.sede.core.utils.Propiedades;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,13 +55,14 @@ public class AsyncLog {
 							+ "&cs=" + format // Fuente de la campaña
 							+ "&cm=" + method //Medio de la campañ
 							+ mensaje;
-					if (Propiedades.getPath().contains("www.zaragoza.es")) {
+					if (Propiedades.getPath().contains("www.zaragoza.es") || Propiedades.getPath().contains("aplicaciones.zaragoza.es")) {
 						postExterno(url, "", null, referer, userAgent);
 					}
 				} catch (Exception e) {
 					logger.error("ERROR code:{}", Propiedades.getAnalyticsCode());
 					logger.error("ERROR uri:{}", uri);
 					logger.error("ERROR ua:{}", userAgent);
+					logger.error(e.getMessage());
 				}
 			}
 		});
