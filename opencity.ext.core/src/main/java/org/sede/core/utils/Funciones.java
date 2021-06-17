@@ -71,6 +71,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.google.common.net.HttpHeaders;
 import com.googlecode.genericdao.search.SearchResult;
 
 public class Funciones {
@@ -339,7 +340,6 @@ public class Funciones {
 			} catch (SendFailedException e) {
 				throw new SendFailedException("Error en el proceso de envío del mensaje: " +  e.getMessage());
 			} catch (MessagingException e) {
-				e.printStackTrace();
 				throw new MessagingException("Error a la hora de enviar el mensaje: " +  e.getMessage());
 			}
 		} else {
@@ -908,6 +908,11 @@ public class Funciones {
 			url = url.replace("http://", "https://");
 		}
 		return String.valueOf(url.hashCode());
+	}
+	public static String getReferer(HttpServletRequest request) {
+		return request.getHeader("REFERER") == null ? 
+				request.getHeader(HttpHeaders.REFERER) == null ? "" : request.getHeader(HttpHeaders.REFERER) 
+				: request.getHeader("REFERER");
 	}
 }
 

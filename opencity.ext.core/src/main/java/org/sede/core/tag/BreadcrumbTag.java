@@ -4,6 +4,8 @@ import java.util.HashMap;
 import org.sede.core.rest.json.JSONArray;
 import org.sede.core.rest.json.JSONObject;
 import org.sede.core.utils.Funciones;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.mobile.device.Device;
 import org.thymeleaf.context.ITemplateContext;
 import org.thymeleaf.model.AttributeValueQuotes;
@@ -15,7 +17,7 @@ import org.thymeleaf.processor.element.IElementTagStructureHandler;
 import org.thymeleaf.templatemode.TemplateMode;
 
 public class BreadcrumbTag extends AbstractElementTagProcessor {
-	
+	private static final Logger logger = LoggerFactory.getLogger(BreadcrumbTag.class);
 	private static final String TAG_NAME = "breadcrumb";
     private static final int PRECEDENCE = 0;
 
@@ -146,7 +148,7 @@ public class BreadcrumbTag extends AbstractElementTagProcessor {
 			
 	        structureHandler.replaceWith(model, false);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
     }
     

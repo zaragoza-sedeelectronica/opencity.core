@@ -6,7 +6,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.sede.core.anotaciones.Esquema;
 import org.sede.core.dao.JPAIgnoreTraversableResolver;
 import org.sede.core.utils.ConvertDate;
+import org.sede.core.utils.Funciones;
 import org.sede.servicio.contenido.entity.IndexError;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,7 +31,7 @@ import java.util.Set;
 @Repository
 @Transactional(Esquema.TMINTRA)
 public class IndexErrorGenericDAOImpl extends GenericDAOImpl <IndexError, String> implements IndexErrorGenericDAO {
-	
+	private static final Logger logger = LoggerFactory.getLogger(IndexErrorGenericDAOImpl.class);
 	@PersistenceContext(unitName=Esquema.INTRA)
 	public void setEntityManager(EntityManager entityManager) {
 		this.setEm(entityManager);
@@ -102,7 +105,7 @@ public class IndexErrorGenericDAOImpl extends GenericDAOImpl <IndexError, String
 			data.append("];");
 			return data.toString();
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 			return null;
 		}
 	}
@@ -139,7 +142,7 @@ public class IndexErrorGenericDAOImpl extends GenericDAOImpl <IndexError, String
 			data.append("];");
 			return data.toString();
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 			return null;
 		}
 	}

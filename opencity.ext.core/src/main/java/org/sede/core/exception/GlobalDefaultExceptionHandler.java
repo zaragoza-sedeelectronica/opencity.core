@@ -28,7 +28,7 @@ class GlobalDefaultExceptionHandler {
     	if (Funciones.getPeticion() != null && Funciones.getPeticion().isDebug()) {
     		logger.error(Funciones.getStackTrace(e));
     	} else {
-    		String query = "ORIGEN:" + request.getHeader("REFERER") + " PETICION:" + request.getRequestURI();
+    		String query = "ORIGEN:" + Funciones.getReferer(request) + " PETICION:" + request.getRequestURI();
     		
     		if (request.getQueryString() != null && !request.getQueryString().isEmpty()) {
     			query = query + "?" + request.getQueryString();
@@ -67,7 +67,7 @@ class GlobalDefaultExceptionHandler {
     	if (Funciones.getPeticion() != null && Funciones.getPeticion().isDebug()) {
     		logger.error(Funciones.getStackTrace(e));
     	} else {
-    		String query = "ORIGEN:" + request.getHeader("REFERER") + " PETICION:" + request.getRequestURI();
+    		String query = "ORIGEN:" + Funciones.getReferer(request) + " PETICION:" + request.getRequestURI();
     		
     		if (request.getQueryString() != null && !request.getQueryString().isEmpty()) {
     			query = query + "?" + request.getQueryString();

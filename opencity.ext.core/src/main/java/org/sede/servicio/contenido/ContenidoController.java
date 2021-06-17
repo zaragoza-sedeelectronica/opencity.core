@@ -8,12 +8,14 @@ import java.util.Date;
 import java.util.Locale;
 
 import javax.imageio.ImageIO;
+import javax.persistence.Query;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.commons.codec.CharEncoding;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.solr.common.SolrInputDocument;
+import org.sede.core.anotaciones.Esquema;
 import org.sede.core.anotaciones.Gcz;
 import org.sede.core.anotaciones.NoCache;
 import org.sede.core.anotaciones.Permisos;
@@ -27,11 +29,14 @@ import org.sede.core.utils.ProcesadorImagenes;
 import org.sede.core.utils.Propiedades;
 import org.sede.core.validator.HTMLValidator;
 import org.sede.servicio.ModelAttr;
+import org.sede.servicio.contenido.dao.IndexErrorGenericDAO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -60,6 +65,9 @@ public class ContenidoController {
 	
 	/** Constant MAPPING. */
 	public static final String MAPPING = "servicio/" + SERVICIO;
+	
+	@Autowired
+	public IndexErrorGenericDAO dao;
 	
 	/**
 	 * Redirect.
@@ -178,6 +186,7 @@ public class ContenidoController {
 	 * @param model Model
 	 * @return string
 	 */
+	@Transactional(Esquema.TMINTRA)
 	@Permisos(Permisos.MOD)
 	@RequestMapping(value = "/index-solr", method = RequestMethod.POST, produces = {
 			MediaType.TEXT_HTML_VALUE, "*/*" })
@@ -197,12 +206,19 @@ public class ContenidoController {
 			@RequestParam(value="robots", defaultValue = "") String robots,
 			@RequestParam(value="links") String links, 
 			Model model) {
-		if (!robots.toLowerCase().contains("noindex")) {
-			try {
+		try {
+			Query propWeb = dao.em().createNativeQuery("insert into intra.ELASTIC_UPDATE_URLS(url) values (?)");
+			propWeb.setParameter(1, Funciones.corregirUri(uri));
+			propWeb.executeUpdate();
+			if (!robots.toLowerCase().contains("noindex")) {
+			
+				// Damos de alta para que se indice en ELASTIC
+				
 				String docId = "contenido-" + String.valueOf(uri.hashCode()).replace("-", "n");
 				SolrInputDocument registro = new SolrInputDocument();
 				registro.addField("id", docId);
 				registro.addField("uri", Funciones.corregirUri(uri));
+				
 				if (StringUtils.isNotEmpty(category)) {
 					registro.addField("category", category);
 				}
@@ -258,12 +274,15 @@ public class ContenidoController {
 					model.addAttribute(ModelAttr.MENSAJE, new Mensaje(HttpStatus.OK.value(), "Registro indizado correctamente"));
 				}
 				
-			} catch (Exception e) {
-				model.addAttribute(ModelAttr.MENSAJE, new Mensaje(HttpStatus.BAD_REQUEST.value(), e.getMessage()));
+			
+			} else {
+				Solr.getInstance().deleteUri(uri);
+				
+				model.addAttribute(ModelAttr.MENSAJE, new Mensaje(HttpStatus.BAD_REQUEST.value(), "Registro eliminado del índice al contener robots noindex"));
 			}
-		} else {
-			Solr.getInstance().deleteUri(uri);
-			model.addAttribute(ModelAttr.MENSAJE, new Mensaje(HttpStatus.BAD_REQUEST.value(), "Registro eliminado del índice al contener robots noindex"));
+		} catch (Exception e) {
+			logger.error(Funciones.getStackTrace(e));
+			model.addAttribute(ModelAttr.MENSAJE, new Mensaje(HttpStatus.BAD_REQUEST.value(), e.getMessage()));
 		}
 		
 		return "fragmentos/error";

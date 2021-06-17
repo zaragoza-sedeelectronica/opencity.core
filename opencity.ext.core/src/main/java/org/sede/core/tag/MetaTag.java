@@ -5,6 +5,8 @@ import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
 import org.sede.core.plantilla.LayoutInterceptor;
 import org.sede.core.utils.Funciones;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.thymeleaf.IEngineConfiguration;
 import org.thymeleaf.context.ITemplateContext;
 import org.thymeleaf.model.AttributeValueQuotes;
@@ -19,6 +21,7 @@ import org.thymeleaf.standard.expression.StandardExpressions;
 import org.thymeleaf.templatemode.TemplateMode;
 
 public class MetaTag extends AbstractElementTagProcessor {
+	private static final Logger logger = LoggerFactory.getLogger(MetaTag.class);
 	private static final String TAG_NAME = "meta";
     private static final int PRECEDENCE = 0;
 
@@ -145,7 +148,7 @@ public class MetaTag extends AbstractElementTagProcessor {
 			}
 	        			
 			if (!StringUtils.isEmpty(description)) {
-				description = Funciones.removeHTMLEntity(description).trim();
+				description = Funciones.removeHTMLEntity(description).trim().replaceAll("\"", "'");
 				if (description.length() > 200) {
 					description = description.substring(0, 200);
 				}
@@ -231,7 +234,7 @@ public class MetaTag extends AbstractElementTagProcessor {
 	        model.addModel(SedeDialect.computeFragment(context, plantilla + "::cssjs").getTemplateModel());
 	        structureHandler.replaceWith(model, true);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
     }
     

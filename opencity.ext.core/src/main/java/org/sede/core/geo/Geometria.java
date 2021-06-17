@@ -72,7 +72,7 @@ public class Geometria implements Serializable {
 	}
 	
 	public static double[] transform(Double x, Double y, String source, String target) {
-		logger.info("Transformar coordenadas: origen " + source + ", destino " + target);
+		logger.debug("Transformar coordenadas: origen " + source + ", destino " + target);
 		return Transformer.transform(x,y, SRS.get(source), SRS.get(target));
 	}
 

@@ -83,7 +83,7 @@ public class TransformadorBasico {
 								respuesta.append(transformador.getInicioObjeto(field.getName()));
 								transformarMap(respuesta, peticion, transformador, true, field, object);
 								respuesta.append(transformador.getFinObjeto(field.getName()));
-							} else if (object instanceof String || object instanceof BigDecimal || object instanceof Long) {
+							} else if (object instanceof String || object instanceof BigDecimal || object instanceof Long || object instanceof Integer) {
 								if (!primerInterno) {
 									respuesta.append(transformador.getSeparador());
 								}

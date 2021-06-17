@@ -5,6 +5,7 @@ import org.sede.core.anotaciones.Permisos;
 import org.sede.core.anotaciones.ResponseClass;
 import org.sede.core.rest.Mensaje;
 import org.sede.core.rest.MimeTypes;
+import org.sede.core.utils.Funciones;
 import org.sede.servicio.sms.dao.SmsGenericDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -32,8 +33,13 @@ public class SmsController {
 			MimeTypes.TURTLE, MimeTypes.RDF_N3 })
 	public @ResponseBody ResponseEntity<?> apiSendSms() {
 		try {
-			Mensaje m = dao.send(new String[]{"<tel>"}, "prueba");
-			return ResponseEntity.status(HttpStatus.OK).body(m);
+			
+			Funciones.sendMail("Mail desde ayuntamiento", "Texto de la propuesta", "vmorlan@gmail.com", "", "HTML");
+			Funciones.sendMail("Mail desde ayuntamiento", "Texto de la propuesta", "analistaweb@zaragoza.es", "", "HTML");
+			Funciones.sendMail("Mail desde ayuntamiento", "Texto de la propuesta", "obcek2@gmail.com", "", "HTML");
+			return ResponseEntity.status(HttpStatus.OK).body(new Mensaje(HttpStatus.OK.value(), "Envío OK"));
+//			Mensaje m = dao.send(new String[]{"<tel>"}, "prueba");
+//			return ResponseEntity.status(HttpStatus.OK).body(m);
 		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Mensaje(HttpStatus.BAD_REQUEST.value(), e.getMessage()));
 		}

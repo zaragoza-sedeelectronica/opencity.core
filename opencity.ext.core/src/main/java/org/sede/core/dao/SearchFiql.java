@@ -195,7 +195,9 @@ public class SearchFiql {
 					query.deleteCharAt(query.length() - 1);	
 				}
 			}
-			logger.info((elastic ? "ElasticSearch: " : "FIQL: ") + query.toString());
+			if (Funciones.getPeticion().isDebug()) {
+				logger.info((elastic ? "ElasticSearch: " : "FIQL: ") + query.toString());
+			}
 			searchExpression = query.toString();
 			return query.toString();
 		} else {
@@ -582,6 +584,18 @@ public class SearchFiql {
 
 	public void setShowAll(boolean showAll) {
 		this.showAll = showAll;
+	}
+
+	public void setSearchExpressionFromOpenCities() {
+		
+		this.searchExpression = this.getSearchExpression().replaceAll(" AND ", ";")
+				.replaceAll(" and ", ";")
+				.replaceAll("'", "")
+				.replaceAll(">=", "=ge=")
+				.replaceAll("<=", "=le=");
+		
+		
+		
 	}
 	
 }
