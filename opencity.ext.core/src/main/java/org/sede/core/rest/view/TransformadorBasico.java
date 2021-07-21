@@ -8,6 +8,8 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.persistence.Inheritance;
+import javax.persistence.Tuple;
+import javax.persistence.TupleElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.apache.commons.lang3.ArrayUtils;
@@ -93,6 +95,25 @@ public class TransformadorBasico {
 									respuesta.append(transformador.getSeparador());
 								}
 								transformarArray(respuesta, peticion, prefijo, transformador, true, field, object);
+							} else if (object instanceof Tuple) {
+								Tuple tuple = ((Tuple)object);
+								if (!primerInterno) {
+									respuesta.append(transformador.getSeparador());
+								}
+								List<TupleElement<?>> elements = tuple.getElements();
+								boolean primerTuple = true;
+								respuesta.append(transformador.getInicioObjeto(field.getName()));
+							    for (TupleElement<?> element : elements ) {
+							    	if (!primerTuple) {
+							    		respuesta.append(transformador.getSeparador());	
+							    	}
+							    	
+							    	primerTuple = false;
+							        respuesta.append(transformador.escribirValorCampo(element.getAlias(), tuple.get(element.getAlias()), false, peticion.getTipoEtiquetado()));
+							        
+							        
+							    }
+							    respuesta.append(transformador.getFinObjeto(field.getName()));
 							} else {
 								transformarObjeto(respuesta, object, peticion, primerInterno, pref);
 							}

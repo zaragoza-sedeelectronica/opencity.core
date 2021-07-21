@@ -71,6 +71,7 @@ public class ConvertDate {
 
     public static final String TEXTO_DIA_TXT_NUM = "EEEE dd";
     public static final String TEXTO_MES = "MMMM";
+    public static final String YEAR = "yyyy";
     
     public static final String TEXTO_MES_YEAR = "MMMM yyyy";
 

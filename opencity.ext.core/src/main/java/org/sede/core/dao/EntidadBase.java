@@ -267,7 +267,7 @@ public class EntidadBase implements java.io.Serializable {
 	                	}
 	                }
 	            } catch (Exception e) {
-	            	logger.error(Funciones.getStackTrace(e));
+	            	logger.error(e.getMessage());
 	            } 
 	        }
 	    }

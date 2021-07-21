@@ -18,8 +18,10 @@ import java.io.Serializable;
 import java.util.List;
 
 import javax.persistence.EntityManager;
+import javax.persistence.Tuple;
 
 import org.ciudadesabiertas.utils.DistinctSearch;
+import org.ciudadesabiertas.utils.DynamicEntity;
 import org.ciudadesabiertas.utils.GroupBySearch;
 
 import com.googlecode.genericdao.search.ExampleOptions;
@@ -244,6 +246,7 @@ public interface GenericDAO<T, ID extends Serializable> {
 
 	public EntityManager em();
 	public List<Object> groupBy(String key,Class<T> type, GroupBySearch search, int page, int pageSize) throws Exception;
+	public List<Tuple> groupByTuple(String key,Class<T> type, GroupBySearch search, int page, int pageSize) throws Exception;
 	public long rowCountGroupBy(String key,Class<T> type, GroupBySearch search) throws Exception;
 	public List<?> distinctSearch(String key,Class<T> type,DistinctSearch search, int page, int pageSize) throws Exception;
 	public long rowCountDistinct(String key,Class<T> type, DistinctSearch search) throws Exception;

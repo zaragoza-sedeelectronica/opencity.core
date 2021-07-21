@@ -69,7 +69,7 @@ public class TransformadorJson implements TransformadorGenerico {
 			if (anotacionPresente && CheckeoParametros.RESPUESTAMARKDOWN.equals(formato)) {
 				return "\"" + nombreCampo + "\":\"" +  Funciones.escape(transformadorMarkDown.transformar(valor.toString())) + "\"";
 			} else {
-				return "\"" + nombreCampo + "\":\"" + Funciones.escape(valor.toString()) + "\"";
+				return "\"" + nombreCampo + "\":" + (valor == null ? "null" : "\"" + Funciones.escape(valor.toString()) + "\"");
 			}
 		}
 	}

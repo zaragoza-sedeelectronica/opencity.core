@@ -94,7 +94,7 @@ public class SearchFiql {
 			Enumeration<String> parameterNames = req.getParameterNames();
 			while (parameterNames.hasMoreElements()) {
 				String paramName = parameterNames.nextElement();
-				if (CheckeoParametros.PARAMQUERY.equals(paramName)) {
+				if (CheckeoParametros.PARAMQUERY.equals(paramName) || (CheckeoParametros.PARAMQUERYSOLR.equals(paramName) && !isExcluded(CheckeoParametros.PARAMQUERYSOLR))) {
 					if (elastic) {
 						query.append(convertirEspaciosAAND(req.getParameter(paramName)) + " AND ");
 					} else {

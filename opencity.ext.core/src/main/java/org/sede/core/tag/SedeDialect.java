@@ -2,20 +2,16 @@ package org.sede.core.tag;
 
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
-import org.sede.servicio.acceso.userrequirements.RequirementsInterface;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.thymeleaf.context.IExpressionContext;
 import org.thymeleaf.context.ITemplateContext;
 import org.thymeleaf.dialect.AbstractProcessorDialect;
 import org.thymeleaf.dialect.IExpressionObjectDialect;
-import org.thymeleaf.dialect.IProcessorDialect;
 import org.thymeleaf.expression.IExpressionObjectFactory;
 import org.thymeleaf.processor.IProcessor;
 import org.thymeleaf.processor.element.AbstractElementTagProcessor;
@@ -66,7 +62,7 @@ public class SedeDialect extends AbstractProcessorDialect implements IExpression
     		logger.info("Tag added: {}", s);
     		processors.add((IProcessor) applicationContext.getBean(s));
     	}
-
+    	
         return processors;
     }
 	
@@ -102,32 +98,4 @@ public class SedeDialect extends AbstractProcessorDialect implements IExpression
         return fragmento;
     }
 
-//	@Override
-//	  public Set<IProcessor> getProcessors() {
-//	    final Set<IProcessor> processors = new HashSet<IProcessor>();
-//	    processors.add(new FechaTag());
-//		processors.add(new SolrTag());
-//	    processors.add(new RedirectTag());
-//	    processors.add(new CollapseTag());
-//	    return processors;
-//	  }
-//
-//	public static Map<String, String> obtenerParametros(Element element, String attributeName) {
-//		final String attributeValue = element.getAttributeValue(attributeName);
-//		String[] parametros = attributeValue.split("#");
-//		HashMap<String, String> retorno = new HashMap<String, String>();
-//		for (String param:parametros) {
-//			String[] valor = param.split("=");
-//			retorno.put(valor[0].trim(), valor[1].trim());
-//		}
-//		return retorno;
-//	}
-//	@Override
-//	public Map<String, Object> getAdditionalExpressionObjects(
-//			IProcessingContext processingContext) {
-//		 final Map<String, Object> objects = new HashMap<String, Object>();
-//		 final Utils utils = new Utils();
-//	     objects.put("utils", utils);
-//	     return objects;
-//	}
 }

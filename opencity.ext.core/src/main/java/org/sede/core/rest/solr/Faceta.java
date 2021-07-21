@@ -296,7 +296,7 @@ public class Faceta {
 			StringBuilder queryString = generarQueryString(request);
 			
 			String facetaName = URLEncoder.encode(this.getName(), CharEncoding.UTF_8) + escaparEnlace(valorFaceta);
-			String fq = URLEncoder.encode(request.getParameter(CheckeoParametros.PARAMFQ), CharEncoding.UTF_8);
+			String fq = URLEncoder.encode(request.getParameter(CheckeoParametros.PARAMFQ) == null ? "" : request.getParameter(CheckeoParametros.PARAMFQ), CharEncoding.UTF_8);
 			
 			fq = fq.replace("+AND+" + facetaName, "");
 			fq = fq.replace(facetaName + "+AND+", "");
@@ -310,9 +310,12 @@ public class Faceta {
 	}
 
 	private boolean isFacetaSeleccionada(ValorFaceta v, HttpServletRequest request) {
-		if (request.getParameter(CheckeoParametros.PARAMFQ) != null && request.getParameter(CheckeoParametros.PARAMFQ).trim().length() > 0) {
-			String[] facetas = request.getParameterValues(CheckeoParametros.PARAMFQ);
-			for (String facetaStr : facetas) {
+		String[] fq = request.getParameter(CheckeoParametros.PARAMFQ) == null 
+				? (String[])request.getAttribute(CheckeoParametros.PARAMFQ) 
+						: request.getParameterValues(CheckeoParametros.PARAMFQ);  
+
+		if (fq != null) {
+			for (String facetaStr : fq) {
 				if (facetaStr.contains(this.getName()) && facetaStr.contains(Utils.toUnicode(v.getName()))) {
 					return true;
 				}
@@ -332,7 +335,9 @@ public class Faceta {
 			} else {
 				fq = CheckeoParametros.PARAMFQ + "=" + this.getName() + escaparEnlace(v.getName());
 			}
-			return prefijoEnlace + "?" + fq + (request.getParameter(CheckeoParametros.PARAMQUERYSOLR) == null ? "" : "&" + CheckeoParametros.PARAMQUERYSOLR + "=" + request.getParameter(CheckeoParametros.PARAMQUERYSOLR) + queryString);
+			return prefijoEnlace + "?" + fq 
+					+ (request.getParameter(CheckeoParametros.PARAMQUERYSOLR) == null ? "" : "&" + CheckeoParametros.PARAMQUERYSOLR + "=" + request.getParameter(CheckeoParametros.PARAMQUERYSOLR)) 
+					+ queryString;
 		} catch (UnsupportedEncodingException e) {
 			logger.error(e.getMessage());
 			return "";

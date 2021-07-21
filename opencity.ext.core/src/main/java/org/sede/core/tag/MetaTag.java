@@ -64,8 +64,7 @@ public class MetaTag extends AbstractElementTagProcessor {
 				description = ((String) expression.execute(context));
 			}
 			
-			title = title + ". Ayuntamiento de Zaragoza";
-			
+			title = Funciones.removeHTMLEntity(title + ". Ayuntamiento de Zaragoza");
 			model.add(modelFactory.createOpenElementTag("title"));
 	        model.add(modelFactory.createText(title));
 	        model.add(modelFactory.createCloseElementTag("title"));

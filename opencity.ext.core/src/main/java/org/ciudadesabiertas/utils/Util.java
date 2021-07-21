@@ -19,6 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.sede.core.rest.CheckeoParametros;
 import org.sede.core.rest.Mensaje;
+import org.sede.core.utils.Funciones;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
@@ -165,7 +166,7 @@ public static PageInfo getPageInfoFromURL(HttpServletRequest request, int pageSi
 		}
 		String extraParams="";
 		
-		info.setRequestURL(request.getRequestURL().toString());
+		info.setRequestURL(Funciones.getPathSecureWithoutContext() + request.getRequestURI().toString());
 		
 		 Map<String, String[]> parameterNames = request.getParameterMap(); 
 		 

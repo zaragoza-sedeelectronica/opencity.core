@@ -19,10 +19,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Query;
+import javax.persistence.Tuple;
+import javax.persistence.TupleElement;
 
 import org.apache.commons.lang3.StringUtils;
 import org.ciudadesabiertas.utils.DifferentSQLforDatabases;
 import org.ciudadesabiertas.utils.DistinctSearch;
+import org.ciudadesabiertas.utils.DynamicEntity;
 import org.ciudadesabiertas.utils.GroupBySearch;
 import org.ciudadesabiertas.utils.Util;
 import org.hibernate.Session;
@@ -250,39 +253,6 @@ public class GenericDAOImpl<T, ID extends Serializable> extends
 					logger.info("Group By Query: "+query);
 											
 					queryObj = this.em().createQuery(query);						
-//				}else {						
-//					
-//					//Controlamos problemas en el where por distintas bbdd
-//					if (StringUtils.isNotEmpty(search.getWhere()))
-//					{
-//						search.setWhere(DifferentSQLforDatabases.transForm(search.getWhere()));
-//					}
-//					
-//					if (search.getWhere().contains("like"))
-//					{	
-//						String finalWhere=DifferentSQLforDatabases.controlLikeConditions(search.getWhere());
-//						search.setWhere(finalWhere);
-//					}
-//					
-//					if (search.getHaving().contains("like"))
-//					{	
-//						String finalHaving=DifferentSQLforDatabases.controlLikeConditions(search.getHaving());
-//						search.setHaving(finalHaving);
-//					}
-//					
-//					
-//					query = search.createQuery(nameClass);
-//					if (query.contains("*"))
-//					{
-//						logger.info("Group By Query With *: "+query);
-//						//Control de comodines en groupby
-//						query = query.replace("*", "%");
-//					}
-//					
-//					logger.info("Group By Query: "+query);
-//					
-//					queryObj = this.em().createQuery(query);	
-//				}
 					
 				queryObj.setFirstResult(page * pageSize);
 				queryObj.setMaxResults(pageSize);		
@@ -301,6 +271,79 @@ public class GenericDAOImpl<T, ID extends Serializable> extends
 		return result;		
 
 	}
+	
+	public  List<Tuple> groupByTuple(String key,Class<T> type, GroupBySearch search, int page, int pageSize) throws Exception {
+
+		List<Tuple> resultado = new ArrayList<Tuple>();
+		
+		if (key==null || "".equals(key)) {
+			key = Util.extractKeyFromModelClass(type);
+		}
+		String nameClass=Util.extractNameFromModelClass(type);
+		
+		String query ="";
+		
+		
+		if (page>=0)
+		{
+			
+			try 
+			{
+				Query queryObj = null;
+//				if (this.em().getKeys().contains(key))
+//				{
+					
+					//Controlamos problemas en el where por distintas bbdd
+					if (StringUtils.isNotEmpty(search.getWhere()))
+					{
+						search.setWhere(DifferentSQLforDatabases.transForm(search.getWhere()));
+					}
+					
+					if (search.getWhere().contains("like"))
+					{
+						String finalWhere=DifferentSQLforDatabases.controlLikeConditions(search.getWhere());						
+						search.setWhere(finalWhere);
+					}
+					
+					if (search.getHaving().contains("like"))
+					{							
+						String finalHaving=DifferentSQLforDatabases.controlLikeConditions(search.getHaving());
+						search.setHaving(finalHaving);
+					}
+					
+					query = search.createQuery(nameClass);
+					
+					if (query.contains("*"))
+					{
+						logger.info("Group By Query With *: "+query);
+						//Control de comodines en groupby
+						query = query.replace("*", "%");
+					}
+					
+					logger.info("Group By Query: "+query);
+											
+					queryObj = this.em().createQuery(query, Tuple.class);						
+
+					
+				queryObj.setFirstResult(page * pageSize);
+				queryObj.setMaxResults(pageSize);		
+				
+				resultado = queryObj.getResultList();
+				
+				
+							
+					
+			}catch (Exception e1) {
+				String msg="executeSelect(query) [Hibernate Exception]:" + e1.getMessage() + " [query Fail:"+query+"]";
+				logger.error(msg,e1);
+				throw new Exception("Wrong parameters in the petition");			
+			}
+		
+		}
+		return resultado;		
+
+	}
+	
 	public long rowCountGroupBy(String key,Class<T> type, GroupBySearch search) throws Exception {
 		
 		int size=0;	
@@ -391,12 +434,13 @@ public class GenericDAOImpl<T, ID extends Serializable> extends
 //			queryObj  = this.em().createQuery(query);
 //		}
 //		
-		if (queryObj.getResultList().size()>0)
-		{
-			size = queryObj.getResultList().size();
+		size = queryObj.getResultList().size(); 
+		if (size > 0) {
+			return size;
+		} else {
+			return 0;
 		}
 		
-		return size;
 	}	
 	public long rowCountDistinct(String key,Class<T> type, DistinctSearch search) throws Exception {
     	logger.debug("[rowCountGroupBy][key:"+key+"][type:"+type+"][search:"+search+"]");
@@ -430,18 +474,13 @@ public class GenericDAOImpl<T, ID extends Serializable> extends
 			
 			queryObj  = this.em().createQuery(query);
 //		}
-		
-		if (queryObj.getResultList().size()>0)
-		{
-			size=(Long)queryObj.getResultList().get(0);
+		size = queryObj.getResultList().size(); 
+		if (size > 0) {
+			return size;
+		} else {
+			return 0;
 		}
-		
-//		if (opennedSession!=null)
-//		{							
-//			opennedSession.close();
-//		}	
-		
-		return size;
+
     }
 	public List<?> distinctSearch(String key,Class<T> type,DistinctSearch search, int page, int pageSize) throws Exception {
     	logger.debug("[search][key:"+key+"][search:"+search+"]");
