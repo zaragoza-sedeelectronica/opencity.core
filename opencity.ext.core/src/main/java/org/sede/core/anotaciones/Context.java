@@ -36,6 +36,10 @@ public class Context {
 	public static final String ESACCID = "esaccid";
 	public static final String ESEQUIP = "esequip";
 	public static final String ESBICI = "esbici";
+	public static final String ESAUTOB = "esautob";
+	public static final String TMJOURNEY = "tmjourney";
+	public static final String TMCOMMONS = "tmcommons";
+	public static final String TMORG = "tmorg";
 	public static final String ESNORM = "esnorm";
 	public static final String ELI = "eli";
 	
@@ -64,6 +68,9 @@ public class Context {
 	public static final String ADMS = "adms";
 	
 	public static final String SOSA = "sosa";
+	
+	public static final String SF = "sf";
+	
 	
 	
 	public static final Map<String, Context> listado = new HashMap<String, Context>();
@@ -111,11 +118,16 @@ public class Context {
         listado.put(DCAT, new Context("http://www.w3.org/ns/dcat#",DCAT));
         listado.put(ESEQUIP, new Context("http://vocab.linkeddata.es/datosabiertos/def/urbanismo-infraestructuras/equipamiento#",ESEQUIP));
         listado.put(ESBICI, new Context("http://vocab.ciudadesabiertas.es/def/transporte/bicicleta-publica#",ESBICI));
+        listado.put(ESAUTOB, new Context("http://vocab.ciudadesabiertas.es/def/transporte/autobus#",ESAUTOB));
+        listado.put(TMJOURNEY, new Context("http://w3id.org/transmodel/journeys#",TMJOURNEY));
+        listado.put(TMCOMMONS, new Context("http://w3id.org/transmodel/commons#",TMCOMMONS));
+        listado.put(TMORG, new Context("http://w3id.org/transmodel/organisations#",TMORG));
         listado.put(ESNORM, new Context("http://vocab.linkeddata.es/datosabiertos/def/sector-publico/normativa#",ESNORM));
         listado.put(ELI, new Context("http://data.europa.eu/eli/ontology#",ELI));
         listado.put(OPEN311, new Context("http://ontology.eil.utoronto.ca/o311o#",OPEN311));
         listado.put(CPSV, new Context("http://purl.org/vocab/cpsv#",CPSV));
         listado.put(SOSA, new Context("http://www.w3.org/ns/sosa/",SOSA));
+        listado.put(SF, new Context("http://www.opengis.net/ont/sf#",SF));
     }
 	
 	private String uri;
