@@ -251,11 +251,16 @@ public abstract class CachingFilter extends Filter {
 	            if (request.getParameter(CheckeoParametros.DEBUG) != null) {
 	            	logger.error("despues de escritura");
 	            }
+	        } else if (pageInfo != null && (pageInfo.getStatusCode() == 303 || pageInfo.getStatusCode() == 302)) {
+	        	for (Header<? extends Serializable> h : pageInfo.getHeaders()) {
+	        		if ("Location".equals(h.getName())) {
+	        			logger.info("Redirige a: " + (String)h.getValue());
+	        			response.setStatus(pageInfo.getStatusCode());
+	    	        	response.setHeader("Location", (String)h.getValue());
+	        		}
+	        	}
+	        	
 	        } else {
-
-//	        	OutputStream out = new BufferedOutputStream(response.getOutputStream());
-//	            out.write(getPaginaError(request, response).getBytes());
-//	            out.flush();
 	        	PrintWriter out = response.getWriter();
 	        	out.println(getPaginaError(request, response));
 	            out.flush();

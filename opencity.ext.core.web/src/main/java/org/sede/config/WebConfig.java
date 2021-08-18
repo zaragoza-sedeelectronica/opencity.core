@@ -86,6 +86,8 @@ public class WebConfig implements WebMvcConfigurer {
 			templateResolver.setForceTemplateMode(true);
 			templateResolver.setTemplateMode(TemplateMode.HTML);
 			templateResolver.setCacheable(false);
+			templateResolver.setOrder(0);
+			templateResolver.setCheckExistence(true);
 			return templateResolver;
 		} else {
 			logger.info("FileTemplateResolver: {}", pathVistas);
@@ -96,11 +98,45 @@ public class WebConfig implements WebMvcConfigurer {
 			templateResolver.setForceTemplateMode(true);
 			templateResolver.setTemplateMode(TemplateMode.HTML);
 			templateResolver.setCacheable(false);
+			templateResolver.setOrder(0);
+			templateResolver.setCheckExistence(true);
 			return templateResolver;
 		}
 		
 	}
-
+	@Bean
+	public AbstractConfigurableTemplateResolver templateResolverAlternative()
+	{	
+		String pathVistas = Propiedades.getThymeleafViewAlternative();
+		if (pathVistas.indexOf("http:") >= 0 || pathVistas.indexOf("https:") >= 0) {
+			logger.info("UrlTemplateResolverAlternative: {}", pathVistas);
+			UrlTemplateResolver templateResolver = new UrlTemplateResolver();
+			templateResolver.setPrefix(pathVistas);
+			templateResolver.setSuffix(".xml");
+			templateResolver.setCharacterEncoding("UTF-8");
+			templateResolver.setForceTemplateMode(true);
+			templateResolver.setTemplateMode(TemplateMode.HTML);
+			templateResolver.setCacheable(false);
+			templateResolver.setOrder(1);
+			templateResolver.setCheckExistence(true);
+			
+			return templateResolver;
+		} else {
+			logger.info("FileTemplateResolverAlternative: {}", pathVistas);
+			FileTemplateResolver templateResolver = new FileTemplateResolver();
+			templateResolver.setPrefix(pathVistas);
+			templateResolver.setSuffix(".xml");
+			templateResolver.setCharacterEncoding("UTF-8");
+			templateResolver.setForceTemplateMode(true);
+			templateResolver.setTemplateMode(TemplateMode.HTML);
+			templateResolver.setCacheable(false);
+			templateResolver.setOrder(1);
+			templateResolver.setCheckExistence(true);
+			
+			return templateResolver;
+		}
+		
+	}
 	@Bean
 	public AutowireHelper autowireHelper(){
 	    return AutowireHelper.getInstance();
@@ -112,10 +148,10 @@ public class WebConfig implements WebMvcConfigurer {
 	}
 	
 	@Bean
-	public SpringTemplateEngine templateEngine()
-	{
+	public SpringTemplateEngine templateEngine() {
 		SpringTemplateEngine templateEngine = new SpringTemplateEngine();
 		templateEngine.addTemplateResolver(templateResolver());
+		templateEngine.addTemplateResolver(templateResolverAlternative());
 		templateEngine.addDialect(sedeDialect());
 		if (!Propiedades.isThymeleafStrictMode()) {
 			templateEngine.setEngineContextFactory(new AvoidRestrictedContextFactory());

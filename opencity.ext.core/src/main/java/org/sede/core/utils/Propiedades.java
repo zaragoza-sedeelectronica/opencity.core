@@ -203,6 +203,9 @@ public class Propiedades {
 	public static String getThymeleafView() {
 		return Propiedades.getString("thymeleaf.view");
 	}
+	public static String getThymeleafViewAlternative() {
+		return Propiedades.getString("thymeleaf.view.alternative");
+	}
 	public static boolean isThymeleafStrictMode() {
 		if (RESOURCE_BUNDLE.containsKey("thymeleaf.strictMode")) {
 			return "true".equals(Propiedades.getString("thymeleaf.strictMode"));
