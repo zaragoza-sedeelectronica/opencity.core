@@ -246,7 +246,7 @@ public class Faceta {
 				if (toShow < allFacetas.size()) {
 					String collapsedId = String.format("%s-collapsed-%s", this.getName(), toShow);
 					xhtm.append(verTodosBlock(collapsedId));
-					xhtm.append("<li class=\"panel-collapse collapse\" id=\"" + collapsedId + "\" aria-expanded=\"false\" style=\"height: 0px;\">");
+					xhtm.append("<li class=\"panel-collapse collapse h0\" id=\"" + collapsedId + "\" aria-expanded=\"false\">");
 					xhtm.append("<ul class=\"list-group\">");
 					xhtm.append(valoresFacetaBlock(request, allFacetas.subList(toShow, allFacetas.size()), prefijoEnlace, esBooleana));
 					xhtm.append("</ul>");
