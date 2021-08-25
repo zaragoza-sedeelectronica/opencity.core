@@ -290,7 +290,7 @@ public abstract class CachingFilter extends Filter {
             + " <header class=\"navbar navbar-default navbar-fixed-top navbar-portal\">"
             + "  <div class=\"container-fluid\">"
             + "   <a class=\"logo pull-left\" href=\"http://www.zaragoza.es\" title=\"Ir a la página principal de la Sede Electrónica del Ayuntamiento de Zaragoza\">"
-            + "    <img src=\"//www.zaragoza.es/cont/paginas/img/sede/logo_escudo.png\" alt=\"Logotipo Ayuntamiento de Zaragoza\">"
+            + "    <img src=\"//www.zaragoza.es/cont/paginas/img/sede/logo_escudo.png\" alt=\"Logotipo Ayuntamiento de Zaragoza\"/>"
             + "   </a>"
             + "   <div class=\"pull-left portal-header\">"
             + "    <h1><a href=\"http://www.zaragoza.es\">Ayuntamiento de Zaragoza</a></h1>"
