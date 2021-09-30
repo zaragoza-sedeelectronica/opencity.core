@@ -753,6 +753,23 @@ public class CiudadanoGenericDAOImpl extends GenericDAOImpl <Ciudadano, Integer>
 	}
 
 	/**
+	 * Eliminar imagen.
+	 *
+	 * @param ciudadano Ciudadano
+	 * @return mensaje
+	 */
+	@Override
+	public Mensaje removeImagen(Ciudadano ciudadano) {
+		try {
+			ciudadano.setImage(null);
+			return new Mensaje(HttpStatus.OK.value(), "Imagen eliminada correctamente");
+		}
+		catch (Exception e) {
+			return new Mensaje(HttpStatus.BAD_REQUEST.value(), "Error al eliminar la imagen: " + e.getMessage());
+		}
+	}
+
+	/**
 	 * Find by email.
 	 *
 	 * @param email Email

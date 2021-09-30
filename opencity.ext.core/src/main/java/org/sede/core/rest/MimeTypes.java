@@ -201,6 +201,10 @@ public class MimeTypes {
         	finalContentType = PDF_MEDIA;
         } else if (sMimeType.equals("ppt")) {
         	finalContentType = MediaType.parseMediaType("application/vnd.ms-powerpoint");
+        } else if (sMimeType.equals("odt")) {
+        	finalContentType = MediaType.parseMediaType("application/vnd.oasis.opendocument.text");
+        } else if (sMimeType.equals("ods")) {
+        	finalContentType = MediaType.parseMediaType("application/vnd.oasis.opendocument.spreadsheet");
         } else if (sMimeType.equals("zip")) {
         	finalContentType = MediaType.parseMediaType("application/x-zip-compressed");
         } else {
@@ -208,5 +212,5 @@ public class MimeTypes {
         }
         return finalContentType;
 	}
-    
+	
 }

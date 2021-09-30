@@ -194,7 +194,15 @@ public interface CiudadanoGenericDAO extends GenericDAO<Ciudadano, Integer> {
 	 * @return mensaje
 	 */
 	public Mensaje asociarImagen(Ciudadano ciudadano, MultipartFile file);
-	
+
+	/**
+	 * Eliminar imagen.
+	 *
+	 * @param ciudadano Ciudadano
+	 * @return mensaje
+	 */
+	public Mensaje removeImagen(Ciudadano ciudadano);
+
 	/**
 	 * Find by email.
 	 *

@@ -47,4 +47,15 @@ public class LiderUtils {
 		}
 		return null;
 	}
+	
+	public static List<BigDecimal> getRecursosQueLidera(Credenciales credenciales, Class<?> clase) {
+		List<BigDecimal> ids = new ArrayList<BigDecimal>();
+		if (credenciales != null) {
+			List<Lider> lista = LiderUtils.liderazgosGestor(clase.getName(), credenciales);
+			for (Lider l : lista) {
+				ids.add(l.getAssociatedId());
+			}
+		}
+		return ids;
+	}
 }

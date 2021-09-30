@@ -68,7 +68,9 @@ public class CiudadanoController {
 	
 	/** Constant MAPPING_CREAR. */
 	public static final String MAPPING_CREAR = "servicio/" + SERVICIO + "/new";
-	
+
+	public static final String MAPPING_DETALLE_MIS_PARTICIPACIONES = "servicio/" + SERVICIO + "/detalle-mis-participaciones";
+
 	/** dao. */
 	@Autowired
 	private CiudadanoGenericDAO dao;
@@ -91,6 +93,24 @@ public class CiudadanoController {
 		
 		model.addAttribute(ModelAttr.DATO, ciudadano);
 		return MAPPING_DETALLE;
+	}
+
+	/**
+	 * Acceso a página Mis Participaciones
+	 * @param model
+	 * @param request
+	 * @return
+	 */
+	@PermisosUser
+	@RequestMapping(value="/detalle-mis-participaciones", method = RequestMethod.GET, produces = {MediaType.TEXT_HTML_VALUE, "*/*" })
+	public String detalleMisParticipaciones(Model model, HttpServletRequest request) {
+
+		request.getSession().removeAttribute(CheckeoParametros.REQUIREMENTESATTR);
+
+		Ciudadano ciudadano = Funciones.getUser(request);
+
+		model.addAttribute(ModelAttr.DATO, ciudadano);
+		return MAPPING_DETALLE_MIS_PARTICIPACIONES;
 	}
 
 	/**
@@ -270,13 +290,30 @@ public class CiudadanoController {
 		return "redirect:/" + MAPPING;
 	}
 
-/**
- * Api usuarios listar.
- *
- * @param search Search
- * @return response entity
- * @throws SearchParseException the search parse exception
- */
+	/**
+	 * Eliminar imagen.
+	 *
+	 * @param c C
+	 * @param attr Attr
+	 * @param request Request
+	 * @return string
+	 */
+	@PermisosUser
+	@RequestMapping(value = "/del-image", method = RequestMethod.POST, produces = {MediaType.TEXT_HTML_VALUE, "*/*" })
+	public String removeImagen(Ciudadano c, RedirectAttributes attr, HttpServletRequest request) {
+		Ciudadano ciudadano = Funciones.getUser(request);
+		attr.addFlashAttribute(ModelAttr.MENSAJE, dao.removeImagen(ciudadano));
+		request.getSession().setAttribute(CheckeoParametros.SESSIONCIUDADANO, ciudadano);
+		return "redirect:/" + MAPPING;
+	}
+
+	/**
+	 * Api usuarios listar.
+	 *
+	 * @param search Search
+	 * @return response entity
+	 * @throws SearchParseException the search parse exception
+	 */
 	@Permisos(Permisos.ADJ)
 	@ResponseClass(value = Ciudadano.class, entity = SearchResult.class)
 	@RequestMapping(value = "/usuarios", method = RequestMethod.GET, produces = {MimeTypes.JSON, MimeTypes.XML, MimeTypes.CSV, MimeTypes.JSONLD, MimeTypes.RDF, MimeTypes.TURTLE, MimeTypes.RDF_N3})
