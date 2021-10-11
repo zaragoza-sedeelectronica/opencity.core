@@ -587,15 +587,13 @@ public class SearchFiql {
 	}
 
 	public void setSearchExpressionFromOpenCities() {
-		
 		this.searchExpression = this.getSearchExpression().replaceAll(" AND ", ";")
 				.replaceAll(" and ", ";")
 				.replaceAll("'", "")
 				.replaceAll(">=", "=ge=")
-				.replaceAll("<=", "=le=");
-		
-		
-		
+				.replaceAll(">", "=gt=")
+				.replaceAll("<=", "=le=")
+				.replaceAll("<", "=lt=");
 	}
 	
 }
