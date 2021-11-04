@@ -37,6 +37,7 @@ public class CheckeoParametros {
 	public static final String REFRESHPARAMETER = "refresh";
 	
 	public static final String PARAMSRS = "srsname";
+	public static final String PARAMSRID = "srId";
 	public static final String SRSWGS84 = "wgs84";
 	public static final String SRSETRS89 = "utm30n_etrs89";
 	public static final String SRSUTM30N = "utm30n";

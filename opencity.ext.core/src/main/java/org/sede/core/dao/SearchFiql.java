@@ -156,6 +156,7 @@ public class SearchFiql {
 						&& !CheckeoParametros.PAGESIZE.equals(paramName)
 						&& !"_".equals(paramName)
 						&& !CheckeoParametros.PARAMSRS.equals(paramName)
+						&& !CheckeoParametros.PARAMSRID.equals(paramName)
 						&& !isExcluded(paramName)) {
 					String[] paramValues = req.getParameterValues(paramName);
 					if (paramValues.length > 1) {

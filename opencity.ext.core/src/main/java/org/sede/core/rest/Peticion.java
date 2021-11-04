@@ -374,12 +374,21 @@ public class Peticion {
 			if (this.getMetodo().getDeclaringClass().isAnnotationPresent(SRSPorDefecto.class)) {
 				srs = this.getMetodo().getDeclaringClass().getAnnotation(SRSPorDefecto.class).value();
 			}
-			return this.getQueryParams().get(CheckeoParametros.PARAMSRS) == null 
+			
+			if (this.getQueryParams().get(CheckeoParametros.PARAMSRID) == null) {
+			
+				return this.getQueryParams().get(CheckeoParametros.PARAMSRS) == null 
 					? srs
 					: (this.getQueryParams().get(CheckeoParametros.PARAMSRS)[0].equals(CheckeoParametros.SRSWGS84) 
 							? CheckeoParametros.SRSWGS84
 							: (this.getQueryParams().get(CheckeoParametros.PARAMSRS)[0].equals(CheckeoParametros.SRSETRS89) ?
 								CheckeoParametros.SRSETRS89 : CheckeoParametros.SRSUTM30N));
+			} else {
+				return (this.getQueryParams().get(CheckeoParametros.PARAMSRID)[0].equals("EPSG:4326") 
+						? CheckeoParametros.SRSWGS84
+						: (this.getQueryParams().get(CheckeoParametros.PARAMSRID)[0].equals("EPSG:4258") ?
+							CheckeoParametros.SRSETRS89 : CheckeoParametros.SRSUTM30N));
+			}
 		} else {
 			return srsName; 
 		}
