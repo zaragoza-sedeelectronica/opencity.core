@@ -135,7 +135,10 @@ public class Transformador extends AbstractGenericHttpMessageConverter<Object>
 					log.info("la petición no contiene atributo " + CheckeoParametros.HEADERLASTMODIFIED);
 				}
 				
-				if (peticion.isDebug()) {
+				if (peticion.isDebug() 
+						&& Funciones.getPeticion().getQueryParams().get(CheckeoParametros.DEBUG) != null
+						&& "response".equals(Funciones.getPeticion().getQueryParams().get(CheckeoParametros.DEBUG)[0])
+						) {
 					log.error("llega");
 					log.error(respuesta.toString());
 					log.error("fin transformador");
