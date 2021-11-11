@@ -260,14 +260,14 @@ public class EntidadBase implements java.io.Serializable {
 	                Method toMetod = original.getClass().getMethod(toName, fromMethod.getReturnType());
 	                Object value = fromMethod.invoke(update, (Object[])null);
 	                if(value != null){
-	                	if (value.toString().equals("")) {
+	                	if (!(value instanceof Iterable) && value.toString().equals("")) {
 	                		toMetod.invoke(original, new Object[]{ null });
 	                	} else {
 	                		toMetod.invoke(original, value);
 	                	}
 	                }
 	            } catch (Exception e) {
-	            	logger.error(e.getMessage());
+	            	logger.error(e.getClass().getCanonicalName()+ e.getMessage());
 	            } 
 	        }
 	    }
