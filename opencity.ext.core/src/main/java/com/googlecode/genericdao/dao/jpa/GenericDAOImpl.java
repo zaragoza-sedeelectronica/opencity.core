@@ -179,6 +179,7 @@ public class GenericDAOImpl<T, ID extends Serializable> extends
 		}
 		Query ps = this.em().createNativeQuery("ALTER SESSION SET NLS_COMP='LINGUISTIC' NLS_SORT='BINARY_AI'");
         ps.executeUpdate();
+        logger.info(search.toString());
 		return _searchAndCount(persistentClass, search);
 	}
 

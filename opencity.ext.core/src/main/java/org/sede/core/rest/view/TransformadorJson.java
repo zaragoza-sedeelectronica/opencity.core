@@ -60,7 +60,7 @@ public class TransformadorJson implements TransformadorGenerico {
 	}
 	
 	public String escribirValorCampo(String nombreCampo, Object valor, boolean anotacionPresente, String formato) {
-		if (valor instanceof Integer || valor instanceof Double || valor instanceof BigDecimal || valor instanceof Boolean) {
+		if (valor instanceof Integer || valor instanceof Double || valor instanceof BigDecimal || valor instanceof Boolean || valor instanceof Long) {
 			return "\"" + nombreCampo + "\":" + Funciones.escape(valor.toString()) + "";
 		} else if (valor instanceof Date) {
 			Date fecha = (Date) valor;

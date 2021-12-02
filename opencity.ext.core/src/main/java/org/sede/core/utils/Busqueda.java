@@ -75,6 +75,7 @@ public class Busqueda {
 	private static String obtenerValorCampo(String property, Object value, Object entity) {
 		if (value.getClass().getName().indexOf("SingletonSet") >= 0
 				|| value.getClass().getName().indexOf("SingletonList") >= 0
+				|| value.getClass().getName().indexOf("ArrayList") >= 0
 				|| value.getClass().isAnnotationPresent(XmlRootElement.class)) {
 			
 			try {

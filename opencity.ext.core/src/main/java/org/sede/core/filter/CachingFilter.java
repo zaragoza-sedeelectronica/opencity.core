@@ -247,6 +247,12 @@ public abstract class CachingFilter extends Filter {
 	            if (request.getParameter(CheckeoParametros.DEBUG) != null) {
 	            	logger.error("Antes de escritura");
 	            }
+	            
+	            if (request.getAttribute(CheckeoParametros.TM_ERROR) != null) {
+	            	response.setStatus(404);
+	            }
+	            
+	            
 	            writeResponse(request, response, pageInfo);
 	            if (request.getParameter(CheckeoParametros.DEBUG) != null) {
 	            	logger.error("despues de escritura");
@@ -555,7 +561,13 @@ public abstract class CachingFilter extends Filter {
      */
     protected void setStatus(final HttpServletResponse response,
             final PageInfo pageInfo) {
-        response.setStatus(pageInfo.getStatusCode());
+    	logger.info("response Status:" + response.getStatus());
+    	logger.info("pageInfo Status:" + pageInfo.getStatusCode());
+    	if (pageInfo.getStatusCode() == 200 && response.getStatus() == 404) {
+    		response.setStatus(response.getStatus());
+    	} else {
+    		response.setStatus(pageInfo.getStatusCode());
+    	}
     }
 
     /**

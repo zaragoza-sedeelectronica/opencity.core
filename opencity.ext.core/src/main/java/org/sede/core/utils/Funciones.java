@@ -911,8 +911,8 @@ public class Funciones {
 	}
 	public static String getReferer(HttpServletRequest request) {
 		return request.getHeader("REFERER") == null ? 
-				request.getHeader(HttpHeaders.REFERER) == null ? "" : request.getHeader(HttpHeaders.REFERER) 
-				: request.getHeader("REFERER");
+				request.getHeader(HttpHeaders.REFERER) == null ? (Funciones.getIpUser(request) + request.getHeader("User-Agent")) : (request.getHeader(HttpHeaders.REFERER) + request.getHeader("User-Agent")) 
+				: (request.getHeader("REFERER") + request.getHeader("User-Agent"));
 	}
 }
 

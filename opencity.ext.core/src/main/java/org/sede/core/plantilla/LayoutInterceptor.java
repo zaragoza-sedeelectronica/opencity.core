@@ -8,6 +8,7 @@ import org.sede.core.utils.Funciones;
 import org.sede.servicio.ModelAttr;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.ModelAndView;
@@ -87,6 +88,14 @@ public class LayoutInterceptor extends HandlerInterceptorAdapter {
     		String query = "ORIGEN:" + Funciones.getReferer(request) + " PETICION:" + request.getRequestURI();    		
     		if (request.getQueryString() != null && !request.getQueryString().isEmpty()) {
     			query = query + "?" + request.getQueryString();
+    		}
+    		if (ex.getMessage().indexOf("template might not exist")>=0) {
+    			if (request.getParameter(CheckeoParametros.DEBUG) != null) {
+    				logger.error(Funciones.getStackTrace(ex));
+    			}
+    			response.sendError(HttpStatus.NOT_FOUND.value());
+    			response.setStatus(HttpStatus.NOT_FOUND.value());
+    			
     		}
     		logger.error("{}:{}",  query, ex.getMessage());
     	}    	
