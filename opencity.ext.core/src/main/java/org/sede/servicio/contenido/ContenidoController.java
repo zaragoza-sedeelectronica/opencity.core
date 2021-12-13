@@ -328,7 +328,7 @@ public class ContenidoController {
 			Model model) throws IOException {		
 		try {
 			
-	        String filename =  Funciones.normalizar(upload.getOriginalFilename());
+	        String filename =  Utils.normalizar(upload.getOriginalFilename());
 	        	        
 			if (image == null) {
 				filename = Funciones.saveFileGetFileName((Propiedades.getPathContDisk() + "vistas/portal/" + Funciones.getPeticion().getCredenciales().getUsuario().getPropiedades().get("carpeta") + "/doc/").replace("///", "/"), filename, upload.getInputStream());

@@ -7,6 +7,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import org.sede.core.anotaciones.Context;
 import org.sede.core.anotaciones.Rdf;
+import org.sede.core.tag.Utils;
 import org.sede.core.utils.Funciones;
 
 @Entity
@@ -89,7 +90,7 @@ public class SKOSBean implements Serializable {
 			String conceptURI = conceptName;
 			try {
 				if (encodeConceptName) {
-					conceptURI = Funciones.normalizar(conceptName);
+					conceptURI = Utils.normalizar(conceptName);
 				}
 			} catch (Exception e) {
 				;

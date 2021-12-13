@@ -59,6 +59,7 @@ import org.sede.core.rest.CheckeoParametros;
 import org.sede.core.rest.Mensaje;
 import org.sede.core.rest.Peticion;
 import org.sede.core.rest.json.JSONArray;
+import org.sede.core.tag.Utils;
 import org.sede.servicio.acceso.entity.Ciudadano;
 import org.sede.servicio.acceso.entity.Credenciales;
 import org.slf4j.Logger;
@@ -505,12 +506,6 @@ public class Funciones {
 		}
 	}
 
-	public static String normalizar(String text) {
-		String temp = Normalizer.normalize(text, Normalizer.Form.NFD);
-		Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
-	    return pattern.matcher(temp).replaceAll("").replaceAll("&", "_").replaceAll(" ", "_").replaceAll("º", "_").replaceAll("ª", "_").replace("(", "_").replace(")", "_");
-	}
-	
 	public static List<?> asList(JSONArray jsonArray) {
 		List<Object> list = new ArrayList<Object>();
 		for (int i = 0; i < jsonArray.length(); i++) {
@@ -606,7 +601,7 @@ public class Funciones {
     }
 	
 	public static void saveFile(String path, String fileName, InputStream is) throws IOException {
-		String name = Funciones.normalizar(fileName);
+		String name = Utils.normalizar(fileName);
 		if (new File(path + name).exists()) {
 			saveFile(path, calculateNextFileName(name), is);
 		} else {
@@ -615,7 +610,7 @@ public class Funciones {
 	}
 	public static void saveFileOverWrite(String path, String fileName,
 			InputStream is) throws IOException {
-		String name = Funciones.normalizar(fileName);
+		String name = Utils.normalizar(fileName);
 		OutputStream os = null;
 		try {
 			os = new FileOutputStream(path + name);

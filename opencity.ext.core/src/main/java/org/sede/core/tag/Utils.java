@@ -2,9 +2,11 @@ package org.sede.core.tag;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.text.Normalizer;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -807,5 +809,10 @@ public class Utils {
 			}
 		}
 		return queryString.toString();
+	}
+	public static String normalizar(String text) {
+		String temp = Normalizer.normalize(text, Normalizer.Form.NFD);
+		Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
+	    return pattern.matcher(temp).replaceAll("").replaceAll("&", "_").replaceAll(" ", "_").replaceAll("º", "_").replaceAll("ª", "_").replace("(", "_").replace(")", "_");
 	}
 }

@@ -26,13 +26,13 @@ public class Similarity {
      * @param em
      * @return Lista con los identificadores de registros que son similares al texto introducido
      */
-    public List<BigDecimal> evaluar(String query, String texto, EntityManager em) {		
+    public static BigDecimal[] evaluar(String query, String texto, EntityManager em) {		
 		List<BigDecimal> returnId = new ArrayList<BigDecimal>();
 		NormalizedLevenshtein norm = new NormalizedLevenshtein();
 		
 		String textoProcesado = procesaCadena(texto, STOPWORDS);
 		
-		double limit = 0.1;
+		double limit = 0.3;
 		double currentLimit = limit;
 		Query q = em.createNativeQuery(query);		
 		
@@ -51,14 +51,16 @@ public class Similarity {
 			}
 			BigDecimal id = (BigDecimal) list.get(0);
 			String text = procesaCadena((String) list.get(1), STOPWORDS);
-			double val = norm.distance(textoProcesado, text); 
-			 if (val < limit && val < currentLimit) { 
-				 currentLimit = val;
-				 returnId.add(id);
-			 }
+			double val = norm.distance(textoProcesado, text);
+//			System.out.println(id + ":" +val+":"+text);
+			if (val < limit && val < currentLimit) { 
+				currentLimit = val;
+				returnId.add(id);
+			}
 			
-		}		
-		return returnId;
+		}
+		BigDecimal[] retorno = new BigDecimal[returnId.size()];
+		return returnId.toArray(retorno);
 	}
 	
 	/**
@@ -68,7 +70,7 @@ public class Similarity {
 	 * @param stopWords the stop words
 	 * @return the string
 	 */
-	private String procesaCadena(String input, List<String> stopWords) {
+	private static String procesaCadena(String input, List<String> stopWords) {
 		String cadena = cleanString(input
 				.replaceAll("\n", " ").replaceAll("[-+^¿?¡!,.;:-_'\"]*", "")
 				.replaceAll("\\s{2,}", " ").trim());
@@ -86,7 +88,7 @@ public class Similarity {
 	 * @param texto the texto
 	 * @return the string
 	 */
-	private String cleanString(String texto) {
+	private static String cleanString(String texto) {
 		texto = Normalizer.normalize(texto, Normalizer.Form.NFD);
 		texto = texto.replaceAll("[\\p{InCombiningDiacriticalMarks}]", "");
 		return texto;
