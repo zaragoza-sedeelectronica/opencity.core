@@ -12,4 +12,5 @@ public interface PadronWS2TCPortType extends java.rmi.Remote {
     public java.lang.String getEmpadronadoIdent(int tipoIdentificacion, java.lang.String nif, long anioNacimiento) throws java.rmi.RemoteException;
     public java.lang.String getEmpadronadoDS(int tipoIdentificacion, java.lang.String nif, long anioNacimiento) throws java.rmi.RemoteException;
     public java.lang.String getEmpadronadoJunta(int tipoIdentificacion, java.lang.String nif, long anioNacimiento) throws java.rmi.RemoteException;
+    public boolean getEmpadronadoFechaNacimiento(int tipoIdentificacion, String nif, Long diaNacimiento, Long mesNacimiento, Long anioNacimiento) throws java.rmi.RemoteException;
 }

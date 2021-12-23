@@ -56,7 +56,13 @@
 		    <version>5.5.1</version>
 		</dependency>
 
-				
+		
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-text</artifactId>
+			<version>1.9</version>
+		</dependency>
+		
 		<!-- https://mvnrepository.com/artifact/org.apache.poi/poi-ooxml-schemas -->
 				
 		<!-- Hibernate -->
@@ -410,6 +416,14 @@
 			<artifactId>apns</artifactId>
 			<version>1.0.0.Beta6</version>
 	    </dependency>
+	    
+	    <!-- Similitud de registros -->
+        <dependency>
+            <groupId>info.debatty</groupId>
+			<artifactId>java-string-similarity</artifactId>
+            <version>RELEASE</version>
+        </dependency>
+	    
 	</dependencies>
   
   <repositories>

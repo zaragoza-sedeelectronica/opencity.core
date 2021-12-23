@@ -41,6 +41,18 @@ public class PadronController {
     @Permisos(Permisos.DET)
     @Cache(Cache.DURACION_30MIN)
     @ResponseClass(value = Mensaje.class)
+    @RequestMapping(value = "/consulta-fecha", method = RequestMethod.GET, produces = {MimeTypes.JSON, MimeTypes.XML, MimeTypes.CSV})
+    public @ResponseBody  ResponseEntity<?> apiCheckEmpadronadoFecha(@RequestParam(name = "d") String d, @RequestParam(name = "day") Integer day, @RequestParam(name = "month") Integer month, @RequestParam(name = "year") Integer year) {
+        if (dao.checkEmpadronado(d, day, month, year)) {
+            return ResponseEntity.ok(new Mensaje(HttpStatus.OK.value(), "Los datos proporcionados corresponden a un ciudadano empadronado"));
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Mensaje(HttpStatus.BAD_REQUEST.value(), "Los datos proporcionados NO corresponden a ningún ciudadano empadronado"));
+        }
+
+    }
+    @Permisos(Permisos.DET)
+    @Cache(Cache.DURACION_30MIN)
+    @ResponseClass(value = Mensaje.class)
     @RequestMapping(value = "/distrito", method = RequestMethod.GET, produces = {MimeTypes.JSON, MimeTypes.XML, MimeTypes.CSV})
     public @ResponseBody  ResponseEntity<?> apiDistrito(@RequestParam(name = "d") String d, @RequestParam(name = "a") Integer a) {
         String distrito = dao.showDistrito(d, a);

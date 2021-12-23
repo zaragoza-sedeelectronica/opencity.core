@@ -1,5 +1,7 @@
 package org.sede.servicio.padron.dao.ws;
 
+import java.rmi.RemoteException;
+
 public class PadronWS2TCPortTypeProxy implements org.sede.servicio.padron.dao.ws.PadronWS2TCPortType {
   private String _endpoint = null;
   private org.sede.servicio.padron.dao.ws.PadronWS2TCPortType padronWS2TCPortType = null;
@@ -67,6 +69,14 @@ public class PadronWS2TCPortTypeProxy implements org.sede.servicio.padron.dao.ws
       _initPadronWS2TCPortTypeProxy();
     return padronWS2TCPortType.getEmpadronadoJunta(tipoIdentificacion, nif, anioNacimiento);
   }
+
+	@Override
+	public boolean getEmpadronadoFechaNacimiento(int tipoIdentificacion, String nif, Long diaNacimiento, Long mesNacimiento,
+			Long anioNacimiento) throws RemoteException {
+		if (padronWS2TCPortType == null)
+		      _initPadronWS2TCPortTypeProxy();
+		    return padronWS2TCPortType.getEmpadronadoFechaNacimiento(tipoIdentificacion, nif, diaNacimiento, mesNacimiento, anioNacimiento);
+	}
   
   
 }

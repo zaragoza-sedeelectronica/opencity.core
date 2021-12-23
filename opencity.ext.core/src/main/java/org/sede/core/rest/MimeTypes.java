@@ -51,6 +51,7 @@ public class MimeTypes {
 	public static final String JSONLD = "application/ld+json";
 	public static final String GEOJSON = "application/geo+json";
 	public static final MediaType GEOJSON_MEDIA = new MediaType("application", "geo+json");
+	public static final MediaType XML_MEDIA = new MediaType("application", "xml");
 	public static final String XML = "application/xml";
 	public static final String XHTML = "application/xhtml+xml";
 	public static final String HTML = "text/html";
@@ -86,6 +87,8 @@ public class MimeTypes {
 	public static final MediaType PDF_MEDIA = new MediaType("application", "pdf");
 	public static final String XLS = "application/vnd.ms-excel";
 	public static final MediaType XLS_MEDIA = new MediaType("application", "vnd.ms-excel");
+	public static final String XLSX = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+	public static final MediaType XLSX_MEDIA = new MediaType("application", "vnd.openxmlformats-officedocument.spreadsheetml.sheet");
 	
 	public static final String DOC = "application/msword";
 	public static final MediaType DOC_MEDIA = new MediaType("application", "msword");
@@ -212,5 +215,5 @@ public class MimeTypes {
         }
         return finalContentType;
 	}
-	
+    
 }

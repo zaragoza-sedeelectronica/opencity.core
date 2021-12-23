@@ -212,7 +212,7 @@ public class ContenidoController {
 			propWeb.executeUpdate();
 			if (!robots.toLowerCase().contains("noindex")) {
 			
-				// Damos de alta para que se indice en ELASTIC
+				// Damos de alta para que se indice en solr
 				
 				String docId = "contenido-" + String.valueOf(uri.hashCode()).replace("-", "n");
 				SolrInputDocument registro = new SolrInputDocument();
@@ -287,7 +287,25 @@ public class ContenidoController {
 		
 		return "fragmentos/error";
 	}
-	
+	@Transactional(Esquema.TMINTRA)
+	@Permisos(Permisos.MOD)
+	@RequestMapping(value = "/index-elastic", method = RequestMethod.POST, produces = {
+			MediaType.TEXT_HTML_VALUE, "*/*" })
+	public String indizarElastic(
+			@RequestParam(value="uri") String uri,
+			Model model) {
+		try {
+			Query propWeb = dao.em().createNativeQuery("insert into intra.ELASTIC_UPDATE_URLS(url) values (?)");
+			propWeb.setParameter(1, Funciones.corregirUri(uri));
+			propWeb.executeUpdate();
+			model.addAttribute(ModelAttr.MENSAJE, new Mensaje(HttpStatus.OK.value(), "Registro preparado para indizar, puede tardar 40 minutos en ser efectivo el cambio"));
+		} catch (Exception e) {
+			logger.error(Funciones.getStackTrace(e));
+			model.addAttribute(ModelAttr.MENSAJE, new Mensaje(HttpStatus.BAD_REQUEST.value(), e.getMessage()));
+		}
+		
+		return "fragmentos/error";
+	}
 	/**
 	 * Removes the.
 	 *
