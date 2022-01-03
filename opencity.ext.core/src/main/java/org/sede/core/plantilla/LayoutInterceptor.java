@@ -62,7 +62,9 @@ public class LayoutInterceptor extends HandlerInterceptorAdapter {
         HandlerMethod metodo = (HandlerMethod)handler;
         if (metodo.getMethod().getDeclaringClass().isAnnotationPresent(PlantillaHTML.class)) {
         	plantilla = metodo.getMethod().getDeclaringClass().getAnnotation(PlantillaHTML.class).value() + "/" + template;
-        	
+        }
+        if (metodo.getMethod().isAnnotationPresent(PlantillaHTML.class)) {
+        	plantilla = metodo.getMethod().getAnnotation(PlantillaHTML.class).value() + "/" + template;
         }
         
         if (request.getAttribute(LayoutInterceptor.PLANTILLA_PORTAL) != null) {
