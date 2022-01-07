@@ -6,6 +6,7 @@ import org.sede.servicio.contenido.entity.IndexError;
 
 import javax.validation.ConstraintViolation;
 
+import java.util.List;
 import java.util.Set;
 
 public interface IndexErrorGenericDAO extends GenericDAO<IndexError, String> {
@@ -19,4 +20,6 @@ public interface IndexErrorGenericDAO extends GenericDAO<IndexError, String> {
 	public boolean updateStatusSinIndizar(String id);
 
 	public String getStatisticsByCode();
+	
+	public List<String> getPortales();
 }

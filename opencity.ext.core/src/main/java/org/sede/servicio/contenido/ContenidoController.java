@@ -92,6 +92,7 @@ public class ContenidoController {
 	@RequestMapping(value = "/", method = RequestMethod.GET, produces = {
 			MediaType.TEXT_HTML_VALUE, "*/*" })
 	public String nuevo(Model model, @RequestParam(name = "path", required = false) String path) throws IOException {
+		model.addAttribute("portales", dao.getPortales());
 		if (path != null) {
 			String pathFisico = Propiedades.getPathVistas() + path + ".xml";
 			FileInputStream fisTargetFile = new FileInputStream(new File(pathFisico));

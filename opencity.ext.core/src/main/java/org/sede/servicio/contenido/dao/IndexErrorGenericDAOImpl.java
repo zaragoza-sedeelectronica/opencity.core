@@ -146,5 +146,11 @@ public class IndexErrorGenericDAOImpl extends GenericDAOImpl <IndexError, String
 			return null;
 		}
 	}
+
+	@Override
+	public List<String> getPortales() {
+		Query query = em().createNativeQuery("select portal from noticias.portales where gcz_publicado='S' and (url_portal like '/sede%' or url_portal like '/ciudad%' ) order by 1 asc");
+		return query.getResultList();
+	}
 	
 }
