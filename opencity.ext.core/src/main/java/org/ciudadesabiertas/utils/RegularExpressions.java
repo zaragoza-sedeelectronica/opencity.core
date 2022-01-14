@@ -29,8 +29,8 @@ public class RegularExpressions
 		while (matcherA.find())
 		{
 			String original=matcherA.group();				
-			String originalTratado=original.toUpperCase().replace("T", " ");
-			String cambio="to_date("+originalTratado+",'YYYY-MM-DD HH24:MI:SS')";						
+			String originalTratado=original.toUpperCase().replace("T", ",");
+			String cambio="to_date("+originalTratado+",'YYYY-MM-DD,HH24:MI:SS')";						
 			Pair<String, String> pair = new MutablePair<String, String>(original, cambio);
 			if (changes.contains(pair)==false)
 				changes.add(pair);

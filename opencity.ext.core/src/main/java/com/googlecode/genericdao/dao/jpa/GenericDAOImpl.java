@@ -316,12 +316,12 @@ public class GenericDAOImpl<T, ID extends Serializable> extends
 					
 					if (query.contains("*"))
 					{
-						logger.info("Group By Query With *: "+query);
+						logger.info("Group By Query en groupByTuple With *: "+query);
 						//Control de comodines en groupby
 						query = query.replace("*", "%");
 					}
 					
-					logger.info("Group By Query: "+query);
+					logger.info("Group By Query en groupByTuple: "+query);
 											
 					queryObj = this.em().createQuery(query, Tuple.class);						
 
@@ -344,7 +344,9 @@ public class GenericDAOImpl<T, ID extends Serializable> extends
 		return resultado;		
 
 	}
-	
+	public static void main(String[] args) {
+		System.out.println(DifferentSQLforDatabases.controlLikeConditions("clasificacionEconomicaGasto like '7**' and fechaAcuerdo >= to_date('2021-01-01,00:00:00','YYYY-MM-DD,HH24:MI:SS') and fechaAcuerdo < to_date('2021-12-31,11:59:59','YYYY-MM-DD,HH24:MI:SS')"));
+	} 
 	public long rowCountGroupBy(String key,Class<T> type, GroupBySearch search) throws Exception {
 		
 		int size=0;	
