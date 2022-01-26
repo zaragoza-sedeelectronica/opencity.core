@@ -263,7 +263,7 @@ public class GczUsuarioGenericDAOImpl extends GenericDAOImpl <GczUsuario, BigDec
 		}
 
 		if(grupos.length() > 0){
-			Query q = em().createNativeQuery("select ID_LIDER, ID_ASOCIADO, TIPO_ASOCIADO, ID_USUARIO, TIPO_USUARIO "
+			Query q = em().createNativeQuery("select ID_LIDER, ID_ASOCIADO, TIPO_ASOCIADO, ID_USUARIO, TIPO_USUARIO, DESCRIPTION "
 					+ "from " + ConfigCiudadano.ESQUEMA + ".lideres "
 					+ "where (id_usuario=" + gczUsuario.getId()
 					+ " and tipo_usuario='" + GczUsuario.class.getName() + "') or "
@@ -278,6 +278,7 @@ public class GczUsuarioGenericDAOImpl extends GenericDAOImpl <GczUsuario, BigDec
 				l.setAssociatedType((String)row[2]);
 				l.setUserId((BigDecimal)row[3]);
 				l.setUserType((String)row[4]);
+				l.setDescription((String)row[5]);
 				lider.add(l);
 			}
 		}

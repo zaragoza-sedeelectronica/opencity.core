@@ -73,6 +73,10 @@ public class Lider extends EntidadBase {
     @Column(name = "TIPO_USUARIO")
     @Size(max = 300)
     private String userType;
+    
+    @Column(name = "DESCRIPTION")
+    @Size(max = 100)
+    private String description;
 
     /** user resource. */
     // tipo de usuario líder
@@ -209,6 +213,14 @@ public class Lider extends EntidadBase {
 		this.associatedResource = associatedResource;
 	}
 
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
 	/**
 	 * To string.
 	 *
@@ -216,8 +228,11 @@ public class Lider extends EntidadBase {
 	 */
 	@Override
     public String toString() {
-        return "Lider [associatedId=" + associatedId + ", associatedType=" + associatedType +
-        		", user_id=" + userId + ", userType=" + userType+ "]";
+        return "Lider [associatedId=" + associatedId 
+        		+ ", associatedType=" + associatedType +
+        		", user_id=" + userId + ", userType=" + userType
+        		+ ", description=" + description 
+        		+ "]";
     }
 
 	/**

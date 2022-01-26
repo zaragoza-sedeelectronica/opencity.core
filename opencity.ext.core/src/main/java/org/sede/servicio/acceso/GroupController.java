@@ -443,6 +443,7 @@ public class GroupController {
 	public String adminPorLideres(Model model, HttpServletRequest request) throws SinCredencialesDefinidas {
 		Credenciales credenciales = (Credenciales)request.getSession().getAttribute(CheckeoParametros.SESSIONGCZ);
 		if (request.getSession().getAttribute(CheckeoParametros.SESSIONGCZ) != null) {
+			model.addAttribute("ocultarFormulario", true);
 			model.addAttribute(ModelAttr.RESULTADO, dao.obtenerGruposAsociadosPersona(credenciales));
 			return MAPPING + "/index";
 		} else {
