@@ -781,7 +781,7 @@ public class Funciones {
 	
 	public static String cleanNif(String nif) {
 		if (nif != null) {
-			return nif.toUpperCase().trim().replaceAll(" ", "").replaceAll("-", "").replace(".", "");
+			return nif.toUpperCase().trim().replaceAll("[^A-Z0-9]", "");
 		} else {
 			return null;
 		}
