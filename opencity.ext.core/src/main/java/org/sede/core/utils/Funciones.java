@@ -244,7 +244,8 @@ public class Funciones {
 	public static void sendMailCustomFromAdjunto(final String titulo, final String txtMensaje, 
 			String from, final String destino, final String respuesta, 
 			final String tipo, byte[] adjunto, String nombreAdjunto, String mimetype) throws MessagingException {
-		Funciones.sendMail(titulo, txtMensaje, from, destino, respuesta, Propiedades.getMailUser(), Propiedades.getMailPass(), tipo);
+		Funciones.sendMail(titulo, txtMensaje, from, destino, respuesta, Propiedades.getMailUser(), Propiedades.getMailPass(),
+				tipo, null, adjunto, nombreAdjunto, mimetype);
 	}
 	
 	public static void sendMail(final String titulo, final String txtMensaje, 
