@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -59,6 +60,7 @@ import org.sede.core.rest.CheckeoParametros;
 import org.sede.core.rest.Mensaje;
 import org.sede.core.rest.Peticion;
 import org.sede.core.rest.json.JSONArray;
+import org.sede.core.rest.json.JSONObject;
 import org.sede.core.tag.Utils;
 import org.sede.servicio.acceso.entity.Ciudadano;
 import org.sede.servicio.acceso.entity.Credenciales;
@@ -72,6 +74,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
 import com.google.common.net.HttpHeaders;
 import com.googlecode.genericdao.search.SearchResult;
 
@@ -483,6 +486,15 @@ public class Funciones {
 		return ResponseEntity.badRequest().body(mensaje);
 		
 	}
+	public static ResponseEntity<?> generarJsonError(
+			Set<ConstraintViolation<Object>> errores) {
+		JSONObject jo = new JSONObject();
+		jo.put("errores", errores);
+		Mensaje mensaje = new Mensaje(HttpStatus.BAD_REQUEST.value(), jo.toString());
+
+		return ResponseEntity.badRequest().body(mensaje);
+		
+	}
 	
 	public static boolean isValidEmail(String email) {
 		email = email.toLowerCase();
@@ -613,6 +625,7 @@ public class Funciones {
 		String name = Utils.normalizar(fileName);
 		OutputStream os = null;
 		try {
+			createDirIfNotExists(path);
 			os = new FileOutputStream(path + name);
 	        byte[] buffer = new byte[1024];
 	        int bytesRead;
@@ -702,6 +715,57 @@ public class Funciones {
 				out.close();
 			}
 		}
+	}
+	/**
+	 * Método que guarda un fichero sustituyendo el anterior 
+	 *  - Si viejo=nuevo se sobreescribe
+	 *  - Si viejo!=nuevo Se guarda nuevo renombrando si existe y se borra viejo
+	 *  - Si viejo==null Se guarda nuevo renombrando si existe 
+	 *  - Si nuevo==null Se borra viejo
+	 * @param ruta Ruta donde se va a guardar/eliminar el fichero
+	 * @param nuevo Nombre del nuevo fichero
+	 * @param viejo Nombre del fichero anterior
+	 * @param is Binario del fichero
+	 * @return Nombre definitivo del fichero guardado. Null si solo se borra
+	 * @throws Exception Sólo al escribir el nuevo fichero. Si falla al borrar no la propaga
+	 */
+	public static String sustituirFichero(String ruta, String nuevo, String viejo, InputStream is) throws Exception {
+		if(viejo==null && nuevo ==null) {
+			throw new Exception("Al sustituirFichero no pueden ser nuevo y viejo nulos");
+		}else if(viejo==null && nuevo!=null) { //guardar nuevo
+			return saveFileGetFileName(ruta, nuevo, is);
+		}else if(viejo!=null && nuevo==null) { //borrar fichero sin guardar nada
+			try {
+				File oldFile = new File(ruta, viejo);
+	            oldFile.delete();
+			}catch (Exception e) {
+				logger.error("Error sustituyendo en la ruta {} al borrar el fichero antiguo {}. Al poder escribir {} correctamente continua la ejecución", ruta, viejo, nuevo);
+			}
+			return null;
+		}else if(nuevo.equals(viejo)) {//sustituir mismo fichero
+			saveFileOverWrite(ruta, nuevo, is);
+			return nuevo;
+		}else { //no nulos y distintos. se modifica con fichero diferente
+			String definitivo = saveFileGetFileName(ruta, nuevo, is);
+			try {
+				File oldFile = new File(ruta, viejo);
+	            oldFile.delete();
+			}catch (Exception e) {
+				logger.error("Error sustituyendo en la ruta {} al borrar el fichero antiguo {}. Al poder escribir {} correctamente continua la ejecución", ruta, viejo, nuevo);
+			}
+			return definitivo;
+		}
+	}
+	
+	/**
+	 * Comprueba si existe la ruta path, y si no existe la crea
+	 * @param path Ruta a la carpeta a comprobar
+	 * @return Objeto File representando la ruta path
+	 */
+	public static File createDirIfNotExists(String path) {
+		File f = new File(path);
+		if(!f.exists()) f.mkdirs();
+		return f;
 	}
 
 	public static String removeB64Prefix(String b64) {

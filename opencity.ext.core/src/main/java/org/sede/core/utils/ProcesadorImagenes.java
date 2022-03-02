@@ -132,6 +132,7 @@ public class ProcesadorImagenes {
 						strFileName = ProcesadorImagenes.rename(nombre, rutaFichero);
 					}
 				}
+				//Funciones.createDirIfNotExists(rutaFichero);
 				ImageIO.write(imagen, formato, new File( rutaFichero + "/" + strFileName ));
 				return strFileName;
 				

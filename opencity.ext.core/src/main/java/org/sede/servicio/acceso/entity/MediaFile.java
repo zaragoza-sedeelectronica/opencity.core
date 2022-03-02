@@ -1,6 +1,15 @@
 package org.sede.servicio.acceso.entity;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+
 import javax.persistence.Transient;
+import javax.xml.bind.DatatypeConverter;
+
+import org.apache.commons.codec.CharEncoding;
+import org.sede.core.utils.Funciones;
 
 public class MediaFile {
 
@@ -47,6 +56,16 @@ public class MediaFile {
 
     public void setMedia_type(String media_type) {
         this.media_type = media_type;
+    }
+    
+    public byte[] getBytes() throws UnsupportedEncodingException {
+    	String body = Funciones.removeB64Prefix(URLDecoder.decode(getMedia_body(), CharEncoding.UTF_8));
+		return DatatypeConverter.parseBase64Binary(body);
+		
+    }
+    
+    public InputStream getInputStream() throws UnsupportedEncodingException {
+    	return new ByteArrayInputStream(getBytes());
     }
 
     @Override
