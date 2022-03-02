@@ -17,7 +17,6 @@ import java.net.URL;
 import java.net.URLDecoder;
 import java.security.MessageDigest;
 import java.sql.SQLException;
-import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -244,6 +243,12 @@ public class Funciones {
 			final String tipo) throws MessagingException {
 		Funciones.sendMail(titulo, txtMensaje, from, 
 				destino, respuesta, Propiedades.getMailUser(), Propiedades.getMailPass(), tipo);
+	}
+	public static void sendMailCustomFromAdjunto(final String titulo, final String txtMensaje, 
+			String from, final String destino, final String respuesta, 
+			final String tipo, byte[] adjunto, String nombreAdjunto, String mimetype) throws MessagingException {
+		Funciones.sendMail(titulo, txtMensaje, from, destino, respuesta, Propiedades.getMailUser(), Propiedades.getMailPass(),
+				tipo, null, adjunto, nombreAdjunto, mimetype);
 	}
 	
 	public static void sendMail(final String titulo, final String txtMensaje, 
@@ -841,7 +846,7 @@ public class Funciones {
 	
 	public static String cleanNif(String nif) {
 		if (nif != null) {
-			return nif.toUpperCase().trim().replaceAll(" ", "").replaceAll("-", "").replace(".", "");
+			return nif.toUpperCase().trim().replaceAll("[^A-Z0-9]", "");
 		} else {
 			return null;
 		}

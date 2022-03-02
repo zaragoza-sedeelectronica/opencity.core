@@ -85,7 +85,7 @@ public class TransformadorBasico {
 								respuesta.append(transformador.getInicioObjeto(field.getName()));
 								transformarMap(respuesta, peticion, transformador, true, field, object);
 								respuesta.append(transformador.getFinObjeto(field.getName()));
-							} else if (object instanceof String || object instanceof BigDecimal || object instanceof Long || object instanceof Integer) {
+							} else if (object instanceof String || object instanceof BigDecimal || object instanceof Long || object instanceof Integer || object instanceof Boolean) {
 								if (!primerInterno) {
 									respuesta.append(transformador.getSeparador());
 								}
@@ -221,7 +221,7 @@ public class TransformadorBasico {
 			boolean primerInterno = true;
 			for (int i = 0; i < listado.length; i++) {
 				Object object = listado[i];
-				if (object instanceof Double || object instanceof Integer || object instanceof Long || object instanceof BigDecimal) {
+				if (object instanceof Double || object instanceof Integer || object instanceof Long || object instanceof BigDecimal || object instanceof Boolean) {
 					if (i > 0) {
 						respuesta.append(",");
 					}
