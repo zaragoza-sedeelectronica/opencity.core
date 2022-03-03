@@ -141,6 +141,7 @@ public class Faceta {
 	public static final String FACET_BANCO_DURACION = "duracion_s";
 	public static final String FACET_BANCO_ENTIDAD = "entity_s";
 	public static final String FACET_MOTIVO = "motivo_smultiple";
+	public static final String FACET_VIEWS = "views_smultiple";
 	
 	
 	static {
@@ -198,8 +199,8 @@ public class Faceta {
 		faceta.put(FACET_BANCO_AMBITO, "Ámbitos");
 		faceta.put(FACET_BANCO_DURACION, "Duración");
 		faceta.put(FACET_BANCO_ENTIDAD, "Entidades");
-		
 		faceta.put(FACET_MOTIVO, "Motivo");
+		faceta.put(FACET_VIEWS, "Vistas");
 		
 	}
 
