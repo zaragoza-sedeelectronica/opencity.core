@@ -89,6 +89,8 @@ public class MimeTypes {
 	public static final MediaType XLS_MEDIA = new MediaType("application", "vnd.ms-excel");
 	public static final String XLSX = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
 	public static final MediaType XLSX_MEDIA = new MediaType("application", "vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+	public static final String ODS = "application/vnd.oasis.opendocument.spreadsheet";
+	public static final MediaType ODS_MEDIA = new MediaType("application", "vnd.oasis.opendocument.spreadsheet");
 	
 	public static final String DOC = "application/msword";
 	public static final MediaType DOC_MEDIA = new MediaType("application", "msword");
