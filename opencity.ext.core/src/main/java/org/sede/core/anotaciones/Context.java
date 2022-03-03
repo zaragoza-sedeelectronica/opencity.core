@@ -71,9 +71,13 @@ public class Context {
 	
 	public static final String SF = "sf";
 	
+	public static final String QB = "sf";
+	public static final String SDMXA = "sdmx-attribute";
+			
 	
 	
 	public static final Map<String, Context> listado = new HashMap<String, Context>();
+	
 	
 	
     static { 
@@ -128,6 +132,8 @@ public class Context {
         listado.put(CPSV, new Context("http://purl.org/vocab/cpsv#",CPSV));
         listado.put(SOSA, new Context("http://www.w3.org/ns/sosa/",SOSA));
         listado.put(SF, new Context("http://www.opengis.net/ont/sf#",SF));
+        listado.put(QB, new Context("http://purl.org/linked-data/cube#",QB));
+        listado.put(SDMXA, new Context("http://purl.org/linked-data/sdmx/2009/attribute#",SDMXA));
     }
 	
 	private String uri;
